@@ -116,7 +116,7 @@ const TutorDashboard = () => {
 
   return (
     <section className="space-y-6">
-      <div className="rounded-3xl bg-gradient-to-br from-sky-600 via-cyan-600 to-teal-500 p-6 text-white shadow-lg">
+      <div className="rounded-3xl bg-linear-to-br from-sky-600 via-cyan-600 to-teal-500 p-6 text-white shadow-lg">
         <div className="flex items-start gap-4">
           <div className="rounded-2xl bg-white/15 p-3">
             <LayoutDashboard className="h-6 w-6" />
