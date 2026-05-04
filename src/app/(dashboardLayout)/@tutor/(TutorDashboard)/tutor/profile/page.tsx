@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Swal from 'sweetalert2'
 import {
+  AlertCircle,
   Briefcase,
   Check,
   Image as ImageIcon,
@@ -12,6 +13,8 @@ import {
   MapPin,
   Save,
   Sparkles,
+  Star,
+  UserRound,
   Wallet,
 } from 'lucide-react'
 
@@ -306,265 +309,227 @@ const ProfilePage = () => {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-3xl bg-gradient-to-br from-sky-600 via-cyan-600 to-teal-500 p-6 text-white shadow-lg">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em]">
-              <Sparkles className="h-3.5 w-3.5" />
-              Tutor profile
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">
-                {profile?.user?.name || user?.name
-                  ? `${profile?.user?.name || user?.name}'s Profile`
-                  : 'Build your tutor profile'}
-              </h1>
-              <p className="mt-2 max-w-2xl text-sm text-sky-50/90">
-                Add the details students need to trust you, understand your experience,
-                and book lessons with confidence.
-              </p>
-            </div>
-          </div>
-
-          <div className={`inline-flex rounded-full border px-4 py-2 text-sm font-semibold ${profileStatus.tone}`}>
-            {profileStatus.label}
-          </div>
+  {/* ─── PREMIUM HERO SECTION ─── */}
+  <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-sky-600 via-cyan-600 to-teal-500 p-8 text-white shadow-xl shadow-cyan-100">
+    <div className="absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+    
+    <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+      <div className="space-y-4">
+        <div className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] border border-white/10">
+          <Sparkles size={14} className="text-yellow-200" /> Tutor Profile
         </div>
-      </section>
+        <div>
+          <h1 className="text-3xl font-black tracking-tight leading-tight">
+            {profile?.user?.name || user?.name
+              ? `${profile?.user?.name || user?.name}&apos;s Profile`
+              : 'Build your tutor profile'}
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm font-medium text-sky-50/90">
+            Add the details students need to trust you, understand your experience,
+            and book lessons with confidence.
+          </p>
+        </div>
+      </div>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-slate-900">
-              {hasExistingProfile ? 'Update your tutor information' : 'Create your tutor information'}
-            </h2>
-          </div>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="bio">Professional bio</Label>
-              <Textarea
-                id="bio"
-                rows={6}
-                placeholder="Tell students about your teaching style, strengths, and subject expertise."
-                className="resize-none rounded-2xl border-slate-200 bg-slate-50/60 px-4 py-3"
-                {...register('bio', {
-                  required: 'Bio is required',
-                  minLength: {
-                    value: 20,
-                    message: 'Bio should be at least 20 characters long',
-                  },
-                })}
-              />
-              {errors.bio && (
-                <p className="text-sm text-red-500">{errors.bio.message}</p>
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex items-center justify-between gap-3">
-                <Label>Tutor categories</Label>
-                <span className="text-sm text-slate-500">
-                  {selectedCategoryIds.length} selected
-                </span>
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-                {availableCategories.map((category) => {
-                  const isSelected = selectedCategoryIds.includes(String(category.id))
-
-                  return (
-                    <button
-                      key={category.id}
-                      type="button"
-                      onClick={() => toggleCategory(category.id)}
-                      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                        isSelected
-                          ? 'border-sky-200 bg-sky-50 text-sky-700'
-                          : 'border-slate-200 bg-white text-slate-600 hover:border-sky-100 hover:bg-slate-50'
-                      }`}
-                    >
-                      <span>{category.name}</span>
-                      {isSelected ? <Check className="h-4 w-4" /> : <Layers3 className="h-4 w-4 text-slate-400" />}
-                    </button>
-                  )
-                })}
-              </div>
-
-              {selectedCategoryIds.length === 0 && (
-                <p className="text-sm text-slate-500">
-                  Select at least one category that matches your teaching area.
-                </p>
-              )}
-            </div>
-
-            <div className="grid gap-5 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="hourlyRate">Hourly rate</Label>
-                <div className="relative">
-                  <Wallet className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  <Input
-                    id="hourlyRate"
-                    type="number"
-                    min="0"
-                    placeholder="1500"
-                    className="h-11 rounded-2xl border-slate-200 bg-slate-50/60 pl-10"
-                    {...register('hourlyRate', {
-                      required: 'Hourly rate is required',
-                      validate: (value) =>
-                        Number(value) > 0 || 'Hourly rate must be greater than 0',
-                    })}
-                  />
-                </div>
-                {errors.hourlyRate && (
-                  <p className="text-sm text-red-500">{errors.hourlyRate.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="experience">Experience in years</Label>
-                <div className="relative">
-                  <Briefcase className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  <Input
-                    id="experience"
-                    type="number"
-                    min="0"
-                    placeholder="3"
-                    className="h-11 rounded-2xl border-slate-200 bg-slate-50/60 pl-10"
-                    {...register('experience', {
-                      required: 'Experience is required',
-                      validate: (value) =>
-                        Number(value) >= 0 || 'Experience cannot be negative',
-                    })}
-                  />
-                </div>
-                {errors.experience && (
-                  <p className="text-sm text-red-500">{errors.experience.message}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid gap-5 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
-                <div className="relative">
-                  <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  <Input
-                    id="location"
-                    placeholder="Dhaka, Bangladesh"
-                    className="h-11 rounded-2xl border-slate-200 bg-slate-50/60 pl-10"
-                    {...register('location', {
-                      required: 'Location is required',
-                    })}
-                  />
-                </div>
-                {errors.location && (
-                  <p className="text-sm text-red-500">{errors.location.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="imageUrl">Profile image URL</Label>
-                <div className="relative">
-                  <ImageIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  <Input
-                    id="imageUrl"
-                    placeholder="https://example.com/photo.jpg"
-                    className="h-11 rounded-2xl border-slate-200 bg-slate-50/60 pl-10"
-                    {...register('imageUrl')}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm text-slate-500">
-                {hasExistingProfile
-                  ? 'Changes will update your existing tutor profile.'
-                  : 'Your first save will create a new tutor profile.'}
-              </p>
-
-              <Button
-                type="submit"
-                disabled={isSubmitting || (!isDirty && hasExistingProfile)}
-                className="h-11 rounded-2xl bg-sky-600 px-5 text-white hover:bg-sky-700"
-              >
-                {isSubmitting ? (
-                  <>
-                    <LoaderCircle className="h-4 w-4 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="h-4 w-4" />
-                    {hasExistingProfile ? 'Update profile' : 'Create profile'}
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
-        </section>
-
-        <aside className="space-y-4">
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900">Profile summary</h3>
-            <div className="mt-4 space-y-4 text-sm">
-              <div>
-                <p className="text-slate-400">Tutor name</p>
-                <p className="mt-1 font-medium text-slate-700">
-                  {profile?.user?.name || user?.name || 'Not available yet'}
-                </p>
-              </div>
-              <div>
-                <p className="text-slate-400">Email</p>
-                <p className="mt-1 font-medium text-slate-700">
-                  {profile?.user?.email || user?.email || 'Sign in to load your account'}
-                </p>
-              </div>
-              <div>
-                <p className="text-slate-400">Categories</p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {profile?.categories?.length ? (
-                    profile.categories.map(({ category }) => (
-                      <span
-                        key={category.id}
-                        className="rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700"
-                      >
-                        {category.name}
-                      </span>
-                    ))
-                  ) : (
-                    <p className="font-medium text-slate-700">No category selected yet</p>
-                  )}
-                </div>
-              </div>
-              <div>
-                <p className="text-slate-400">Reviews</p>
-                <p className="mt-1 font-medium text-slate-700">
-                  {profile ? `${profile.totalReviews} total reviews` : 'No profile yet'}
-                </p>
-              </div>
-              <div>
-                <p className="text-slate-400">Average rating</p>
-                <p className="mt-1 font-medium text-slate-700">
-                  {profile ? profile.avgRating.toFixed(1) : '0.0'}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
-            <h3 className="text-lg font-semibold text-slate-900">What to include</h3>
-            <ul className="mt-4 space-y-3 text-sm text-slate-600">
-              <li>Share your teaching style and the outcomes students can expect.</li>
-              <li>Choose the categories that best represent the subjects you teach.</li>
-              <li>Set a realistic hourly rate and total years of experience.</li>
-              <li>Add a clear location and optional profile photo URL.</li>
-            </ul>
-          </div>
-        </aside>
+      <div className={`inline-flex items-center gap-2 rounded-2xl border px-5 py-2.5 text-xs font-black uppercase tracking-widest shadow-lg backdrop-blur-sm ${profileStatus.tone}`}>
+        <div className="h-2 w-2 rounded-full bg-current animate-pulse" />
+        {profileStatus.label}
       </div>
     </div>
+  </section>
+
+  <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+    {/* ─── FORM SECTION ─── */}
+    <section className="rounded-[32px] border border-slate-100 bg-white p-8 shadow-sm">
+      <div className="mb-8">
+        <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+          {hasExistingProfile ? 'Update tutor information' : 'Create tutor information'}
+        </h2>
+        <div className="mt-2 h-1 w-12 rounded-full bg-sky-500" />
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        {/* Bio Section */}
+        <div className="space-y-3">
+          <Label htmlFor="bio" className="text-xs font-black uppercase tracking-widest text-slate-500">Professional bio</Label>
+          <Textarea
+            id="bio"
+            rows={6}
+            placeholder="Tell students about your teaching style, strengths, and subject expertise."
+            className="resize-none rounded-2xl border-slate-100 bg-slate-50/50 px-4 py-4 text-sm font-medium focus:bg-white focus:ring-4 focus:ring-sky-500/5 transition-all outline-none"
+            {...register('bio', {
+              required: 'Bio is required',
+              minLength: { value: 20, message: 'Bio should be at least 20 characters long' },
+            })}
+          />
+          {errors.bio && <p className="text-xs font-bold text-red-500 flex items-center gap-1"><AlertCircle size={14}/> {errors.bio.message}</p>}
+        </div>
+
+        {/* Categories Section */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <Label className="text-xs font-black uppercase tracking-widest text-slate-500">Tutor categories</Label>
+            <span className="rounded-lg bg-slate-100 px-2 py-1 text-[10px] font-black text-slate-500 uppercase">{selectedCategoryIds.length} selected</span>
+          </div>
+          <div className="flex flex-wrap gap-2.5">
+            {availableCategories.map((category) => {
+              const isSelected = selectedCategoryIds.includes(String(category.id));
+              return (
+                <button
+                  key={category.id}
+                  type="button"
+                  onClick={() => toggleCategory(category.id)}
+                  className={`group relative overflow-hidden flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-bold transition-all ${
+                    isSelected
+                      ? 'border-sky-500 bg-sky-500 text-white shadow-lg shadow-sky-100'
+                      : 'border-slate-100 bg-white text-slate-600 hover:border-sky-200 hover:text-sky-600'
+                  }`}
+                >
+                  {category.name}
+                  {isSelected ? <Check size={14} /> : <Layers3 size={14} className="opacity-40 group-hover:opacity-100" />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Info Grid */}
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="hourlyRate" className="text-xs font-black uppercase tracking-widest text-slate-500">Hourly rate ($)</Label>
+            <div className="group relative">
+              <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors" size={18} />
+              <Input
+                id="hourlyRate"
+                type="number"
+                placeholder="1500"
+                className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                {...register('hourlyRate', { required: 'Hourly rate is required' })}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="experience" className="text-xs font-black uppercase tracking-widest text-slate-500">Experience (Years)</Label>
+            <div className="group relative">
+              <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors" size={18} />
+              <Input
+                id="experience"
+                type="number"
+                placeholder="3"
+                className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                {...register('experience', { required: 'Experience is required' })}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Location & Image */}
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="location" className="text-xs font-black uppercase tracking-widest text-slate-500">Location</Label>
+            <div className="group relative">
+              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors" size={18} />
+              <Input
+                id="location"
+                placeholder="Dhaka, Bangladesh"
+                className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                {...register('location', { required: 'Location is required' })}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="imageUrl" className="text-xs font-black uppercase tracking-widest text-slate-500">Profile Image URL</Label>
+            <div className="group relative">
+              <ImageIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors" size={18} />
+              <Input
+                id="imageUrl"
+                placeholder="https://..."
+                className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                {...register('imageUrl')}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Action Footer */}
+        <div className="flex flex-col gap-4 border-t border-slate-50 pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs font-bold text-slate-400 italic">
+            {hasExistingProfile ? 'Updates will take effect immediately on your profile.' : 'Ready to start your journey as a tutor?'}
+          </p>
+
+          <Button
+            type="submit"
+            disabled={isSubmitting || (!isDirty && hasExistingProfile)}
+            className="h-14 min-w-[180px] rounded-2xl bg-sky-600 px-8 font-black text-white shadow-lg shadow-sky-100 hover:bg-sky-700 hover:-translate-y-1 transition-all active:scale-95"
+          >
+            {isSubmitting ? <LoaderCircle className="animate-spin" /> : <span className="flex items-center gap-2 uppercase tracking-widest text-xs"><Save size={18}/> {hasExistingProfile ? 'Update Profile' : 'Create Profile'}</span>}
+          </Button>
+        </div>
+      </form>
+    </section>
+
+    {/* ─── SIDEBAR ─── */}
+    <aside className="space-y-6">
+      <div className="overflow-hidden rounded-[32px] border border-slate-100 bg-white p-1 shadow-sm transition-all hover:shadow-xl hover:shadow-sky-500/5">
+        <div className="bg-slate-50/50 p-6 rounded-[28px]">
+          <h3 className="text-lg font-black text-slate-900 tracking-tight">Live Preview</h3>
+          <div className="mt-6 space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="h-16 w-16 overflow-hidden rounded-2xl border-2 border-white shadow-md bg-sky-100">
+                {profile?.imageUrl ? <img src={profile.imageUrl} className="h-full w-full object-cover" /> : <UserRound className="m-auto h-8 w-8 text-sky-600 mt-3" />}
+              </div>
+              <div>
+                <p className="text-xs font-black uppercase tracking-widest text-slate-400 leading-none">Tutor Name</p>
+                <p className="mt-1.5 font-black text-slate-800">{profile?.user?.name || user?.name || 'Your Name'}</p>
+              </div>
+            </div>
+
+            <div className="space-y-4 border-t border-slate-100 pt-6">
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Rating</span>
+                <div className="flex items-center gap-1 font-black text-slate-800">
+                  <Star size={14} className="fill-yellow-400 text-yellow-400" /> {profile ? profile.avgRating.toFixed(1) : '0.0'}
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Reviews</span>
+                <span className="font-black text-slate-800">{profile?.totalReviews || 0}</span>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {profile?.categories?.map(({ category }) => (
+                <span key={category.id} className="rounded-lg bg-sky-50 px-2 py-1 text-[10px] font-black text-sky-700 uppercase tracking-tighter border border-sky-100">
+                  {category.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-[32px] border border-slate-100 bg-slate-900 p-8 text-white">
+        <h3 className="text-lg font-black tracking-tight flex items-center gap-2">
+          <Sparkles size={20} className="text-yellow-400" /> Pro Tips
+        </h3>
+        <ul className="mt-6 space-y-4">
+          {[
+            'Highlight your unique teaching method.',
+            'Choose specialized categories.',
+            'Use a professional photo URL.',
+            'Be specific about your location.'
+          ].map((tip, i) => (
+            <li key={i} className="flex gap-3 text-sm font-medium text-slate-400">
+              <span className="text-sky-500 font-black">0{i+1}.</span> {tip}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </aside>
+  </div>
+</div>
   )
 }
 
