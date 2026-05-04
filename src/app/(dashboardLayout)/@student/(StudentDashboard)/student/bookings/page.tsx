@@ -222,7 +222,7 @@ const StudentBookingsPage = () => {
           {
             label: "Completed",
             key: "COMPLETED",
-            color: "bg-emerald-50 text-emerald-700",
+            color: "bg-emerald-50 text-emerald-600",
             border: "border-emerald-100",
           },
           {
