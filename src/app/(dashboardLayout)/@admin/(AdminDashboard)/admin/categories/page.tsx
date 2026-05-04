@@ -1,15 +1,12 @@
 "use client";
 
-
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { FolderOpen, LoaderCircle, Plus, Sparkles, Trash2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 
-
 type Category = { id: number; name: string; icon?: string | null; _count?: { tutors: number } };
-
 
 const AdminCategoriesPage = () => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
@@ -20,7 +17,6 @@ const AdminCategoriesPage = () => {
   const [newIcon, setNewIcon] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
-
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -40,7 +36,6 @@ const AdminCategoriesPage = () => {
     };
     fetchCategories();
   }, [baseUrl, token]);
-
 
   const handleCreate = async () => {
     if (!newName.trim()) return;
@@ -63,7 +58,6 @@ const AdminCategoriesPage = () => {
       setIsCreating(false);
     }
   };
-
 
   const handleDelete = async (id: number, name: string) => {
     const confirm = await Swal.fire({
@@ -91,7 +85,6 @@ const AdminCategoriesPage = () => {
     }
   };
 
-
   if (isLoading) return (
     <div className="flex min-h-[60vh] items-center justify-center">
       <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
@@ -100,7 +93,6 @@ const AdminCategoriesPage = () => {
       </div>
     </div>
   );
-
 
   return (
     <div className="space-y-6">
@@ -111,7 +103,6 @@ const AdminCategoriesPage = () => {
         <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
         <p className="mt-2 text-sm text-rose-50/90">Create and delete tutoring subject categories.</p>
       </section>
-
 
       {/* Create form */}
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -141,7 +132,6 @@ const AdminCategoriesPage = () => {
           </Button>
         </div>
       </div>
-
 
       {/* Categories grid */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -177,6 +167,5 @@ const AdminCategoriesPage = () => {
     </div>
   );
 };
-
 
 export default AdminCategoriesPage;

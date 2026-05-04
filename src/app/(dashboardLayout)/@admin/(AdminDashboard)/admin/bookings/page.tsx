@@ -1,11 +1,9 @@
 "use client";
 
-
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { CalendarDays, Clock3, LoaderCircle, Search, Sparkles, Wallet, BookOpen } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-
 
 type BookingStatus = "CONFIRMED" | "COMPLETED" | "CANCELLED";
 type AdminBooking = {
@@ -19,13 +17,11 @@ type AdminBooking = {
   tutorProfile: { id: number; user: { id: number; name: string; email: string } };
 };
 
-
 const statusTone: Record<BookingStatus, string> = {
   CONFIRMED: "border-sky-200 bg-sky-50 text-sky-700",
   COMPLETED: "border-emerald-200 bg-emerald-50 text-emerald-700",
   CANCELLED: "border-rose-200 bg-rose-50 text-rose-700",
 };
-
 
 const AdminBookingsPage = () => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
@@ -34,7 +30,6 @@ const AdminBookingsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<BookingStatus | "ALL">("ALL");
-
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -55,12 +50,10 @@ const AdminBookingsPage = () => {
     fetchBookings();
   }, [baseUrl, token]);
 
-
   const filtered = bookings.filter((b) => {
     const matchSearch = [b.student.name, b.tutorProfile.user.name].join(" ").toLowerCase().includes(search.toLowerCase());
     return matchSearch && (statusFilter === "ALL" || b.status === statusFilter);
   });
-
 
   if (isLoading) return (
     <div className="flex min-h-[60vh] items-center justify-center">
@@ -71,7 +64,6 @@ const AdminBookingsPage = () => {
     </div>
   );
 
-
   return (
     <div className="space-y-6">
       <section className="rounded-3xl bg-gradient-to-br from-rose-600 via-pink-600 to-orange-500 p-6 text-white shadow-lg">
@@ -81,7 +73,6 @@ const AdminBookingsPage = () => {
         <h1 className="text-3xl font-bold tracking-tight">All Bookings</h1>
         <p className="mt-2 text-sm text-rose-50/90">Monitor all platform session bookings.</p>
       </section>
-
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
@@ -99,7 +90,6 @@ const AdminBookingsPage = () => {
           ))}
         </div>
       </div>
-
 
       <div className="space-y-3">
         {filtered.length === 0 ? (
@@ -125,7 +115,4 @@ const AdminBookingsPage = () => {
   );
 };
 
-
 export default AdminBookingsPage;
-
-
