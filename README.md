@@ -7,10 +7,10 @@ SkillBridge is a premium 1-on-1 tutoring marketplace that connects passionate le
 ## 🔗 Quick Links
 
 
-- **Frontend GitHub:** []()
-- **Backend GitHub:** []()
-- **Live Site:** []() 
-- **Backend API:** [Render](https://skillbridge-server-ya87.onrender.com)
+- **Frontend GitHub:** [GitHub Client Repo](https://github.com/fakhrulsipon/skillBridge_client)
+- **Backend GitHub:** [GitHub Server Repo](https://github.com/fakhrulsipon/skillBridge_server)
+- **Live Site:** [SkillBridge Live](https://skill-bridge-client-lyart.vercel.app/)
+- **Backend API:** [SkillBridge API URL](https://skillbridge-server-ya87.onrender.com)
 
 
 
@@ -20,7 +20,7 @@ SkillBridge is a premium 1-on-1 tutoring marketplace that connects passionate le
 
 | Role | Email | Password |
 | :--- | :--- | :--- |
-| **Admin** | `admin@example.com` | `admin123` |
+| **Admin** | `sipon@gmail.com` | `sipon12345` |
 
 
 ## ✨ Key Features
