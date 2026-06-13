@@ -160,7 +160,7 @@ export default function TutorDetailsPage() {
 
     try {
       // ব্যাকএন্ড থেকে clientSecret নিয়ে আসা
-      const res = await fetch(`${baseUrl}/create-payment-intent`, {
+      const res = await fetch(`${baseUrl.replace('/api', '')}/api/create-payment-intent`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({
