@@ -160,18 +160,18 @@ export default function TutorDetailsPage() {
 
     try {
       // ব্যাকএন্ড থেকে clientSecret নিয়ে আসা
-      const res = await fetch(`${baseUrl.replace('/api', '')}/api/create-payment-intent`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({
-          amount: estimatedPrice,
-          email: user.email,
-          tutorProfileId: tutorId,
-          scheduledAt: bookingForm.scheduledAt,
-          duration: Number(bookingForm.duration),
-          note: bookingForm.note.trim(),
-        }),
-      });
+const res = await fetch("https://skillbridge-server-ya87.onrender.com/api/create-payment-intent", {
+  method: "POST",
+  headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+  body: JSON.stringify({
+    amount: estimatedPrice,
+    email: user.email,
+    tutorProfileId: tutorId,
+    scheduledAt: bookingForm.scheduledAt,
+    duration: Number(bookingForm.duration),
+    note: bookingForm.note.trim(),
+  }),
+});
 
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || "Failed to initiate payment");
