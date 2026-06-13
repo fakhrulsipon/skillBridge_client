@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {
   ArrowLeft,
   CalendarDays,
@@ -15,7 +17,6 @@ import {
   MessageSquareQuote,
   ShieldCheck,
   Star,
-  Wallet,
   BookOpen,
   Sparkles,
 } from "lucide-react";
@@ -33,7 +34,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 
-// Types
+// Stripe লোড করা (আপনার .env.local ফাইলে NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY থাকতে হবে)
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
 type Category = { id: number; name: string; icon?: string | null };
 
 type AvailabilitySlot = {
@@ -67,7 +70,6 @@ type TutorReview = {
 };
 
 const dayLabels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
 const durationOptions = [
   { label: "30 minutes", value: "30" },
   { label: "60 minutes", value: "60" },
@@ -106,7 +108,7 @@ const TutorAvatar = ({ tutor }: { tutor: TutorProfile }) => {
 export default function TutorDetailsPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+  const baseUrl = "https://skillbridge-server-ya87.onrender.com/api";
   const { user, token } = useAuth();
   const tutorId = Number(params.id);
 
@@ -115,6 +117,7 @@ export default function TutorDetailsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isBooking, setIsBooking] = useState(false);
   const [bookingForm, setBookingForm] = useState({ scheduledAt: "", duration: "60", note: "" });
+  const [clientSecret, setClientSecret] = useState<string>("");
 
   useEffect(() => {
     const loadData = async () => {
@@ -138,28 +141,42 @@ export default function TutorDetailsPage() {
     return tutor ? (tutor.hourlyRate / 60) * Number(bookingForm.duration) : 0;
   }, [bookingForm.duration, tutor]);
 
-  const handleBooking = async () => {
+  // পেমেন্ট গেটওয়ে ইনিশিয়েট করার ফাংশন
+  const handleInitiatePayment = async () => {
     if (!user || !token) {
-      router.push("/login"); return;
+      router.push("/login");
+      return;
     }
     if (user.role !== "STUDENT") {
-      await Swal.fire({ icon: "warning", title: "Student account required", confirmButtonColor: "#6366f1" }); return;
+      await Swal.fire({ icon: "warning", title: "Student account required", confirmButtonColor: "#6366f1" });
+      return;
     }
     if (!bookingForm.scheduledAt) {
-      await Swal.fire({ icon: "warning", title: "Select a time", confirmButtonColor: "#6366f1" }); return;
+      await Swal.fire({ icon: "warning", title: "Select a time", confirmButtonColor: "#6366f1" });
+      return;
     }
 
     setIsBooking(true);
+
     try {
-      const res = await fetch(`${baseUrl}/booking`, {
+      // ব্যাকএন্ড থেকে clientSecret নিয়ে আসা
+      const res = await fetch(`${baseUrl}/create-payment-intent`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ tutorProfileId: tutorId, scheduledAt: bookingForm.scheduledAt, duration: Number(bookingForm.duration), note: bookingForm.note.trim() }),
+        body: JSON.stringify({
+          amount: estimatedPrice,
+          email: user.email,
+          tutorProfileId: tutorId,
+          scheduledAt: bookingForm.scheduledAt,
+          duration: Number(bookingForm.duration),
+          note: bookingForm.note.trim(),
+        }),
       });
+
       const result = await res.json();
-      if (!res.ok) throw new Error(result.message || "Failed");
-      await Swal.fire({ icon: "success", title: "Booked!", text: result.message, confirmButtonColor: "#6366f1" });
-      setBookingForm({ scheduledAt: "", duration: "60", note: "" });
+      if (!res.ok) throw new Error(result.error || "Failed to initiate payment");
+      
+      setClientSecret(result.clientSecret);
     } catch (e: any) {
       await Swal.fire({ icon: "error", title: "Failed", text: e.message, confirmButtonColor: "#6366f1" });
     } finally {
@@ -297,16 +314,17 @@ export default function TutorDetailsPage() {
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Date & Time</Label>
                   <Input 
                     type="datetime-local" 
+                    disabled={!!clientSecret}
                     value={bookingForm.scheduledAt}
                     onChange={e => setBookingForm(f => ({ ...f, scheduledAt: e.target.value }))}
-                    className="h-12 rounded-2xl bg-slate-50 border-slate-200 focus:bg-white transition-all"
+                    className="h-12 rounded-2xl bg-slate-50 border-slate-200 focus:bg-white transition-all disabled:opacity-60"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Session Length</Label>
-                  <Select value={bookingForm.duration} onValueChange={v => setBookingForm(f => ({ ...f, duration: v }))}>
-                    <SelectTrigger className="h-12 rounded-2xl bg-slate-50 border-slate-200">
+                  <Select disabled={!!clientSecret} value={bookingForm.duration} onValueChange={v => setBookingForm(f => ({ ...f, duration: v }))}>
+                    <SelectTrigger className="h-12 rounded-2xl bg-slate-50 border-slate-200 disabled:opacity-60">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="rounded-2xl">
@@ -319,9 +337,10 @@ export default function TutorDetailsPage() {
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Notes (Optional)</Label>
                   <Textarea 
                     placeholder="Mention specific topics..."
+                    disabled={!!clientSecret}
                     value={bookingForm.note}
                     onChange={e => setBookingForm(f => ({ ...f, note: e.target.value }))}
-                    className="rounded-2xl bg-slate-50 border-slate-200 resize-none h-32"
+                    className="rounded-2xl bg-slate-50 border-slate-200 resize-none h-32 disabled:opacity-60"
                   />
                 </div>
 
@@ -330,13 +349,30 @@ export default function TutorDetailsPage() {
                     <div className="text-sm font-bold text-slate-500">Estimated Price</div>
                     <div className="text-2xl font-bold text-indigo-600">${estimatedPrice.toFixed(2)}</div>
                   </div>
-                  <Button 
-                    onClick={handleBooking}
-                    disabled={isBooking}
-                    className="w-full h-14 rounded-2xl bg-indigo-600 text-white font-bold text-lg hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-indigo-100"
-                  >
-                    {isBooking ? <LoaderCircle className="animate-spin" /> : "Confirm Booking"}
-                  </Button>
+
+                  {/* 🚨 Stripe Elements Wrapper & Conditional Form Layout */}
+                  {clientSecret ? (
+                    <Elements stripe={stripePromise} options={{ clientSecret }}>
+                      <StripeCheckoutSubForm 
+                        baseUrl={baseUrl}
+                        token={token!}
+                        tutorId={tutorId}
+                        bookingForm={bookingForm}
+                        clearForm={() => {
+                          setBookingForm({ scheduledAt: "", duration: "60", note: "" });
+                          setClientSecret("");
+                        }}
+                      />
+                    </Elements>
+                  ) : (
+                    <Button 
+                      onClick={handleInitiatePayment}
+                      disabled={isBooking}
+                      className="w-full h-14 rounded-2xl bg-indigo-600 text-white font-bold text-lg hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-indigo-100"
+                    >
+                      {isBooking ? <LoaderCircle className="animate-spin" /> : "Proceed to Payment"}
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
@@ -344,5 +380,83 @@ export default function TutorDetailsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// 🚨 কাস্টম সাব-কম্পোনেন্ট যা Stripe UI রেন্ডার করবে এবং পেমেন্ট সম্পাদন করবে
+function StripeCheckoutSubForm({ 
+  baseUrl, 
+  token, 
+  tutorId, 
+  bookingForm, 
+  clearForm 
+}: { 
+  baseUrl: string; 
+  token: string; 
+  tutorId: number; 
+  bookingForm: any; 
+  clearForm: () => void;
+}) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const router = useRouter();
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handlePayAndBook = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!stripe || !elements) return;
+
+    setIsProcessing(true);
+
+    try {
+      // ১. পেমেন্ট কনফার্মেশন সরাসরি স্ট্রাইপ এন্ডপয়েন্টে পাঠানো হচ্ছে
+      const { paymentIntent, error } = await stripe.confirmPayment({
+        elements,
+        redirect: "if_required", // ডিরেক্ট রিডাইরেক্ট অফ করে আমরা বুকিং এন্ডপয়েন্ট কল করব
+      });
+
+      if (error) {
+        throw new Error(error.message || "Payment verification failed");
+      }
+
+      if (paymentIntent && paymentIntent.status === "succeeded") {
+        // ২. পেমেন্ট সফল হওয়ার পরই কেবলমাত্র বুকিং এপিআই কল করা হচ্ছে
+        const bookingRes = await fetch(`${baseUrl}/booking`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          body: JSON.stringify({
+            tutorProfileId: tutorId,
+            scheduledAt: bookingForm.scheduledAt,
+            duration: Number(bookingForm.duration),
+            note: bookingForm.note.trim(),
+            stripePaymentId: paymentIntent.id // আপনার বুকিং টেবিলে রেফারেন্স রাখার জন্য
+          }),
+        });
+
+        const bookingResult = await bookingRes.json();
+        if (!bookingRes.ok) throw new Error(bookingResult.message || "Payment successful, but booking failed.");
+
+        await Swal.fire({ icon: "success", title: "Session Booked!", text: "Your payment was successful and session is reserved.", confirmButtonColor: "#6366f1" });
+        clearForm();
+        router.push("/dashboard"); // পেমেন্ট শেষে স্টুডেন্ট ড্যাশবোর্ডে নিয়ে যাবে
+      }
+    } catch (err: any) {
+      await Swal.fire({ icon: "error", title: "Booking Failed", text: err.message, confirmButtonColor: "#6366f1" });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handlePayAndBook} className="space-y-4 animate-fadeIn">
+      <PaymentElement className="mb-4" />
+      <Button 
+        type="submit"
+        disabled={isProcessing || !stripe || !elements}
+        className="w-full h-14 rounded-2xl bg-emerald-600 text-white font-bold text-lg hover:bg-emerald-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-emerald-100"
+      >
+        {isProcessing ? <LoaderCircle className="animate-spin" /> : "Pay & Confirm Booking"}
+      </Button>
+    </form>
   );
 }
