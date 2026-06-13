@@ -141,7 +141,6 @@ export default function TutorDetailsPage() {
     return tutor ? (tutor.hourlyRate / 60) * Number(bookingForm.duration) : 0;
   }, [bookingForm.duration, tutor]);
 
-  // পেমেন্ট গেটওয়ে ইনিশিয়েট করার ফাংশন
   const handleInitiatePayment = async () => {
     if (!user || !token) {
       router.push("/login");
@@ -438,7 +437,7 @@ function StripeCheckoutSubForm({
 
         await Swal.fire({ icon: "success", title: "Session Booked!", text: "Your payment was successful and session is reserved.", confirmButtonColor: "#6366f1" });
         clearForm();
-        router.push("/dashboard");
+        router.push("/student-dashboard");
       }
     } catch (err: any) {
       await Swal.fire({ icon: "error", title: "Booking Failed", text: err.message, confirmButtonColor: "#6366f1" });
