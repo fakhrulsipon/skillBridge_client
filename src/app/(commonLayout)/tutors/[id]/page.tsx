@@ -412,13 +412,12 @@ function StripeCheckoutSubForm({
       // অথবা আপনি যদি চান পেমেন্ট আগে হবে, তবে স্ট্রাইপকে অফিশিয়াল return_url দিন।
       
       const { error } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          // পেমেন্ট সফল হলে স্ট্রাইপ স্বয়ংক্রিয়ভাবে ব্রাউজারকে এই লিঙ্কে নিয়ে যাবে
-          return_url: "https://skill-bridge-client-lyart.vercel.app/student/dashboard",
-        },
-      });
-
+  elements,
+  confirmParams: {
+    // 🚨 আমরা ইউজারকে একটি ডেডিকেটেড সাকসেস পেজে পাঠাবো
+    return_url: "https://skill-bridge-client-lyart.vercel.app/payment-success",
+  },
+});
       // যদি কোনো কারণে সাথে সাথে এরর আসে (যেমন ব্যালেন্স কম)
       if (error) {
         throw new Error(error.message || "Payment verification failed");
