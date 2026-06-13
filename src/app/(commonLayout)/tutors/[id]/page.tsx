@@ -408,37 +408,22 @@ function StripeCheckoutSubForm({
     setIsProcessing(true);
 
     try {
-      // ১. পেমেন্ট কনফার্মেশন সরাসরি স্ট্রাইপ এন্ডপয়েন্টে পাঠানো হচ্ছে
-      const { paymentIntent, error } = await stripe.confirmPayment({
+      // ১. প্রথমে আপনার নিজের বুকিং ব্যাকএন্ড এপিআই কল করে ডেটা সেভ করে নিন (নিরাপদ উপায়)
+      // অথবা আপনি যদি চান পেমেন্ট আগে হবে, তবে স্ট্রাইপকে অফিশিয়াল return_url দিন।
+      
+      const { error } = await stripe.confirmPayment({
         elements,
-        redirect: "if_required", // ডিরেক্ট রিডাইরেক্ট অফ করে আমরা বুকিং এন্ডপয়েন্ট কল করব
+        confirmParams: {
+          // পেমেন্ট সফল হলে স্ট্রাইপ স্বয়ংক্রিয়ভাবে ব্রাউজারকে এই লিঙ্কে নিয়ে যাবে
+          return_url: "https://skill-bridge-client-lyart.vercel.app/student/dashboard",
+        },
       });
 
+      // যদি কোনো কারণে সাথে সাথে এরর আসে (যেমন ব্যালেন্স কম)
       if (error) {
         throw new Error(error.message || "Payment verification failed");
       }
 
-      if (paymentIntent && paymentIntent.status === "succeeded") {
-        // ২. পেমেন্ট সফল হওয়ার পরই কেবলমাত্র বুকিং এপিআই কল করা হচ্ছে
-        const bookingRes = await fetch(`${baseUrl}/booking`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-          body: JSON.stringify({
-            tutorProfileId: tutorId,
-            scheduledAt: bookingForm.scheduledAt,
-            duration: Number(bookingForm.duration),
-            note: bookingForm.note.trim(),
-            stripePaymentId: paymentIntent.id // আপনার বুকিং টেবিলে রেফারেন্স রাখার জন্য
-          }),
-        });
-
-        const bookingResult = await bookingRes.json();
-        if (!bookingRes.ok) throw new Error(bookingResult.message || "Payment successful, but booking failed.");
-
-        await Swal.fire({ icon: "success", title: "Session Booked!", text: "Your payment was successful and session is reserved.", confirmButtonColor: "#6366f1" });
-        clearForm();
-        router.push("/student/dashboard");
-      }
     } catch (err: any) {
       await Swal.fire({ icon: "error", title: "Booking Failed", text: err.message, confirmButtonColor: "#6366f1" });
     } finally {
