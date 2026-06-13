@@ -438,7 +438,7 @@ function StripeCheckoutSubForm({
 
         await Swal.fire({ icon: "success", title: "Session Booked!", text: "Your payment was successful and session is reserved.", confirmButtonColor: "#6366f1" });
         clearForm();
-        router.push("/dashboard"); // পেমেন্ট শেষে স্টুডেন্ট ড্যাশবোর্ডে নিয়ে যাবে
+        router.push("/dashboard");
       }
     } catch (err: any) {
       await Swal.fire({ icon: "error", title: "Booking Failed", text: err.message, confirmButtonColor: "#6366f1" });
