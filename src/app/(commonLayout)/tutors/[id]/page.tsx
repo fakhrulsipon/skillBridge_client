@@ -53,6 +53,9 @@ type TutorProfile = {
   experience: number;
   location: string;
   imageUrl: string | null;
+  imageUrls?: string[];
+  images?: string[];
+  galleryImages?: string[];
   isApproved: boolean;
   avgRating: number;
   totalReviews: number;
@@ -146,8 +149,16 @@ export default function TutorDetailsPage() {
   }, [bookingForm.duration, tutor]);
 
   const galleryImages = useMemo(() => {
-    if (!tutor?.imageUrl) return [];
-    return [tutor.imageUrl];
+    if (!tutor) return [];
+
+    return [
+      ...(tutor.galleryImages || []),
+      ...(tutor.imageUrls || []),
+      ...(tutor.images || []),
+      tutor.imageUrl,
+    ].filter((image, index, images): image is string =>
+      Boolean(image) && images.indexOf(image) === index,
+    );
   }, [tutor]);
 
   const handleInitiatePayment = async () => {
@@ -482,6 +493,10 @@ function StripeCheckoutSubForm({
   const elements = useElements();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
+  const returnUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/payment-success`
+      : "/payment-success";
 
   const handlePayAndBook = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -497,7 +512,7 @@ function StripeCheckoutSubForm({
   elements,
   confirmParams: {
     // 🚨 আমরা ইউজারকে একটি ডেডিকেটেড সাকসেস পেজে পাঠাবো
-    return_url: "https://skill-bridge-client-lyart.vercel.app/payment-success",
+    return_url: returnUrl,
   },
 });
       // যদি কোনো কারণে সাথে সাথে এরর আসে (যেমন ব্যালেন্স কম)

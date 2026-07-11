@@ -130,7 +130,8 @@ const AdminBookingsPage = () => {
   }, [bookings, search, statusFilter, sortKey, sortDirection]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+  const currentPage = Math.min(page, totalPages);
+  const paginated = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   if (isLoading) return (
     <div className="flex min-h-[60vh] items-center justify-center">
@@ -223,12 +224,12 @@ const AdminBookingsPage = () => {
         ))}
       </div>
       <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
-        <span>Page {page} of {totalPages}</span>
+        <span>Page {currentPage} of {totalPages}</span>
         <div className="flex gap-2">
-          <Button onClick={() => setPage((value) => Math.max(1, value - 1))} disabled={page === 1} className="h-8 rounded-xl bg-slate-100 px-3 text-xs font-semibold text-slate-700 hover:bg-slate-200">
+          <Button onClick={() => setPage((value) => Math.max(1, value - 1))} disabled={currentPage === 1} className="h-8 rounded-xl bg-slate-100 px-3 text-xs font-semibold text-slate-700 hover:bg-slate-200">
             Previous
           </Button>
-          <Button onClick={() => setPage((value) => Math.min(totalPages, value + 1))} disabled={page === totalPages} className="h-8 rounded-xl bg-rose-600 px-3 text-xs font-semibold text-white hover:bg-rose-700">
+          <Button onClick={() => setPage((value) => Math.min(totalPages, value + 1))} disabled={currentPage === totalPages} className="h-8 rounded-xl bg-rose-600 px-3 text-xs font-semibold text-white hover:bg-rose-700">
             Next
           </Button>
         </div>

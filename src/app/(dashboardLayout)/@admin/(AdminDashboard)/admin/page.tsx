@@ -40,7 +40,10 @@ type AdminStats = {
 
 type AdminUser = { role: string; createdAt?: string };
 type AdminBooking = { status?: string; totalPrice?: number; createdAt?: string; scheduledAt?: string };
-type AdminCategory = { name: string; _count?: { tutors?: number } };
+type AdminCategory = { id?: number; name: string; _count?: { tutors?: number } };
+type TutorForCategory = {
+  categories?: { categoryId: number; category: { id: number; name: string } }[];
+};
 
 const chartColors = ["#e11d48", "#4f46e5", "#10b981", "#f59e0b", "#0ea5e9"];
 
@@ -62,7 +65,7 @@ const AdminDashboardPage = () => {
       }
 
       try {
-        const [usersRes, bookingsRes, categoriesRes] = await Promise.all([
+        const [usersRes, bookingsRes, categoriesRes, tutorsRes] = await Promise.all([
           fetch(`${baseUrl}/admin/users`, {
             headers: { Authorization: `Bearer ${token}` },
             cache: "no-store",
@@ -75,15 +78,25 @@ const AdminDashboardPage = () => {
             headers: { Authorization: `Bearer ${token}` },
             cache: "no-store",
           }),
+          fetch("/api/tutors?limit=48", { cache: "no-store" }),
         ]);
 
         const usersData = await usersRes.json();
         const bookingsData = await bookingsRes.json();
         const categoriesData = await categoriesRes.json();
+        const tutorsData = await tutorsRes.json();
 
         const users: AdminUser[] = Array.isArray(usersData.data) ? usersData.data : [];
         const bookings: AdminBooking[] = Array.isArray(bookingsData.data) ? bookingsData.data : [];
         const categories: AdminCategory[] = Array.isArray(categoriesData.data) ? categoriesData.data : [];
+        const tutors: TutorForCategory[] = Array.isArray(tutorsData.data) ? tutorsData.data : [];
+        const tutorCountsByCategory = tutors.reduce<Record<string, number>>((acc, tutor) => {
+          tutor.categories?.forEach(({ categoryId, category }) => {
+            const key = String(categoryId || category.id || category.name);
+            acc[key] = (acc[key] || 0) + 1;
+          });
+          return acc;
+        }, {});
         const roleCounts = users.reduce<Record<string, number>>((acc, user) => {
           acc[user.role] = (acc[user.role] || 0) + 1;
           return acc;
@@ -120,7 +133,10 @@ const AdminDashboardPage = () => {
         setCategoryData(
           categories.slice(0, 8).map((category) => ({
             name: category.name,
-            tutors: category._count?.tutors || 0,
+            tutors:
+              category._count?.tutors ||
+              tutorCountsByCategory[String(category.id || category.name)] ||
+              0,
           })),
         );
       } catch (error) {
