@@ -108,27 +108,32 @@ const TutorAvatar = ({ tutor }: { tutor: TutorProfile }) => {
 export default function TutorDetailsPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  const baseUrl = "https://skillbridge-server-ya87.onrender.com/api";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    "https://skillbridge-server-ya87.onrender.com/api";
   const { user, token } = useAuth();
   const tutorId = Number(params.id);
 
   const [tutor, setTutor] = useState<TutorProfile | null>(null);
+  const [relatedTutors, setRelatedTutors] = useState<TutorProfile[]>([]);
   const [reviews, setReviews] = useState<TutorReview[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isBooking, setIsBooking] = useState(false);
   const [bookingForm, setBookingForm] = useState({ scheduledAt: "", duration: "60", note: "" });
   const [clientSecret, setClientSecret] = useState<string>("");
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const [tRes, rRes] = await Promise.all([
-          fetch(`${baseUrl}/tutors/${tutorId}`, { cache: "no-store" }),
+          fetch(`/api/tutors/${tutorId}`, { cache: "no-store" }),
           fetch(`${baseUrl}/review/tutor/${tutorId}`, { cache: "no-store" }),
         ]);
         const tResult = await tRes.json();
         const rResult = await rRes.json();
         if (tRes.ok) setTutor(tResult.data);
+        if (tRes.ok) setRelatedTutors(Array.isArray(tResult.related) ? tResult.related : []);
         if (rRes.ok) setReviews(Array.isArray(rResult.data) ? rResult.data : []);
       } finally {
         setIsLoading(false);
@@ -140,6 +145,11 @@ export default function TutorDetailsPage() {
   const estimatedPrice = useMemo(() => {
     return tutor ? (tutor.hourlyRate / 60) * Number(bookingForm.duration) : 0;
   }, [bookingForm.duration, tutor]);
+
+  const galleryImages = useMemo(() => {
+    if (!tutor?.imageUrl) return [];
+    return [tutor.imageUrl];
+  }, [tutor]);
 
   const handleInitiatePayment = async () => {
     if (!user || !token) {
@@ -243,6 +253,35 @@ const res = await fetch("https://skillbridge-server-ya87.onrender.com/api/create
               </div>
             </div>
           </div>
+
+          {galleryImages.length > 0 && (
+            <div className="mt-10 rounded-[32px] border border-slate-200 bg-slate-50 p-4">
+              <div className="relative overflow-hidden rounded-[24px] bg-white">
+                <img
+                  src={galleryImages[activeImageIndex]}
+                  alt={`${tutor.user.name} gallery image ${activeImageIndex + 1}`}
+                  className="h-72 w-full object-cover"
+                />
+                {galleryImages.length > 1 && (
+                  <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
+                    {galleryImages.map((image, index) => (
+                      <button
+                        key={image}
+                        type="button"
+                        onClick={() => setActiveImageIndex(index)}
+                        className={`h-2.5 rounded-full transition-all ${
+                          activeImageIndex === index
+                            ? "w-8 bg-white"
+                            : "w-2.5 bg-white/60"
+                        }`}
+                        aria-label={`Show gallery image ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -377,6 +416,50 @@ const res = await fetch("https://skillbridge-server-ya87.onrender.com/api/create
             </div>
           </aside>
         </div>
+
+        {relatedTutors.length > 0 && (
+          <section className="mt-14">
+            <div className="mb-8 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-slate-900">
+                Related Tutors
+              </h2>
+              <Link
+                href="/explore"
+                className="text-sm font-bold text-indigo-600 hover:text-indigo-700"
+              >
+                View all
+              </Link>
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {relatedTutors.slice(0, 4).map((relatedTutor) => (
+                <Link
+                  key={relatedTutor.id}
+                  href={`/explore/${relatedTutor.id}`}
+                  className="group rounded-[32px] border border-slate-200 bg-white p-5 transition-all hover:border-indigo-200 hover:shadow-2xl hover:shadow-indigo-100/50"
+                >
+                  <div className="mb-4 h-24 overflow-hidden rounded-2xl">
+                    <TutorAvatar tutor={relatedTutor} />
+                  </div>
+                  <h3 className="truncate text-lg font-bold text-slate-900 group-hover:text-indigo-600">
+                    {relatedTutor.user.name}
+                  </h3>
+                  <div className="mt-1 flex items-center gap-2">
+                    <Stars rating={relatedTutor.avgRating} size={12} />
+                    <span className="text-xs font-bold text-slate-400">
+                      {relatedTutor.avgRating.toFixed(1)}
+                    </span>
+                  </div>
+                  <p className="mt-3 line-clamp-2 text-sm text-slate-500">
+                    {relatedTutor.bio}
+                  </p>
+                  <div className="mt-4 text-xl font-bold text-indigo-600">
+                    ${relatedTutor.hourlyRate}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

@@ -180,7 +180,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${baseUrl}/tutors`, { cache: "no-store" })
+    fetch("/api/tutors?limit=8&sort=rating-desc", { cache: "no-store" })
       .then((r) => r.json())
       .then((result) => {
         if (result.data && Array.isArray(result.data)) {

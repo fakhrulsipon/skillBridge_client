@@ -127,7 +127,7 @@ export default function BrowseTutorPage() {
     const fetchData = async () => {
       try {
         const [tutorsRes, categoriesRes] = await Promise.all([
-          fetch(`${baseUrl}/tutors`, { cache: "no-store" }),
+          fetch("/api/tutors?limit=48&sort=rating-desc", { cache: "no-store" }),
           fetch(`${baseUrl}/tutors/categories`, { cache: "no-store" }),
         ]);
 

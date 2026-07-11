@@ -49,6 +49,10 @@ const SignUp = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [formMessage, setFormMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const {
     register,
@@ -63,6 +67,7 @@ const SignUp = () => {
   const selectedRole = watch("role");
 
   const onSubmit = async (data: SignUpFormData) => {
+    setFormMessage(null);
     setIsLoading(true);
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
 
@@ -70,12 +75,20 @@ const SignUp = () => {
       const response = await fetch(`${baseUrl}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          name: data.name.trim(),
+          email: data.email.trim().toLowerCase(),
+        }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
+        setFormMessage({
+          type: "success",
+          text: "Your account has been created successfully.",
+        });
         await Swal.fire({
           icon: "success",
           title: "Welcome Aboard! 🎉",
@@ -94,6 +107,12 @@ const SignUp = () => {
         });
         router.push("/login");
       } else {
+        setFormMessage({
+          type: "error",
+          text:
+            result.message ||
+            "Unable to create your account. Please try again.",
+        });
         await Swal.fire({
           icon: "error",
           title: "Registration Failed",
@@ -109,6 +128,10 @@ const SignUp = () => {
         });
       }
     } catch {
+      setFormMessage({
+        type: "error",
+        text: "Unable to reach the server. Please check your internet connection and try again.",
+      });
       await Swal.fire({
         icon: "error",
         title: "Connection Error",
@@ -204,6 +227,7 @@ const SignUp = () => {
                   key={role}
                   type="button"
                   onClick={() => setValue("role", role)}
+                  disabled={isLoading}
                   className={`relative flex flex-col items-center gap-2 rounded-xl border-2 py-3 transition-all duration-200 ${
                     selectedRole === role
                       ? "border-indigo-500 bg-indigo-50 text-indigo-600 shadow-md"
@@ -241,7 +265,16 @@ const SignUp = () => {
                     size={18}
                   />
                   <input
-                    {...register("name", { required: "Full name is required" })}
+                    {...register("name", {
+                      required: "Full name is required",
+                      validate: (value) => {
+                        const trimmed = value.trim();
+                        if (!trimmed) return "Full name is required";
+                        if (trimmed.length < 2)
+                          return "Full name must be at least 2 characters";
+                        return true;
+                      },
+                    })}
                     className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20"
                     placeholder="Enter your full name"
                   />
@@ -264,6 +297,9 @@ const SignUp = () => {
                   <input
                     {...register("email", {
                       required: "Email address is required",
+                      validate: (value) =>
+                        value.trim().length > 0 ||
+                        "Email address is required",
                       pattern: {
                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                         message: "Please enter a valid email address",
@@ -296,6 +332,11 @@ const SignUp = () => {
                         value: 8,
                         message: "Password must be at least 8 characters",
                       },
+                      pattern: {
+                        value: /^(?=.*[A-Za-z])(?=.*\d).+$/,
+                        message:
+                          "Password must include at least one letter and one number",
+                      },
                     })}
                     className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-10 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20"
                     placeholder="Create a strong password"
@@ -315,6 +356,18 @@ const SignUp = () => {
                 )}
               </div>
             </div>
+
+            {formMessage && (
+              <p
+                className={`text-xs ${
+                  formMessage.type === "success"
+                    ? "text-emerald-600"
+                    : "text-red-500"
+                }`}
+              >
+                {formMessage.text}
+              </p>
+            )}
 
             {/* Submit Button */}
             <button

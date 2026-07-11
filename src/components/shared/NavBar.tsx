@@ -65,6 +65,16 @@ const loggedInBaseLinks = [
   { label: "How it Works", href: "/#how-it-works" },
 ];
 
+const getRoleNavLink = (role?: string) => {
+  if (role === "TUTOR") {
+    return { label: "Sessions", href: "/tutor/sessions" };
+  }
+  if (role === "ADMIN") {
+    return { label: "Users", href: "/admin/users" };
+  }
+  return { label: "Bookings", href: "/student/bookings" };
+};
+
 const NavBar = () => {
   const pathname = usePathname();
   const router = useRouter();
@@ -90,14 +100,11 @@ const NavBar = () => {
 
   const userMenuItems = getUserMenuItems(user?.role);
   const dashboardHref = userMenuItems[0]?.href || "/student/dashboard";
-  const profileHref =
-    userMenuItems.find((item) => item.label === "Profile")?.href ||
-    dashboardHref;
   const navLinks = isAuthenticated
     ? [
         ...loggedInBaseLinks,
         { label: "Dashboard", href: dashboardHref },
-        { label: "Profile", href: profileHref },
+        getRoleNavLink(user?.role),
       ]
     : loggedOutLinks;
 
@@ -145,6 +152,7 @@ const NavBar = () => {
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  aria-label="Open profile menu"
                   className={cn(
                     "flex items-center gap-3 rounded-full pl-1.5 pr-4 py-1.5 transition-all",
                     isHome && !isScrolled
@@ -200,7 +208,7 @@ const NavBar = () => {
                         className="flex w-full items-center gap-3 rounded-2xl px-5 py-3 text-sm font-bold text-rose-500 hover:bg-rose-50 transition-all"
                       >
                         <LogOut size={18} />
-                        Sign Out
+                        Logout
                       </button>
                     </div>
                   </>
@@ -235,6 +243,7 @@ const NavBar = () => {
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle mobile menu"
               className={cn(
                 "rounded-full p-2 transition-colors lg:hidden",
                 isHome && !isScrolled
@@ -273,11 +282,32 @@ const NavBar = () => {
             )}
             {isAuthenticated && (
               <div className="space-y-3 pt-2">
+                <div className="rounded-3xl border border-indigo-50 bg-white p-3 shadow-sm">
+                  <div className="px-4 py-3 border-b border-indigo-50 mb-2">
+                    <p className="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400">
+                      Account
+                    </p>
+                    <p className="text-sm font-bold text-slate-900 truncate mt-1">
+                      {user?.email}
+                    </p>
+                  </div>
+                  {userMenuItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all"
+                    >
+                      <item.icon size={18} />
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
                 <button
                   onClick={handleLogout}
                   className="flex w-full items-center justify-center gap-2 rounded-2xl bg-rose-50 py-4 text-base font-bold text-rose-500"
                 >
-                  <LogOut size={18} /> Sign Out
+                  <LogOut size={18} /> Logout
                 </button>
               </div>
             )}

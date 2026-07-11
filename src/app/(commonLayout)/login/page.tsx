@@ -46,10 +46,16 @@ const Login = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [formMessage, setFormMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const {
     register,
     handleSubmit,
+    setValue,
+    clearErrors,
     formState: { errors },
   } = useForm<LoginFormData>({
     defaultValues: {
@@ -58,7 +64,23 @@ const Login = () => {
     },
   });
 
+  const fillDemoCredentials = (role: "USER" | "ADMIN") => {
+    const credentials =
+      role === "ADMIN"
+        ? { email: "admin@skillbridge.com", password: "admin123" }
+        : { email: "student@skillbridge.com", password: "student123" };
+
+    setValue("email", credentials.email, { shouldValidate: true });
+    setValue("password", credentials.password, { shouldValidate: true });
+    clearErrors();
+    setFormMessage({
+      type: "success",
+      text: `${role === "ADMIN" ? "Admin" : "User"} demo credentials filled.`,
+    });
+  };
+
   const onSubmit = async (data: LoginFormData) => {
+    setFormMessage(null);
     setIsLoading(true);
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
 
@@ -78,6 +100,11 @@ const Login = () => {
         if (result.data.user) {
           persistAuth(result.data.user, result.data.token);
         }
+
+        setFormMessage({
+          type: "success",
+          text: result.message || "Login successful. Redirecting...",
+        });
 
         await Swal.fire({
           icon: "success",
@@ -105,6 +132,11 @@ const Login = () => {
           router.push("/admin");
         }
       } else {
+        setFormMessage({
+          type: "error",
+          text:
+            result.message || "Invalid email or password. Please try again.",
+        });
         await Swal.fire({
           icon: "error",
           title: "Login Failed",
@@ -119,6 +151,10 @@ const Login = () => {
         });
       }
     } catch {
+      setFormMessage({
+        type: "error",
+        text: "Unable to connect to the server. Please check your internet connection.",
+      });
       await Swal.fire({
         icon: "error",
         title: "Connection Error",
@@ -250,10 +286,12 @@ const Login = () => {
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 transition-all group-focus-within:text-indigo-500"
                   size={18}
                 />
-                <input
+              <input
                   type="email"
                   {...register("email", {
                     required: "Email address is required",
+                    validate: (value) =>
+                      value.trim().length > 0 || "Email address is required",
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       message: "Please enter a valid email address",
@@ -290,6 +328,8 @@ const Login = () => {
                       value: 6,
                       message: "Password must be at least 6 characters",
                     },
+                    validate: (value) =>
+                      value.trim().length > 0 || "Password is required",
                   })}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-10 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20"
                   placeholder="Enter your password"
@@ -307,6 +347,37 @@ const Login = () => {
                   {errors.password.message}
                 </p>
               )}
+            </div>
+
+            {formMessage && (
+              <p
+                className={`text-xs ${
+                  formMessage.type === "success"
+                    ? "text-emerald-600"
+                    : "text-red-500"
+                }`}
+              >
+                {formMessage.text}
+              </p>
+            )}
+
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => fillDemoCredentials("USER")}
+                disabled={isLoading}
+                className="rounded-xl border border-slate-200 bg-slate-50/50 py-3 text-sm font-semibold text-slate-600 transition-all hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                Demo User
+              </button>
+              <button
+                type="button"
+                onClick={() => fillDemoCredentials("ADMIN")}
+                disabled={isLoading}
+                className="rounded-xl border border-slate-200 bg-slate-50/50 py-3 text-sm font-semibold text-slate-600 transition-all hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                Demo Admin
+              </button>
             </div>
 
             {/* Submit Button */}
