@@ -55,6 +55,7 @@ const loggedOutLinks = [
   { label: "Home", href: "/" },
   { label: "Explore", href: "/explore" },
   { label: "About", href: "/about" },
+  { label: "How it Works", href: "/how-it-works" },
   { label: "Login", href: "/login" },
 ];
 
@@ -62,7 +63,7 @@ const loggedInBaseLinks = [
   { label: "Home", href: "/" },
   { label: "Explore", href: "/explore" },
   { label: "About", href: "/about" },
-  { label: "How it Works", href: "/#how-it-works" },
+  { label: "How it Works", href: "/how-it-works" },
 ];
 
 const getRoleNavLink = (role?: string) => {

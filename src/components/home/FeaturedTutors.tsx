@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { motion, type Variants } from "framer-motion";
 import {
   BookOpen,
   CalendarDays,
@@ -10,6 +10,34 @@ import {
   ShieldCheck,
   Star,
 } from "lucide-react";
+
+const sectionVariants: Variants = {
+  hidden: { opacity: 0, y: 28 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.65, ease: "easeOut" },
+  },
+};
+
+const gridVariants: Variants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.06, delayChildren: 0.08 },
+  },
+};
+
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: "easeOut" },
+  },
+};
+
+const viewport = { once: true, amount: 0.14 };
 
 export type TutorProfile = {
   id: number;
@@ -32,7 +60,7 @@ export const StarRating = ({ rating }: { rating: number }) => (
         size={12}
         className={
           i <= Math.round(rating)
-            ? "fill-amber-400 text-amber-400"
+            ? "fill-secondary text-secondary"
             : "text-slate-200"
         }
       />
@@ -48,19 +76,17 @@ export const TutorAvatar = ({ tutor }: { tutor: TutorProfile }) => {
     .toUpperCase()
     .slice(0, 2);
   const gradients = [
-    "from-violet-400 to-fuchsia-500",
-    "from-cyan-400 to-blue-500",
-    "from-emerald-400 to-teal-500",
-    "from-orange-400 to-rose-500",
-    "from-indigo-400 to-purple-500",
+    "from-primary to-secondary",
+    "from-primary to-primary",
+    "from-secondary to-primary",
+    "from-primary to-secondary",
+    "from-secondary to-secondary",
   ];
   const gradient = gradients[tutor.id % gradients.length];
   return tutor.imageUrl ? (
-    <Image
+    <img
       src={tutor.imageUrl}
       alt={tutor.user.name}
-      width={150}
-      height={150}
       className="h-full w-full object-cover"
     />
   ) : (
@@ -78,7 +104,7 @@ interface FeaturedTutorsProps {
 }
 
 const TutorCardSkeleton = () => (
-  <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
+  <div className="rounded-3xl border border-primary/10 bg-card p-5 shadow-sm shadow-primary/5">
     <div className="flex gap-4">
       <div className="h-16 w-16 flex-shrink-0 animate-pulse rounded-2xl bg-slate-100" />
       <div className="flex-1 space-y-3">
@@ -88,8 +114,8 @@ const TutorCardSkeleton = () => (
       </div>
     </div>
     <div className="mt-4 flex gap-2">
-      <div className="h-5 w-16 animate-pulse rounded-full bg-indigo-50" />
-      <div className="h-5 w-20 animate-pulse rounded-full bg-indigo-50" />
+      <div className="h-5 w-16 animate-pulse rounded-full bg-primary/10" />
+      <div className="h-5 w-20 animate-pulse rounded-full bg-primary/10" />
     </div>
     <div className="mt-4 space-y-2">
       <div className="h-3 w-full animate-pulse rounded-full bg-slate-100" />
@@ -97,18 +123,26 @@ const TutorCardSkeleton = () => (
     </div>
     <div className="mt-4 grid grid-cols-2 gap-2">
       <div className="h-10 animate-pulse rounded-2xl bg-slate-100" />
-      <div className="h-10 animate-pulse rounded-2xl bg-indigo-100" />
+      <div className="h-10 animate-pulse rounded-2xl bg-primary/10" />
     </div>
   </div>
 );
 
 const FeaturedTutors = ({ tutors, isLoading }: FeaturedTutorsProps) => {
   return (
-    <section className="bg-gradient-to-br from-slate-50 to-indigo-50/30 py-20">
-      <div className="mx-auto max-w-7xl px-6">
+    <motion.section
+      variants={sectionVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewport}
+      className="relative overflow-x-hidden bg-canvas py-20"
+    >
+      <div className="absolute -left-24 top-12 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+      <div className="absolute -right-28 bottom-10 h-80 w-80 rounded-full bg-secondary/10 blur-3xl" />
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-indigo-100 px-4 py-1.5 text-xs font-semibold text-indigo-700">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-secondary/10 px-4 py-1.5 text-xs font-semibold text-secondary">
               <ShieldCheck size={12} /> Verified Experts
             </div>
             <h2 className="text-3xl font-bold text-slate-900 md:text-4xl">
@@ -120,20 +154,20 @@ const FeaturedTutors = ({ tutors, isLoading }: FeaturedTutorsProps) => {
           </div>
           <Link
             href="/tutors"
-            className="inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-white px-5 py-2.5 text-sm font-semibold text-indigo-700 hover:bg-indigo-50 transition"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-card px-5 py-2.5 text-sm font-semibold text-primary shadow-sm shadow-primary/5 transition-all duration-300 hover:scale-[1.02] hover:border-secondary/40 hover:bg-primary/5 hover:shadow-xl hover:shadow-primary/10"
           >
             View all tutors <ChevronRight size={16} />
           </Link>
         </div>
 
         {isLoading ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 8 }).map((_, index) => (
               <TutorCardSkeleton key={index} />
             ))}
           </div>
         ) : tutors.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-indigo-200 bg-white p-16 text-center">
+          <div className="rounded-3xl border border-dashed border-secondary/40 bg-card p-8 text-center shadow-xl shadow-primary/10 sm:p-16">
             <div className="text-5xl mb-4">📚</div>
             <h3 className="text-lg font-semibold text-slate-700">
               No tutors yet
@@ -143,14 +177,18 @@ const FeaturedTutors = ({ tutors, isLoading }: FeaturedTutorsProps) => {
             </p>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <motion.div
+            variants={gridVariants}
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          >
             {tutors.map((tutor) => (
-              <div
+              <motion.div
+                variants={cardVariants}
                 key={tutor.id}
-                className="group rounded-3xl border border-slate-100 bg-white p-5 shadow-sm transition-all hover:border-indigo-300 hover:shadow-xl"
+                className="group rounded-3xl border border-primary/10 bg-card p-5 shadow-sm shadow-primary/0 transition-all duration-300 hover:scale-[1.02] hover:border-secondary/40 hover:shadow-xl hover:shadow-primary/10"
               >
                 <div className="flex gap-4">
-                  <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-2xl shadow-sm">
+                  <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-2xl shadow-sm transition-transform duration-300 group-hover:scale-105">
                     <TutorAvatar tutor={tutor} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -169,7 +207,7 @@ const FeaturedTutors = ({ tutors, isLoading }: FeaturedTutorsProps) => {
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <div className="text-xl font-bold text-indigo-600">
+                    <div className="text-xl font-bold text-primary">
                       ${tutor.hourlyRate}
                     </div>
                     <div className="text-xs text-slate-400">/hour</div>
@@ -181,7 +219,7 @@ const FeaturedTutors = ({ tutors, isLoading }: FeaturedTutorsProps) => {
                     {tutor.categories.slice(0, 3).map(({ category }) => (
                       <span
                         key={category.id}
-                        className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-600"
+                        className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
                       >
                         {category.name}
                       </span>
@@ -196,23 +234,23 @@ const FeaturedTutors = ({ tutors, isLoading }: FeaturedTutorsProps) => {
                 <div className="mt-4 grid grid-cols-2 gap-2">
                   <Link
                     href={`/tutors/${tutor.id}`}
-                    className="flex items-center justify-center gap-1.5 rounded-2xl border border-indigo-200 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-50 transition"
+                    className="flex min-w-0 items-center justify-center gap-1.5 rounded-2xl border border-primary/20 px-2 py-2 text-sm font-semibold text-primary transition-all duration-300 hover:border-secondary/40 hover:bg-primary/5"
                   >
                     <BookOpen size={14} /> Profile
                   </Link>
                   <Link
                     href={`/tutors/${tutor.id}`}
-                    className="flex items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 py-2 text-sm font-semibold text-white hover:shadow-md hover:shadow-indigo-200 transition"
+                    className="flex min-w-0 items-center justify-center gap-1.5 rounded-2xl bg-primary px-2 py-2 text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.02] hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20"
                   >
                     <CalendarDays size={14} /> Book
                   </Link>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
-    </section>
+    </motion.section>
   );
 };
 

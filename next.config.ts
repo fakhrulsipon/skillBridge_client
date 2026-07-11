@@ -2,15 +2,15 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  images:{
-    remotePatterns:[
+  images: {
+    remotePatterns: [
       {
         protocol: "https",
-        hostname:"lh3.googleusercontent.com"
+        hostname: "lh3.googleusercontent.com",
       },
       {
         protocol: "https",
-        hostname:"encrypted-tbn0.gstatic.com"
+        hostname: "encrypted-tbn0.gstatic.com",
       },
       {
         protocol: "https",
@@ -20,8 +20,8 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "i.ibb.co",
       },
-    ]
-  }
+    ],
+  },
 };
 
 export default nextConfig;

@@ -23,7 +23,7 @@ const Footer = () => {
 
   const quickLinks = [
     { name: "Find a Tutor", href: "/tutors" },
-    { name: "How it Works", href: "/#how-it-works" },
+    { name: "How it Works", href: "/how-it-works" },
     { name: "Become a Tutor", href: "/register" },
     { name: "Student Dashboard", href: "/student/dashboard" },
     { name: "Help Center", href: "/help" },

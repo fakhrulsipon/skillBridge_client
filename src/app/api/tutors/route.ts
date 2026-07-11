@@ -16,6 +16,28 @@ type TutorProfile = {
 
 const getBaseUrl = () => process.env.NEXT_PUBLIC_API_URL || "";
 
+const extractTutorArray = (payload: unknown): TutorProfile[] => {
+  if (!payload || typeof payload !== "object") return [];
+
+  const record = payload as {
+    data?: unknown;
+    tutors?: unknown;
+    items?: unknown;
+    results?: unknown;
+  };
+
+  if (Array.isArray(record.data)) return record.data as TutorProfile[];
+  if (Array.isArray(record.tutors)) return record.tutors as TutorProfile[];
+  if (Array.isArray(record.items)) return record.items as TutorProfile[];
+  if (Array.isArray(record.results)) return record.results as TutorProfile[];
+
+  if (record.data && typeof record.data === "object") {
+    return extractTutorArray(record.data);
+  }
+
+  return [];
+};
+
 const toNumber = (value: string | null, fallback: number) => {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
@@ -46,7 +68,7 @@ export async function GET(request: NextRequest) {
   try {
     const response = await fetch(`${baseUrl}/tutors`, { cache: "no-store" });
     const result = await response.json();
-    const tutors: TutorProfile[] = Array.isArray(result.data) ? result.data : [];
+    const tutors = extractTutorArray(result);
 
     const filtered = tutors
       .filter((tutor) => {
