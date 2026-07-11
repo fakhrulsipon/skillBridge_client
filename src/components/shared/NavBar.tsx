@@ -5,9 +5,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   ChevronDown,
+  CalendarDays,
   LayoutDashboard,
   LogOut,
   Menu,
+  Settings,
+  UserRound,
   X,
   Sparkles,
 } from "lucide-react";
@@ -24,10 +27,18 @@ const getUserMenuItems = (role?: string) => {
         href: "/tutor/dashboard",
         icon: LayoutDashboard,
       },
+      { label: "Profile", href: "/tutor/profile", icon: UserRound },
+      { label: "Sessions", href: "/tutor/sessions", icon: CalendarDays },
+      { label: "Availability", href: "/tutor/availability", icon: Settings },
     ];
   }
   if (role === "ADMIN") {
-    return [{ label: "Admin Panel", href: "/admin", icon: LayoutDashboard }];
+    return [
+      { label: "Admin Panel", href: "/admin", icon: LayoutDashboard },
+      { label: "Users", href: "/admin/users", icon: UserRound },
+      { label: "Bookings", href: "/admin/bookings", icon: CalendarDays },
+      { label: "Categories", href: "/admin/categories", icon: Settings },
+    ];
   }
   return [
     {
@@ -35,11 +46,22 @@ const getUserMenuItems = (role?: string) => {
       href: "/student/dashboard",
       icon: LayoutDashboard,
     },
+    { label: "Profile", href: "/student/profile", icon: UserRound },
+    { label: "Bookings", href: "/student/bookings", icon: CalendarDays },
   ];
 };
 
-const navLinks = [
-  { label: "Find Tutors", href: "/tutors" },
+const loggedOutLinks = [
+  { label: "Home", href: "/" },
+  { label: "Explore", href: "/explore" },
+  { label: "About", href: "/about" },
+  { label: "Login", href: "/login" },
+];
+
+const loggedInBaseLinks = [
+  { label: "Home", href: "/" },
+  { label: "Explore", href: "/explore" },
+  { label: "About", href: "/about" },
   { label: "How it Works", href: "/#how-it-works" },
 ];
 
@@ -63,9 +85,21 @@ const NavBar = () => {
     logout();
     router.push("/");
     setIsUserMenuOpen(false);
+    setIsMobileMenuOpen(false);
   };
 
   const userMenuItems = getUserMenuItems(user?.role);
+  const dashboardHref = userMenuItems[0]?.href || "/student/dashboard";
+  const profileHref =
+    userMenuItems.find((item) => item.label === "Profile")?.href ||
+    dashboardHref;
+  const navLinks = isAuthenticated
+    ? [
+        ...loggedInBaseLinks,
+        { label: "Dashboard", href: dashboardHref },
+        { label: "Profile", href: profileHref },
+      ]
+    : loggedOutLinks;
 
   return (
     <header
@@ -92,6 +126,7 @@ const NavBar = () => {
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
                     "text-sm font-bold transition-all hover:text-indigo-600 tracking-tight",
                     isHome && !isScrolled
@@ -234,6 +269,16 @@ const NavBar = () => {
                 >
                   Join SkillBridge
                 </Link>
+              </div>
+            )}
+            {isAuthenticated && (
+              <div className="space-y-3 pt-2">
+                <button
+                  onClick={handleLogout}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-rose-50 py-4 text-base font-bold text-rose-500"
+                >
+                  <LogOut size={18} /> Sign Out
+                </button>
               </div>
             )}
           </div>

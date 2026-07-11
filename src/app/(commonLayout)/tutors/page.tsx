@@ -1,24 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
 import {
-  CalendarDays,
-  Clock3,
-  LoaderCircle,
   MapPin,
   Search,
   ShieldCheck,
   Star,
   Wallet,
-  X,
   ChevronRight,
-  Filter,
-  BookOpen,
   LayoutGrid,
 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 
 // Types
@@ -87,10 +78,38 @@ const TutorAvatar = ({ tutor }: { tutor: TutorProfile }) => {
   );
 };
 
+const TutorCardSkeleton = () => (
+  <div className="rounded-[32px] border border-slate-200 bg-white p-5">
+    <div className="mb-4 flex gap-4">
+      <div className="h-16 w-16 flex-shrink-0 animate-pulse rounded-2xl bg-slate-100" />
+      <div className="flex-1 space-y-3">
+        <div className="h-5 w-2/3 animate-pulse rounded-full bg-slate-100" />
+        <div className="h-3 w-1/2 animate-pulse rounded-full bg-slate-100" />
+        <div className="h-3 w-3/4 animate-pulse rounded-full bg-slate-100" />
+      </div>
+    </div>
+    <div className="mb-4 flex h-12 flex-wrap gap-1.5 overflow-hidden">
+      <div className="h-5 w-16 animate-pulse rounded-full bg-slate-100" />
+      <div className="h-5 w-20 animate-pulse rounded-full bg-slate-100" />
+      <div className="h-5 w-14 animate-pulse rounded-full bg-slate-100" />
+    </div>
+    <div className="mb-6 space-y-2">
+      <div className="h-3 w-full animate-pulse rounded-full bg-slate-100" />
+      <div className="h-3 w-5/6 animate-pulse rounded-full bg-slate-100" />
+      <div className="h-3 w-2/3 animate-pulse rounded-full bg-slate-100" />
+    </div>
+    <div className="flex items-center justify-between border-t border-slate-50 pt-4">
+      <div className="space-y-2">
+        <div className="h-5 w-16 animate-pulse rounded-full bg-slate-100" />
+        <div className="h-3 w-12 animate-pulse rounded-full bg-slate-100" />
+      </div>
+      <div className="h-10 w-24 animate-pulse rounded-2xl bg-indigo-100" />
+    </div>
+  </div>
+);
+
 export default function BrowseTutorPage() {
-  const router = useRouter();
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-  const { user, token } = useAuth();
 
   const [tutors, setTutors] = useState<TutorProfile[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -295,9 +314,10 @@ export default function BrowseTutorPage() {
             </div>
 
             {isLoading ? (
-              <div className="flex flex-col items-center justify-center py-20">
-                <LoaderCircle className="animate-spin h-12 w-12 text-indigo-600" />
-                <p className="mt-4 text-lg text-slate-500">Loading tutors...</p>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {Array.from({ length: 8 }).map((_, index) => (
+                  <TutorCardSkeleton key={index} />
+                ))}
               </div>
             ) : filteredTutors.length === 0 ? (
               <div className="bg-white border border-slate-200 rounded-[32px] p-20 text-center">
@@ -310,7 +330,7 @@ export default function BrowseTutorPage() {
                 </p>
               </div>
             ) : (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {filteredTutors.map((tutor) => (
                   <div
                     key={tutor.id}

@@ -6,7 +6,6 @@ import {
   BookOpen,
   CalendarDays,
   ChevronRight,
-  Loader,
   MapPin,
   ShieldCheck,
   Star,
@@ -78,6 +77,31 @@ interface FeaturedTutorsProps {
   isLoading: boolean;
 }
 
+const TutorCardSkeleton = () => (
+  <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
+    <div className="flex gap-4">
+      <div className="h-16 w-16 flex-shrink-0 animate-pulse rounded-2xl bg-slate-100" />
+      <div className="flex-1 space-y-3">
+        <div className="h-5 w-2/3 animate-pulse rounded-full bg-slate-100" />
+        <div className="h-3 w-1/2 animate-pulse rounded-full bg-slate-100" />
+        <div className="h-3 w-3/4 animate-pulse rounded-full bg-slate-100" />
+      </div>
+    </div>
+    <div className="mt-4 flex gap-2">
+      <div className="h-5 w-16 animate-pulse rounded-full bg-indigo-50" />
+      <div className="h-5 w-20 animate-pulse rounded-full bg-indigo-50" />
+    </div>
+    <div className="mt-4 space-y-2">
+      <div className="h-3 w-full animate-pulse rounded-full bg-slate-100" />
+      <div className="h-3 w-5/6 animate-pulse rounded-full bg-slate-100" />
+    </div>
+    <div className="mt-4 grid grid-cols-2 gap-2">
+      <div className="h-10 animate-pulse rounded-2xl bg-slate-100" />
+      <div className="h-10 animate-pulse rounded-2xl bg-indigo-100" />
+    </div>
+  </div>
+);
+
 const FeaturedTutors = ({ tutors, isLoading }: FeaturedTutorsProps) => {
   return (
     <section className="bg-gradient-to-br from-slate-50 to-indigo-50/30 py-20">
@@ -103,11 +127,10 @@ const FeaturedTutors = ({ tutors, isLoading }: FeaturedTutorsProps) => {
         </div>
 
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <Loader className="animate-spin h-12 w-12 text-indigo-600" />
-            <p className="mt-4 text-lg text-slate-500">
-              Loading featured tutors...
-            </p>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <TutorCardSkeleton key={index} />
+            ))}
           </div>
         ) : tutors.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-indigo-200 bg-white p-16 text-center">
@@ -120,7 +143,7 @@ const FeaturedTutors = ({ tutors, isLoading }: FeaturedTutorsProps) => {
             </p>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {tutors.map((tutor) => (
               <div
                 key={tutor.id}

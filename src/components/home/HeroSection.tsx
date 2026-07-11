@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 const stats = [
@@ -12,19 +13,27 @@ const stats = [
 
 const HeroSection = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-700 to-pink-600 text-white">
+    <section className="relative flex h-[68vh] min-h-[60vh] max-h-[70vh] items-center overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-700 to-pink-600 text-white">
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-20 left-10 h-72 w-72 rounded-full bg-white blur-3xl animate-pulse" />
         <div className="absolute bottom-20 right-10 h-96 w-96 rounded-full bg-yellow-300 blur-3xl animate-pulse delay-1000" />
       </div>
-      <div className="relative mx-auto max-w-7xl px-6 py-24 md:py-32">
-        <div className="mx-auto max-w-4xl text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 backdrop-blur-sm">
+      <div className="relative mx-auto w-full max-w-7xl px-6 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="mx-auto max-w-4xl text-center"
+        >
+          <motion.div
+            whileHover={{ scale: 1.04 }}
+            className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 backdrop-blur-sm"
+          >
             <Sparkles size={14} />
             <span className="text-sm font-semibold">
               SkillBridge — Learn from Experts
             </span>
-          </div>
+          </motion.div>
           <h1 className="mb-6 bg-gradient-to-r from-white via-indigo-100 to-pink-100 bg-clip-text text-5xl font-bold text-transparent md:text-7xl">
             Connect. Learn.
             <br className="hidden md:block" />
@@ -50,13 +59,17 @@ const HeroSection = () => {
           </div>
           <div className="mt-14 flex flex-wrap justify-center gap-8 text-sm text-indigo-200">
             {stats.map((s) => (
-              <div key={s.label} className="text-center">
+              <motion.div
+                key={s.label}
+                whileHover={{ y: -4 }}
+                className="text-center"
+              >
                 <div className="text-2xl font-bold text-white">{s.value}</div>
                 <div>{s.label}</div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
