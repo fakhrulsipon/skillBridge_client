@@ -46,7 +46,7 @@ type TutorProfileSummary = {
 };
 
 const TutorDashboard = () => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
   const { user, token, isLoading, isAuthenticated } = useAuth();
   const [bookings, setBookings] = useState<TutorBooking[]>([]);
   const [profile, setProfile] = useState<TutorProfileSummary | null>(null);

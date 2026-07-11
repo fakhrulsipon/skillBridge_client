@@ -46,7 +46,7 @@ const statusTone: Record<BookingStatus, string> = {
 };
 
 const TutorSessionsPage = () => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
   const { token, user, isLoading: isAuthLoading } = useAuth();
 
   const [bookings, setBookings] = useState<TutorBooking[]>([]);

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 type Category = { id: number; name: string; icon?: string | null; _count?: { tutors: number } };
 
 const AdminCategoriesPage = () => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
   const { token } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);

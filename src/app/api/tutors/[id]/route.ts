@@ -6,7 +6,7 @@ type TutorProfile = {
   categories?: { categoryId: number }[];
 };
 
-const getBaseUrl = () => process.env.NEXT_PUBLIC_BASE_URL || "";
+const getBaseUrl = () => process.env.NEXT_PUBLIC_API_URL || "";
 
 export async function GET(_request: NextRequest, context: RouteContext) {
   const { id } = await context.params;
@@ -14,7 +14,7 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 
   if (!baseUrl) {
     return NextResponse.json(
-      { success: false, message: "NEXT_PUBLIC_BASE_URL is not configured" },
+      { success: false, message: "NEXT_PUBLIC_API_URL is not configured" },
       { status: 500 },
     );
   }

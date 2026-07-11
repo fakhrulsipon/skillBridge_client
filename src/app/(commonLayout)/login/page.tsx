@@ -82,7 +82,7 @@ const Login = () => {
   const onSubmit = async (data: LoginFormData) => {
     setFormMessage(null);
     setIsLoading(true);
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
 
     try {
       const response = await fetch(`${baseUrl}/auth/login`, {

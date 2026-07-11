@@ -51,7 +51,7 @@ const emptySlot = (): AvailabilitySlot => ({
 })
 
 const AvailabilityPage = () => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || ''
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || ''
   const { token, user, isLoading: isAuthLoading } = useAuth()
 
   const [slots, setSlots] = useState<AvailabilitySlot[]>([emptySlot()])

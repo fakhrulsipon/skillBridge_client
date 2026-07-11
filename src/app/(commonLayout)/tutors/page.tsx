@@ -109,7 +109,7 @@ const TutorCardSkeleton = () => (
 );
 
 export default function BrowseTutorPage() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
 
   const [tutors, setTutors] = useState<TutorProfile[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -138,8 +138,7 @@ export default function BrowseTutorPage() {
         setCategories(
           Array.isArray(categoriesResult.data) ? categoriesResult.data : [],
         );
-      } catch (error) {
-        console.error("Failed to fetch data", error);
+      } catch {
       } finally {
         setIsLoading(false);
       }

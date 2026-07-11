@@ -40,7 +40,7 @@ const statusTone: Record<BookingStatus, string> = {
 };
 
 const StudentBookingsPage = () => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
   const { token, isLoading: isAuthLoading } = useAuth();
   const [bookings, setBookings] = useState<StudentBooking[]>([]);
   const [isLoadingBookings, setIsLoadingBookings] = useState(true);

@@ -3,13 +3,31 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import {
+  BarChart,
   BookOpen,
   FolderOpen,
+  LineChart,
   LoaderCircle,
+  PieChart,
   Sparkles,
   TrendingUp,
   Users,
 } from "lucide-react";
+import {
+  Bar,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  Pie,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  PieChart as RechartsPieChart,
+  BarChart as RechartsBarChart,
+  LineChart as RechartsLineChart,
+} from "recharts";
 import { useAuth } from "@/hooks/useAuth";
 
 type AdminStats = {
@@ -20,11 +38,20 @@ type AdminStats = {
   totalCategories: number;
 };
 
+type AdminUser = { role: string; createdAt?: string };
+type AdminBooking = { status?: string; totalPrice?: number; createdAt?: string; scheduledAt?: string };
+type AdminCategory = { name: string; _count?: { tutors?: number } };
+
+const chartColors = ["#e11d48", "#4f46e5", "#10b981", "#f59e0b", "#0ea5e9"];
+
 const AdminDashboardPage = () => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
   const { token } = useAuth();
 
   const [stats, setStats] = useState<AdminStats | null>(null);
+  const [roleData, setRoleData] = useState<{ name: string; value: number }[]>([]);
+  const [bookingTrendData, setBookingTrendData] = useState<{ name: string; bookings: number; revenue: number }[]>([]);
+  const [categoryData, setCategoryData] = useState<{ name: string; tutors: number }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -54,17 +81,48 @@ const AdminDashboardPage = () => {
         const bookingsData = await bookingsRes.json();
         const categoriesData = await categoriesRes.json();
 
-        const users = Array.isArray(usersData.data) ? usersData.data : [];
-        const bookings = Array.isArray(bookingsData.data) ? bookingsData.data : [];
-        const categories = Array.isArray(categoriesData.data) ? categoriesData.data : [];
+        const users: AdminUser[] = Array.isArray(usersData.data) ? usersData.data : [];
+        const bookings: AdminBooking[] = Array.isArray(bookingsData.data) ? bookingsData.data : [];
+        const categories: AdminCategory[] = Array.isArray(categoriesData.data) ? categoriesData.data : [];
+        const roleCounts = users.reduce<Record<string, number>>((acc, user) => {
+          acc[user.role] = (acc[user.role] || 0) + 1;
+          return acc;
+        }, {});
+        const monthlyBookings = bookings.reduce<Record<string, { bookings: number; revenue: number }>>((acc, booking) => {
+          const dateValue = booking.scheduledAt || booking.createdAt;
+          const date = dateValue ? new Date(dateValue) : new Date();
+          const key = date.toLocaleDateString(undefined, { month: "short" });
+          acc[key] = acc[key] || { bookings: 0, revenue: 0 };
+          acc[key].bookings += 1;
+          acc[key].revenue += booking.totalPrice || 0;
+          return acc;
+        }, {});
 
         setStats({
           totalUsers: users.length,
-          totalStudents: users.filter((u: any) => u.role === "STUDENT").length,
-          totalTutors: users.filter((u: any) => u.role === "TUTOR").length,
+          totalStudents: users.filter((u) => u.role === "STUDENT").length,
+          totalTutors: users.filter((u) => u.role === "TUTOR").length,
           totalBookings: bookings.length,
           totalCategories: categories.length,
         });
+        setRoleData(
+          ["STUDENT", "TUTOR", "ADMIN"].map((role) => ({
+            name: role,
+            value: roleCounts[role] || 0,
+          })),
+        );
+        setBookingTrendData(
+          Object.entries(monthlyBookings).map(([name, value]) => ({
+            name,
+            ...value,
+          })),
+        );
+        setCategoryData(
+          categories.slice(0, 8).map((category) => ({
+            name: category.name,
+            tutors: category._count?.tutors || 0,
+          })),
+        );
       } catch (error) {
         await Swal.fire({
           icon: "error",
@@ -127,6 +185,66 @@ const AdminDashboardPage = () => {
             <p className="text-sm text-slate-500">{card.label}</p>
           </div>
         ))}
+      </div>
+
+      {/* Charts */}
+      <div className="grid gap-4 xl:grid-cols-3">
+        <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="mb-4 flex items-center gap-2">
+            <BarChart className="h-5 w-5 text-rose-600" />
+            <h2 className="text-sm font-semibold text-slate-900">Category Tutors</h2>
+          </div>
+          <div className="h-72">
+            <ResponsiveContainer width="100%" height="100%">
+              <RechartsBarChart data={categoryData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
+                <Tooltip />
+                <Bar dataKey="tutors" fill="#e11d48" radius={[8, 8, 0, 0]} />
+              </RechartsBarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="mb-4 flex items-center gap-2">
+            <LineChart className="h-5 w-5 text-indigo-600" />
+            <h2 className="text-sm font-semibold text-slate-900">Booking Trend</h2>
+          </div>
+          <div className="h-72">
+            <ResponsiveContainer width="100%" height="100%">
+              <RechartsLineChart data={bookingTrendData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="bookings" stroke="#4f46e5" strokeWidth={3} dot={{ r: 4 }} />
+              </RechartsLineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="mb-4 flex items-center gap-2">
+            <PieChart className="h-5 w-5 text-emerald-600" />
+            <h2 className="text-sm font-semibold text-slate-900">User Roles</h2>
+          </div>
+          <div className="h-72">
+            <ResponsiveContainer width="100%" height="100%">
+              <RechartsPieChart>
+                <Pie data={roleData} dataKey="value" nameKey="name" outerRadius={88} label>
+                  {roleData.map((entry, index) => (
+                    <Cell key={entry.name} fill={chartColors[index % chartColors.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </RechartsPieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
 
       {/* Quick Links */}

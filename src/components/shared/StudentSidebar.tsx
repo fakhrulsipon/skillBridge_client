@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { BookOpen, LayoutDashboard, LogOut, UserCircle } from "lucide-react";
+import { BookOpen, LayoutDashboard, LogOut, Settings, UserCircle } from "lucide-react";
 
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
@@ -10,12 +10,12 @@ import Logo from "./Logo";
 
 const studentNavItems = [
   {
-    title: "Dashboard",
+    title: "Overview",
     href: "/student/dashboard",
     icon: LayoutDashboard,
   },
   {
-    title: "Bookings",
+    title: "My Items",
     href: "/student/bookings",
     icon: BookOpen,
   },
@@ -23,6 +23,11 @@ const studentNavItems = [
     title: "Profile",
     href: "/student/profile",
     icon: UserCircle,
+  },
+  {
+    title: "Settings",
+    href: "/student/profile#settings",
+    icon: Settings,
   },
 ];
 

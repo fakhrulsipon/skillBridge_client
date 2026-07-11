@@ -23,8 +23,7 @@ export const getStoredUser = (): AuthUser | null => {
 
   try {
     return JSON.parse(storedUser) as AuthUser
-  } catch (error) {
-    console.error('Failed to parse stored user:', error)
+  } catch {
     localStorage.removeItem(USER_STORAGE_KEY)
     return null
   }

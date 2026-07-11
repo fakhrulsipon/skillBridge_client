@@ -8,6 +8,7 @@ import {
   FolderOpen,
   LayoutDashboard,
   LogOut,
+  Settings,
   Users,
 } from "lucide-react";
 
@@ -17,24 +18,34 @@ import Logo from "./Logo";
 
 const adminNavItems = [
   {
-    title: "Dashboard",
+    title: "Overview",
     href: "/admin",
     icon: LayoutDashboard,
   },
   {
-    title: "Users",
+    title: "Manage Users",
     href: "/admin/users",
     icon: Users,
   },
   {
-    title: "Bookings",
+    title: "Manage Items",
     href: "/admin/bookings",
     icon: BookOpen,
+  },
+  {
+    title: "Reports",
+    href: "/admin/reports",
+    icon: BarChart3,
   },
   {
     title: "Categories",
     href: "/admin/categories",
     icon: FolderOpen,
+  },
+  {
+    title: "Settings",
+    href: "/admin/settings",
+    icon: Settings,
   },
 ];
 

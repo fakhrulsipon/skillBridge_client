@@ -1,10 +1,70 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
+import Swal from "sweetalert2";
 import { ChevronRight, GraduationCap, HelpCircle, Link, LoaderCircle, Mail, ShieldCheck, Sparkles, UserCircle } from "lucide-react";
 
 const StudentProfilePage = () => {
-  const { user, isLoading } = useAuth();
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
+  const { user, token, isLoading, setAuth } = useAuth();
+  const [name, setName] = useState(user?.name || "");
+  const [email, setEmail] = useState(user?.email || "");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+
+  const handleProfileUpdate = async () => {
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim().toLowerCase();
+    if (trimmedName.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      await Swal.fire({ icon: "error", title: "Check your profile details", confirmButtonColor: "#4f46e5" });
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const response = await fetch(`${baseUrl}/users/me`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ name: trimmedName, email: trimmedEmail }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "Failed to update profile");
+      setAuth({ ...(user || { role: "STUDENT" }), name: trimmedName, email: trimmedEmail }, token);
+      await Swal.fire({ icon: "success", title: "Profile updated", timer: 1500, showConfirmButton: false });
+    } catch (error: any) {
+      await Swal.fire({ icon: "error", title: "Update failed", text: error.message, confirmButtonColor: "#4f46e5" });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handlePasswordUpdate = async () => {
+    if (currentPassword.length < 6 || newPassword.length < 8 || !/^(?=.*[A-Za-z])(?=.*\d).+$/.test(newPassword)) {
+      await Swal.fire({ icon: "error", title: "Use a stronger password", text: "New password needs 8 characters with letters and numbers.", confirmButtonColor: "#4f46e5" });
+      return;
+    }
+
+    setIsUpdatingPassword(true);
+    try {
+      const response = await fetch(`${baseUrl}/auth/password`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "Failed to update password");
+      setCurrentPassword("");
+      setNewPassword("");
+      await Swal.fire({ icon: "success", title: "Password updated", timer: 1500, showConfirmButton: false });
+    } catch (error: any) {
+      await Swal.fire({ icon: "error", title: "Password update failed", text: error.message, confirmButtonColor: "#4f46e5" });
+    } finally {
+      setIsUpdatingPassword(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -74,6 +134,64 @@ const StudentProfilePage = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      <div id="settings" className="mt-10 grid gap-5">
+        <div className="rounded-3xl border border-transparent bg-slate-50/50 p-6">
+          <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400">
+            Basic Info
+          </p>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <input
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              placeholder="Full name"
+            />
+            <input
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              placeholder="Email address"
+            />
+          </div>
+          <button
+            onClick={handleProfileUpdate}
+            disabled={isSaving}
+            className="mt-4 rounded-2xl bg-indigo-600 px-6 py-3 text-sm font-black text-white transition-all hover:bg-indigo-700 disabled:opacity-60"
+          >
+            {isSaving ? "Saving..." : "Update Profile"}
+          </button>
+        </div>
+
+        <div className="rounded-3xl border border-transparent bg-slate-50/50 p-6">
+          <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400">
+            Security
+          </p>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <input
+              type="password"
+              value={currentPassword}
+              onChange={(event) => setCurrentPassword(event.target.value)}
+              className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              placeholder="Current password"
+            />
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(event) => setNewPassword(event.target.value)}
+              className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              placeholder="New password"
+            />
+          </div>
+          <button
+            onClick={handlePasswordUpdate}
+            disabled={isUpdatingPassword}
+            className="mt-4 rounded-2xl bg-slate-900 px-6 py-3 text-sm font-black text-white transition-all hover:bg-indigo-700 disabled:opacity-60"
+          >
+            {isUpdatingPassword ? "Updating..." : "Update Password"}
+          </button>
+        </div>
       </div>
     </div>
 

@@ -62,7 +62,7 @@ type TutorProfileResponse = {
 }
 
 const ProfilePage = () => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || ''
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || ''
   const { token, user, isLoading: isAuthLoading } = useAuth()
   const [isLoadingProfile, setIsLoadingProfile] = useState(true)
   const [isLoadingCategories, setIsLoadingCategories] = useState(true)

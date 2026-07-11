@@ -109,8 +109,7 @@ export default function TutorDetailsPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL ||
-    "https://skillbridge-server-ya87.onrender.com/api";
+    process.env.NEXT_PUBLIC_API_URL || "";
   const { user, token } = useAuth();
   const tutorId = Number(params.id);
 
@@ -169,7 +168,7 @@ export default function TutorDetailsPage() {
 
     try {
       // ব্যাকএন্ড থেকে clientSecret নিয়ে আসা
-const res = await fetch("https://skillbridge-server-ya87.onrender.com/api/create-payment-intent", {
+const res = await fetch(`${baseUrl}/create-payment-intent`, {
   method: "POST",
   headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
   body: JSON.stringify({

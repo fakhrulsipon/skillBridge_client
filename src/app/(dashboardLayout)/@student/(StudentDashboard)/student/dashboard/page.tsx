@@ -39,7 +39,7 @@ type StudentBooking = {
 };
 
 const StudentDashboardPage = () => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
   const { token, user, isLoading: isAuthLoading } = useAuth();
   const [bookings, setBookings] = useState<StudentBooking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -53,8 +53,7 @@ const StudentDashboardPage = () => {
         });
         const result = await response.json();
         if (response.ok) setBookings(Array.isArray(result.data) ? result.data : []);
-      } catch (error) {
-        console.error("Dashboard data fetch failed", error);
+      } catch {
       } finally {
         setIsLoading(false);
       }
