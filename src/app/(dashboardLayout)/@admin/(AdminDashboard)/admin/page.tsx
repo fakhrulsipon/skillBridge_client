@@ -45,7 +45,7 @@ type TutorForCategory = {
   categories?: { categoryId: number; category: { id: number; name: string } }[];
 };
 
-const chartColors = ["#e11d48", "#4f46e5", "#10b981", "#f59e0b", "#0ea5e9"];
+const chartColors = ["#B45309", "#047857", "#047857", "#B45309", "#047857"];
 
 const AdminDashboardPage = () => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
@@ -143,7 +143,7 @@ const AdminDashboardPage = () => {
         await Swal.fire({
           icon: "error",
           title: "Failed to load dashboard",
-          confirmButtonColor: "#e11d48",
+          confirmButtonColor: "#B45309",
         });
       } finally {
         setIsLoading(false);
@@ -156,8 +156,8 @@ const AdminDashboardPage = () => {
   if (isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
-          <LoaderCircle className="h-5 w-5 animate-spin text-rose-600" />
+        <div className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-card px-5 py-4 shadow-sm">
+          <LoaderCircle className="h-5 w-5 animate-spin text-secondary" />
           <span className="text-sm font-medium text-slate-600">Loading admin dashboard...</span>
         </div>
       </div>
@@ -165,17 +165,17 @@ const AdminDashboardPage = () => {
   }
 
   const cards = [
-    { label: "Total Users", value: stats?.totalUsers ?? 0, icon: Users, color: "text-indigo-600", bg: "bg-indigo-50" },
-    { label: "Students", value: stats?.totalStudents ?? 0, icon: Users, color: "text-emerald-600", bg: "bg-emerald-50" },
-    { label: "Tutors", value: stats?.totalTutors ?? 0, icon: TrendingUp, color: "text-sky-600", bg: "bg-sky-50" },
-    { label: "Bookings", value: stats?.totalBookings ?? 0, icon: BookOpen, color: "text-amber-600", bg: "bg-amber-50" },
-    { label: "Categories", value: stats?.totalCategories ?? 0, icon: FolderOpen, color: "text-rose-600", bg: "bg-rose-50" },
+    { label: "Total Users", value: stats?.totalUsers ?? 0, icon: Users, color: "text-primary", bg: "bg-primary" },
+    { label: "Students", value: stats?.totalStudents ?? 0, icon: Users, color: "text-primary", bg: "bg-primary" },
+    { label: "Tutors", value: stats?.totalTutors ?? 0, icon: TrendingUp, color: "text-primary", bg: "bg-primary" },
+    { label: "Bookings", value: stats?.totalBookings ?? 0, icon: BookOpen, color: "text-secondary", bg: "bg-secondary" },
+    { label: "Categories", value: stats?.totalCategories ?? 0, icon: FolderOpen, color: "text-secondary", bg: "bg-secondary/10" },
   ];
 
   return (
     <div className="space-y-6">
       {/* Hero */}
-      <section className="rounded-3xl bg-gradient-to-br from-rose-600 via-pink-600 to-orange-500 p-6 text-white shadow-lg">
+      <section className="rounded-3xl bg-gradient-to-br from-primary via-primary to-secondary p-6 text-white shadow-lg">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em]">
@@ -183,7 +183,7 @@ const AdminDashboardPage = () => {
               Admin Control Panel
             </div>
             <h1 className="text-3xl font-bold tracking-tight">Platform Overview</h1>
-            <p className="text-sm text-rose-50/90 max-w-2xl">
+            <p className="text-sm text-white/90 max-w-2xl">
               Monitor platform-wide statistics, manage users, review bookings, and organize categories.
             </p>
           </div>
@@ -193,7 +193,7 @@ const AdminDashboardPage = () => {
       {/* Stats Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {cards.map((card) => (
-          <div key={card.label} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div key={card.label} className="rounded-3xl border border-primary/15 bg-card p-5 shadow-sm">
             <div className={`inline-flex rounded-2xl p-2 ${card.bg}`}>
               <card.icon className={`h-5 w-5 ${card.color}`} />
             </div>
@@ -205,9 +205,9 @@ const AdminDashboardPage = () => {
 
       {/* Charts */}
       <div className="grid gap-4 xl:grid-cols-3">
-        <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-3xl border border-primary/15 bg-card p-5 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <BarChart className="h-5 w-5 text-rose-600" />
+            <BarChart className="h-5 w-5 text-secondary" />
             <h2 className="text-sm font-semibold text-slate-900">Category Tutors</h2>
           </div>
           <div className="h-72">
@@ -217,15 +217,15 @@ const AdminDashboardPage = () => {
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                 <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
                 <Tooltip />
-                <Bar dataKey="tutors" fill="#e11d48" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="tutors" fill="#B45309" radius={[8, 8, 0, 0]} />
               </RechartsBarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-3xl border border-primary/15 bg-card p-5 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <LineChart className="h-5 w-5 text-indigo-600" />
+            <LineChart className="h-5 w-5 text-primary" />
             <h2 className="text-sm font-semibold text-slate-900">Booking Trend</h2>
           </div>
           <div className="h-72">
@@ -236,15 +236,15 @@ const AdminDashboardPage = () => {
                 <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="bookings" stroke="#4f46e5" strokeWidth={3} dot={{ r: 4 }} />
+                <Line type="monotone" dataKey="bookings" stroke="#047857" strokeWidth={3} dot={{ r: 4 }} />
               </RechartsLineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-3xl border border-primary/15 bg-card p-5 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <PieChart className="h-5 w-5 text-emerald-600" />
+            <PieChart className="h-5 w-5 text-primary" />
             <h2 className="text-sm font-semibold text-slate-900">User Roles</h2>
           </div>
           <div className="h-72">
@@ -266,14 +266,14 @@ const AdminDashboardPage = () => {
       {/* Quick Links */}
       <div className="grid gap-4 md:grid-cols-3">
         {[
-          { title: "Manage Users", desc: "View all users, ban or unban accounts.", href: "/admin/users", color: "bg-indigo-600" },
-          { title: "View Bookings", desc: "See all session bookings across the platform.", href: "/admin/bookings", color: "bg-emerald-600" },
-          { title: "Manage Categories", desc: "Create or delete tutoring subject categories.", href: "/admin/categories", color: "bg-rose-600" },
+          { title: "Manage Users", desc: "View all users, ban or unban accounts.", href: "/admin/users", color: "bg-primary" },
+          { title: "View Bookings", desc: "See all session bookings across the platform.", href: "/admin/bookings", color: "bg-primary" },
+          { title: "Manage Categories", desc: "Create or delete tutoring subject categories.", href: "/admin/categories", color: "bg-secondary" },
         ].map((item) => (
           <a
             key={item.href}
             href={item.href}
-            className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+            className="rounded-3xl border border-primary/15 bg-card p-6 shadow-sm hover:shadow-md transition-shadow"
           >
             <div className={`inline-block h-2 w-8 rounded-full ${item.color} mb-4`} />
             <h2 className="text-lg font-semibold text-slate-900">{item.title}</h2>

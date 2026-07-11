@@ -48,7 +48,7 @@ const TutorSidebar = () => {
   };
 
   return (
-    <aside className="w-full border-b border-slate-200 bg-white lg:min-h-screen lg:w-72 lg:border-b-0 lg:border-r">
+    <aside className="w-full border-b border-primary/15 bg-card lg:min-h-screen lg:w-72 lg:border-b-0 lg:border-r">
       <div className="sticky top-0 flex flex-col gap-6 px-4 py-6 lg:min-h-screen lg:px-6">
         <div className="space-y-2">
           <Logo />
@@ -65,8 +65,8 @@ const TutorSidebar = () => {
                 className={cn(
                   "flex min-w-fit items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition-colors",
                   isActive
-                    ? "border-sky-200 bg-sky-50 text-sky-700"
-                    : "border-slate-200 text-slate-600 hover:border-sky-100 hover:bg-slate-50 hover:text-slate-900",
+                    ? "border-primary bg-primary text-primary"
+                    : "border-primary/15 text-slate-600 hover:border-primary hover:bg-canvas hover:text-slate-900",
                 )}
               >
                 <Icon className="h-4 w-4" />

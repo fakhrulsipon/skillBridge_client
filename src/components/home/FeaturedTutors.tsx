@@ -114,8 +114,8 @@ const TutorCardSkeleton = () => (
       </div>
     </div>
     <div className="mt-4 flex gap-2">
-      <div className="h-5 w-16 animate-pulse rounded-full bg-primary/10" />
-      <div className="h-5 w-20 animate-pulse rounded-full bg-primary/10" />
+      <div className="h-5 w-16 animate-pulse rounded-full bg-slate-100" />
+      <div className="h-5 w-20 animate-pulse rounded-full bg-slate-100" />
     </div>
     <div className="mt-4 space-y-2">
       <div className="h-3 w-full animate-pulse rounded-full bg-slate-100" />
@@ -123,7 +123,7 @@ const TutorCardSkeleton = () => (
     </div>
     <div className="mt-4 grid grid-cols-2 gap-2">
       <div className="h-10 animate-pulse rounded-2xl bg-slate-100" />
-      <div className="h-10 animate-pulse rounded-2xl bg-primary/10" />
+      <div className="h-10 animate-pulse rounded-2xl bg-slate-100" />
     </div>
   </div>
 );

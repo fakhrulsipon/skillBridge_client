@@ -33,9 +33,9 @@ type AdminUser = {
 };
 
 const roleBadge: Record<string, string> = {
-  STUDENT: "bg-indigo-50 text-indigo-700 border-indigo-200",
-  TUTOR: "bg-sky-50 text-sky-700 border-sky-200",
-  ADMIN: "bg-rose-50 text-rose-700 border-rose-200",
+  STUDENT: "bg-primary text-primary border-primary",
+  TUTOR: "bg-primary text-primary border-primary",
+  ADMIN: "bg-secondary/10 text-secondary border-secondary/30",
 };
 
 const AdminUsersPage = () => {
@@ -65,7 +65,7 @@ const AdminUsersPage = () => {
         if (!res.ok) throw new Error(result.message || "Failed to load users");
         setUsers(Array.isArray(result.data) ? result.data : []);
       } catch (error) {
-        await Swal.fire({ icon: "error", title: "Failed to load users", confirmButtonColor: "#e11d48" });
+        await Swal.fire({ icon: "error", title: "Failed to load users", confirmButtonColor: "#B45309" });
       } finally {
         setIsLoading(false);
       }
@@ -96,7 +96,7 @@ const AdminUsersPage = () => {
         showConfirmButton: false,
       });
     } catch (error: any) {
-      await Swal.fire({ icon: "error", title: "Update failed", text: error.message, confirmButtonColor: "#e11d48" });
+      await Swal.fire({ icon: "error", title: "Update failed", text: error.message, confirmButtonColor: "#B45309" });
     } finally {
       setUpdatingId(null);
     }
@@ -114,7 +114,7 @@ const AdminUsersPage = () => {
       icon: "info",
       title: user.name,
       html: `<div style="text-align:left"><p><b>Email:</b> ${user.email}</p><p><b>Role:</b> ${user.role}</p><p><b>Status:</b> ${user.isBanned ? "Banned" : "Active"}</p></div>`,
-      confirmButtonColor: "#e11d48",
+      confirmButtonColor: "#B45309",
     });
   };
 
@@ -138,7 +138,7 @@ const AdminUsersPage = () => {
         return { name, role };
       },
       showCancelButton: true,
-      confirmButtonColor: "#e11d48",
+      confirmButtonColor: "#B45309",
       confirmButtonText: "Save",
     });
 
@@ -159,7 +159,7 @@ const AdminUsersPage = () => {
         prev.map((u) => (u.id === user.id ? { ...u, ...result.value } : u)),
       );
     } catch (error: any) {
-      await Swal.fire({ icon: "error", title: "Update failed", text: error.message, confirmButtonColor: "#e11d48" });
+      await Swal.fire({ icon: "error", title: "Update failed", text: error.message, confirmButtonColor: "#B45309" });
     } finally {
       setUpdatingId(null);
     }
@@ -171,7 +171,7 @@ const AdminUsersPage = () => {
       title: `Delete ${user.name}?`,
       text: "This action is permanent.",
       showCancelButton: true,
-      confirmButtonColor: "#e11d48",
+      confirmButtonColor: "#B45309",
       confirmButtonText: "Delete",
     });
     if (!confirm.isConfirmed) return;
@@ -187,7 +187,7 @@ const AdminUsersPage = () => {
       }
       setUsers((prev) => prev.filter((u) => u.id !== user.id));
     } catch (error: any) {
-      await Swal.fire({ icon: "error", title: "Delete failed", text: error.message, confirmButtonColor: "#e11d48" });
+      await Swal.fire({ icon: "error", title: "Delete failed", text: error.message, confirmButtonColor: "#B45309" });
     } finally {
       setUpdatingId(null);
     }
@@ -218,8 +218,8 @@ const AdminUsersPage = () => {
   if (isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
-          <LoaderCircle className="h-5 w-5 animate-spin text-rose-600" />
+        <div className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-card px-5 py-4 shadow-sm">
+          <LoaderCircle className="h-5 w-5 animate-spin text-secondary" />
           <span className="text-sm font-medium text-slate-600">Loading users...</span>
         </div>
       </div>
@@ -229,7 +229,7 @@ const AdminUsersPage = () => {
   return (
     <div className="space-y-6">
       {/* Hero */}
-      <section className="rounded-3xl bg-gradient-to-br from-rose-600 via-pink-600 to-orange-500 p-6 text-white shadow-lg">
+      <section className="rounded-3xl bg-gradient-to-br from-primary via-primary to-secondary p-6 text-white shadow-lg">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em]">
@@ -237,7 +237,7 @@ const AdminUsersPage = () => {
               User Management
             </div>
             <h1 className="text-3xl font-bold tracking-tight">All Users</h1>
-            <p className="text-sm text-rose-50/90">View, search, and manage all registered users. Ban or unban accounts.</p>
+            <p className="text-sm text-white/90">View, search, and manage all registered users. Ban or unban accounts.</p>
           </div>
           <div className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold">
             {filtered.length} of {users.length} users
@@ -253,14 +253,14 @@ const AdminUsersPage = () => {
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           placeholder="Search by name, email, or role..."
-          className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-700 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100"
+          className="w-full rounded-2xl border border-primary/15 bg-card py-3 pl-11 pr-4 text-sm text-slate-700 outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
         />
       </div>
       <div className="grid gap-3 sm:grid-cols-3">
         <select
           value={roleFilter}
           onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}
-          className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100"
+          className="rounded-2xl border border-primary/15 bg-card px-4 py-3 text-sm text-slate-700 outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
         >
           <option value="ALL">All roles</option>
           <option value="STUDENT">Students</option>
@@ -270,7 +270,7 @@ const AdminUsersPage = () => {
         <select
           value={statusFilter}
           onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-          className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100"
+          className="rounded-2xl border border-primary/15 bg-card px-4 py-3 text-sm text-slate-700 outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
         >
           <option value="ALL">All statuses</option>
           <option value="ACTIVE">Active</option>
@@ -279,11 +279,11 @@ const AdminUsersPage = () => {
       </div>
 
       {/* Table */}
-      <div className="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+      <div className="rounded-3xl border border-primary/15 bg-card shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50">
+              <tr className="border-b border-primary/10 bg-canvas">
                 <th className="px-5 py-3 text-left font-semibold text-slate-600">
                   <button onClick={() => handleSort("name")} className="inline-flex items-center gap-1">User <ChevronsUpDown className="h-3 w-3" /></button>
                 </th>
@@ -306,13 +306,13 @@ const AdminUsersPage = () => {
                 </tr>
               ) : (
                 paginated.map((user) => (
-                  <tr key={user.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+                  <tr key={user.id} className="border-b border-slate-50 hover:bg-canvas/50 transition-colors">
                     <td className="px-5 py-4">
                       <p className="font-medium text-slate-900">{user.name}</p>
                       <p className="text-xs text-slate-400">{user.email}</p>
                     </td>
                     <td className="px-5 py-4">
-                      <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${roleBadge[user.role] ?? "bg-slate-50 text-slate-600 border-slate-200"}`}>
+                      <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${roleBadge[user.role] ?? "bg-canvas text-slate-600 border-primary/15"}`}>
                         {user.role}
                       </span>
                     </td>
@@ -322,7 +322,7 @@ const AdminUsersPage = () => {
                           <Ban className="h-3 w-3" /> Banned
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-primary border border-primary px-2.5 py-1 text-xs font-semibold text-primary">
                           <CheckCircle2 className="h-3 w-3" /> Active
                         </span>
                       )}
@@ -335,7 +335,7 @@ const AdminUsersPage = () => {
                         <Button onClick={() => handleViewUser(user)} className="h-8 rounded-xl bg-slate-700 px-3 text-xs font-semibold text-white hover:bg-slate-800">
                           <Eye className="h-3 w-3" />
                         </Button>
-                        <Button onClick={() => handleEditUser(user)} disabled={updatingId === user.id} className="h-8 rounded-xl bg-indigo-600 px-3 text-xs font-semibold text-white hover:bg-indigo-700">
+                        <Button onClick={() => handleEditUser(user)} disabled={updatingId === user.id} className="h-8 rounded-xl bg-primary px-3 text-xs font-semibold text-white hover:bg-primary">
                           <Pencil className="h-3 w-3" />
                         </Button>
                         {user.role !== "ADMIN" && (
@@ -344,7 +344,7 @@ const AdminUsersPage = () => {
                           disabled={updatingId === user.id}
                           className={`h-8 rounded-xl px-3 text-xs font-semibold ${
                             user.isBanned
-                              ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                              ? "bg-primary text-white hover:bg-primary"
                               : "bg-red-600 text-white hover:bg-red-700"
                           }`}
                         >
@@ -371,13 +371,13 @@ const AdminUsersPage = () => {
           </table>
         </div>
       </div>
-      <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
+      <div className="flex items-center justify-between rounded-2xl border border-primary/15 bg-card px-4 py-3 text-sm text-slate-600">
         <span>Page {currentPage} of {totalPages}</span>
         <div className="flex gap-2">
           <Button onClick={() => setPage((value) => Math.max(1, value - 1))} disabled={currentPage === 1} className="h-8 rounded-xl bg-slate-100 px-3 text-xs font-semibold text-slate-700 hover:bg-slate-200">
             Previous
           </Button>
-          <Button onClick={() => setPage((value) => Math.min(totalPages, value + 1))} disabled={currentPage === totalPages} className="h-8 rounded-xl bg-rose-600 px-3 text-xs font-semibold text-white hover:bg-rose-700">
+          <Button onClick={() => setPage((value) => Math.min(totalPages, value + 1))} disabled={currentPage === totalPages} className="h-8 rounded-xl bg-secondary px-3 text-xs font-semibold text-white hover:bg-secondary/90">
             Next
           </Button>
         </div>

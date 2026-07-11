@@ -18,10 +18,10 @@ const slides = [
       'Connect with 1,200+ verified tutors across 50+ subjects. Book sessions instantly and start learning today.',
     cta: 'Find a Tutor',
     ctaHref: '/tutors',
-    bg: 'from-blue-950 via-blue-900 to-indigo-950',
-    orb1: 'bg-blue-500/30',
-    orb2: 'bg-indigo-500/20',
-    accent: 'from-blue-400 to-indigo-400',
+    bg: 'from-primary via-primary to-primary',
+    orb1: 'bg-primary/30',
+    orb2: 'bg-primary/20',
+    accent: 'from-primary to-primary',
     stats: [
       { value: '10K+', label: 'Students' },
       { value: '1.2K+', label: 'Tutors' },
@@ -39,10 +39,10 @@ const slides = [
       'Learn Python, JavaScript, React, and more from industry professionals with real-world experience.',
     cta: 'Explore Coding',
     ctaHref: '/tutors?category=Programming',
-    bg: 'from-emerald-950 via-teal-900 to-cyan-950',
-    orb1: 'bg-emerald-500/30',
-    orb2: 'bg-teal-500/20',
-    accent: 'from-emerald-400 to-cyan-400',
+    bg: 'from-primary via-primary to-primary',
+    orb1: 'bg-primary/30',
+    orb2: 'bg-primary/20',
+    accent: 'from-primary to-primary',
     stats: [
       { value: '200+', label: 'Dev Tutors' },
       { value: '4.9★', label: 'Rating' },
@@ -60,10 +60,10 @@ const slides = [
       'From guitar to graphic design, discover passionate tutors who will help you express your creativity.',
     cta: 'Start Creating',
     ctaHref: '/tutors?category=Music',
-    bg: 'from-rose-950 via-pink-900 to-purple-950',
-    orb1: 'bg-rose-500/30',
-    orb2: 'bg-purple-500/20',
-    accent: 'from-rose-400 to-purple-400',
+    bg: 'from-primary via-primary to-primary',
+    orb1: 'bg-secondary/20',
+    orb2: 'bg-primary/20',
+    accent: 'from-secondary to-primary',
     stats: [
       { value: '300+', label: 'Art Tutors' },
       { value: '15+', label: 'Art Forms' },
@@ -81,10 +81,10 @@ const slides = [
       'Top-rated math and science tutors make complex topics simple. From algebra to quantum physics.',
     cta: 'Find Math Tutor',
     ctaHref: '/tutors?category=Mathematics',
-    bg: 'from-amber-950 via-orange-900 to-red-950',
-    orb1: 'bg-amber-500/30',
-    orb2: 'bg-orange-500/20',
-    accent: 'from-amber-400 to-orange-400',
+    bg: 'from-secondary via-secondary to-red-950',
+    orb1: 'bg-secondary/30',
+    orb2: 'bg-secondary/20',
+    accent: 'from-secondary to-secondary',
     stats: [
       { value: '500+', label: 'Math Tutors' },
       { value: '92%', label: 'Pass Rate' },
@@ -177,7 +177,7 @@ export default function HeroCarousel() {
                   <Button
                     asChild
                     size="lg"
-                    className="bg-white text-zinc-900 hover:bg-white/90 font-semibold px-6"
+                    className="bg-card text-zinc-900 hover:bg-white/90 font-semibold px-6"
                   >
                     <Link href={slide.ctaHref}>
                       {slide.cta}
@@ -252,7 +252,7 @@ export default function HeroCarousel() {
             onClick={() => scrollTo(index)}
             className={`transition-all rounded-full ${
               index === selectedIndex
-                ? 'w-8 h-2 bg-white'
+                ? 'w-8 h-2 bg-card'
                 : 'w-2 h-2 bg-white/40 hover:bg-white/60'
             }`}
           />

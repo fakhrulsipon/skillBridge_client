@@ -56,17 +56,26 @@ const platformFlow = [
 
 export default function HowItWorksPage() {
   return (
-    <div className="min-h-screen bg-slate-50/50">
-      <section className="bg-white border-b border-slate-200 py-12 md:py-20">
+    <div className="min-h-screen bg-canvas/40 selection:bg-primary/20">
+      {/* Hero Section */}
+      <section className="bg-card border-b border-primary/10 py-16 md:py-24 relative overflow-hidden">
+        {/* Subtle Decorative Background Element */}
+        <div className="absolute right-0 top-0 -z-10 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute left-1/3 bottom-0 -z-10 h-56 w-56 rounded-full bg-primary/5 blur-3xl" />
+        
         <div className="mx-auto max-w-7xl px-6">
           <div className="max-w-3xl">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-indigo-50 px-4 py-1.5 text-xs font-semibold text-indigo-600">
-              <Zap size={14} /> How SkillBridge Works
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-xs font-semibold text-primary">
+              <Zap size={13} className="animate-pulse" /> How SkillBridge Works
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tight">
-              From tutor discovery to completed learning sessions.
+            <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.1]">
+              From tutor discovery to{" "}
+              <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+                completed learning
+              </span>{" "}
+              sessions.
             </h1>
-            <p className="mt-4 text-lg text-slate-500 leading-relaxed">
+            <p className="mt-6 text-lg md:text-xl text-slate-500 leading-relaxed font-medium">
               SkillBridge connects students with verified tutors, supports
               secure bookings, and gives every role a focused dashboard for the
               work they need to complete.
@@ -75,67 +84,80 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
+      {/* Embedded Inner Component */}
       <HowItWorks />
 
-      <section className="bg-gradient-to-br from-slate-50 to-indigo-50/30 py-20">
+      {/* Student Booking Flow Section */}
+      <section className="bg-gradient-to-b from-canvas via-primary/5 to-canvas py-24 border-y border-primary/5">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-12 text-center">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-indigo-100 px-4 py-1.5 text-xs font-semibold text-indigo-700">
+          <div className="mb-16 text-center">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-xs font-semibold text-primary">
               <CheckCircle2 size={12} /> Student booking flow
             </div>
-            <h2 className="text-3xl font-bold text-slate-900 md:text-4xl">
+            <h2 className="text-3xl font-extrabold text-slate-900 md:text-5xl tracking-tight">
               Every session follows a clear path
             </h2>
           </div>
+
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {studentFlow.map((item) => (
+            {studentFlow.map((item, index) => (
               <div
                 key={item.title}
-                className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm hover:border-indigo-200 hover:shadow-md transition-all"
+                className="group relative rounded-3xl border border-primary/10 bg-card p-8 shadow-sm hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 text-white">
+                {/* Step Indicator Number */}
+                <span className="absolute right-6 top-6 text-4xl font-black text-slate-200/50 group-hover:text-primary/10 transition-colors select-none">
+                  0{index + 1}
+                </span>
+
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-white shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">
                   <item.icon size={22} />
                 </div>
-                <h3 className="mb-3 text-xl font-bold text-slate-900">
+                <h3 className="mb-3 text-xl font-bold text-slate-900 tracking-tight group-hover:text-primary transition-colors">
                   {item.title}
                 </h3>
-                <p className="text-slate-500">{item.desc}</p>
+                <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-white py-20">
+      {/* Role-Based Platform Section */}
+      <section className="bg-card py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-12 text-center">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-indigo-100 px-4 py-1.5 text-xs font-semibold text-indigo-700">
+          <div className="mb-16 text-center">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-xs font-semibold text-primary">
               <ShieldCheck size={12} /> Role-based platform
             </div>
-            <h2 className="text-3xl font-bold text-slate-900 md:text-4xl">
+            <h2 className="text-3xl font-extrabold text-slate-900 md:text-5xl tracking-tight">
               Built around each user role
             </h2>
           </div>
+
           <div className="grid gap-8 md:grid-cols-3">
             {platformFlow.map((item) => (
               <div
                 key={item.title}
-                className="rounded-3xl border border-slate-100 bg-slate-50 p-8 hover:border-indigo-200 hover:shadow-md transition-all"
+                className="group rounded-3xl border border-primary/10 bg-canvas/30 p-8 hover:bg-canvas hover:border-primary/40 hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
               >
-                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 text-white">
-                  <item.icon size={22} />
+                <div>
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-white shadow-md shadow-primary/10">
+                    <item.icon size={22} />
+                  </div>
+                  <h3 className="mb-3 text-xl font-bold text-slate-900 tracking-tight">
+                    {item.title}
+                  </h3>
+                  <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
                 </div>
-                <h3 className="mb-3 text-xl font-bold text-slate-900">
-                  {item.title}
-                </h3>
-                <p className="text-slate-500">{item.desc}</p>
               </div>
             ))}
           </div>
-          <div className="mt-12 text-center">
+
+          <div className="mt-16 text-center">
             <Link
               href="/explore"
-              className="inline-flex rounded-xl bg-indigo-600 px-8 py-3 font-semibold text-white hover:bg-indigo-700 transition hover:shadow-lg hover:shadow-indigo-200"
+              className="inline-flex items-center justify-center rounded-xl bg-primary px-10 py-4 font-semibold text-white shadow-lg shadow-primary/25 hover:bg-primary/95 transition-all hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 active:translate-y-0"
             >
               Explore tutors
             </Link>

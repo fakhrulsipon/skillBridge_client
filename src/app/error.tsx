@@ -16,8 +16,8 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-6 text-center">
-      <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-rose-50 text-rose-500 shadow-sm border border-rose-100">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-canvas px-6 text-center">
+      <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-secondary/10 text-secondary shadow-sm border border-secondary/20">
         <AlertCircle size={40} />
       </div>
       <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-3">
@@ -30,14 +30,14 @@ export default function GlobalError({
       <div className="flex flex-col sm:flex-row gap-4">
         <Button
           onClick={() => reset()}
-          className="rounded-2xl bg-indigo-600 px-8 py-6 text-base font-bold text-white hover:bg-indigo-700 shadow-xl shadow-indigo-100 transition-all"
+          className="rounded-2xl bg-primary px-8 py-6 text-base font-bold text-white hover:bg-primary shadow-xl shadow-primary transition-all"
         >
           <RefreshCcw size={18} className="mr-2" /> Try Again
         </Button>
         <Button
           asChild
           variant="outline"
-          className="rounded-2xl border-slate-200 px-8 py-6 text-base font-bold text-slate-600 hover:bg-white"
+          className="rounded-2xl border-primary/15 px-8 py-6 text-base font-bold text-slate-600 hover:bg-card"
         >
           <a href="/">Back to Homepage</a>
         </Button>

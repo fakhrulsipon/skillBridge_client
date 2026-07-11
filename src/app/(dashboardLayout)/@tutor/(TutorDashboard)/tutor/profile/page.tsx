@@ -110,7 +110,7 @@ const ProfilePage = () => {
           icon: 'error',
           title: 'Unable to load categories',
           text: message,
-          confirmButtonColor: '#0284c7',
+          confirmButtonColor: '#047857',
         })
       } finally {
         setIsLoadingCategories(false)
@@ -166,7 +166,7 @@ const ProfilePage = () => {
           icon: 'error',
           title: 'Unable to load profile',
           text: message,
-          confirmButtonColor: '#0284c7',
+          confirmButtonColor: '#047857',
         })
       } finally {
         setIsLoadingProfile(false)
@@ -194,7 +194,7 @@ const ProfilePage = () => {
         icon: 'warning',
         title: 'Login required',
         text: 'Please sign in again to manage your tutor profile.',
-        confirmButtonColor: '#0284c7',
+        confirmButtonColor: '#047857',
       })
       return
     }
@@ -204,7 +204,7 @@ const ProfilePage = () => {
         icon: 'warning',
         title: 'Category required',
         text: 'Please select at least one tutor category.',
-        confirmButtonColor: '#0284c7',
+        confirmButtonColor: '#047857',
       })
       return
     }
@@ -260,7 +260,7 @@ const ProfilePage = () => {
           (hasExistingProfile
             ? 'Your tutor profile has been updated successfully.'
             : 'Your tutor profile has been created successfully.'),
-        confirmButtonColor: '#0284c7',
+        confirmButtonColor: '#047857',
       })
     } catch (error) {
       const message =
@@ -270,7 +270,7 @@ const ProfilePage = () => {
         icon: 'error',
         title: 'Save failed',
         text: message,
-        confirmButtonColor: '#0284c7',
+        confirmButtonColor: '#047857',
       })
     } finally {
       setIsSubmitting(false)
@@ -281,26 +281,26 @@ const ProfilePage = () => {
     if (!profile) {
       return {
         label: 'Profile not created yet',
-        tone: 'bg-amber-50 text-amber-700 border-amber-200',
+        tone: 'bg-secondary text-secondary border-secondary',
       }
     }
 
     return profile.isApproved
       ? {
           label: 'Approved tutor profile',
-          tone: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+          tone: 'bg-primary text-primary border-primary',
         }
       : {
           label: 'Pending approval',
-          tone: 'bg-amber-50 text-amber-700 border-amber-200',
+          tone: 'bg-secondary text-secondary border-secondary',
         }
   }, [profile])
 
   if (isAuthLoading || isLoadingProfile || isLoadingCategories) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 text-slate-600 shadow-sm">
-          <LoaderCircle className="h-5 w-5 animate-spin text-sky-600" />
+        <div className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-card px-5 py-4 text-slate-600 shadow-sm">
+          <LoaderCircle className="h-5 w-5 animate-spin text-primary" />
           <span className="text-sm font-medium">Loading your tutor profile...</span>
         </div>
       </div>
@@ -310,13 +310,13 @@ const ProfilePage = () => {
   return (
     <div className="space-y-6">
   {/* ─── PREMIUM HERO SECTION ─── */}
-  <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-sky-600 via-cyan-600 to-teal-500 p-8 text-white shadow-xl shadow-cyan-100">
+  <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-primary via-primary to-primary p-8 text-white shadow-xl shadow-primary">
     <div className="absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
     
     <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
       <div className="space-y-4">
         <div className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] border border-white/10">
-          <Sparkles size={14} className="text-yellow-200" /> Tutor Profile
+          <Sparkles size={14} className="text-secondary" /> Tutor Profile
         </div>
         <div>
           <h1 className="text-3xl font-black tracking-tight leading-tight">
@@ -324,7 +324,7 @@ const ProfilePage = () => {
               ? `${profile?.user?.name || user?.name}&apos;s Profile`
               : 'Build your tutor profile'}
           </h1>
-          <p className="mt-2 max-w-2xl text-sm font-medium text-sky-50/90">
+          <p className="mt-2 max-w-2xl text-sm font-medium text-primary/90">
             Add the details students need to trust you, understand your experience,
             and book lessons with confidence.
           </p>
@@ -340,12 +340,12 @@ const ProfilePage = () => {
 
   <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
     {/* ─── FORM SECTION ─── */}
-    <section className="rounded-[32px] border border-slate-100 bg-white p-8 shadow-sm">
+    <section className="rounded-[32px] border border-primary/10 bg-card p-8 shadow-sm">
       <div className="mb-8">
         <h2 className="text-2xl font-black text-slate-900 tracking-tight">
           {hasExistingProfile ? 'Update tutor information' : 'Create tutor information'}
         </h2>
-        <div className="mt-2 h-1 w-12 rounded-full bg-sky-500" />
+        <div className="mt-2 h-1 w-12 rounded-full bg-primary" />
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
@@ -356,7 +356,7 @@ const ProfilePage = () => {
             id="bio"
             rows={6}
             placeholder="Tell students about your teaching style, strengths, and subject expertise."
-            className="resize-none rounded-2xl border-slate-100 bg-slate-50/50 px-4 py-4 text-sm font-medium focus:bg-white focus:ring-4 focus:ring-sky-500/5 transition-all outline-none"
+            className="resize-none rounded-2xl border-primary/10 bg-canvas/50 px-4 py-4 text-sm font-medium focus:bg-card focus:ring-4 focus:ring-primary/5 transition-all outline-none"
             {...register('bio', {
               required: 'Bio is required',
               minLength: { value: 20, message: 'Bio should be at least 20 characters long' },
@@ -381,8 +381,8 @@ const ProfilePage = () => {
                   onClick={() => toggleCategory(category.id)}
                   className={`group relative overflow-hidden flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-bold transition-all ${
                     isSelected
-                      ? 'border-sky-500 bg-sky-500 text-white shadow-lg shadow-sky-100'
-                      : 'border-slate-100 bg-white text-slate-600 hover:border-sky-200 hover:text-sky-600'
+                      ? 'border-primary bg-primary text-white shadow-lg shadow-primary'
+                      : 'border-primary/10 bg-card text-slate-600 hover:border-primary hover:text-primary'
                   }`}
                 >
                   {category.name}
@@ -398,12 +398,12 @@ const ProfilePage = () => {
           <div className="space-y-2">
             <Label htmlFor="hourlyRate" className="text-xs font-black uppercase tracking-widest text-slate-500">Hourly rate ($)</Label>
             <div className="group relative">
-              <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors" size={18} />
+              <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
               <Input
                 id="hourlyRate"
                 type="number"
                 placeholder="1500"
-                className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                className="h-12 rounded-2xl border-primary/10 bg-canvas/50 pl-12 font-bold focus:bg-card transition-all"
                 {...register('hourlyRate', { required: 'Hourly rate is required' })}
               />
             </div>
@@ -412,12 +412,12 @@ const ProfilePage = () => {
           <div className="space-y-2">
             <Label htmlFor="experience" className="text-xs font-black uppercase tracking-widest text-slate-500">Experience (Years)</Label>
             <div className="group relative">
-              <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors" size={18} />
+              <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
               <Input
                 id="experience"
                 type="number"
                 placeholder="3"
-                className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                className="h-12 rounded-2xl border-primary/10 bg-canvas/50 pl-12 font-bold focus:bg-card transition-all"
                 {...register('experience', { required: 'Experience is required' })}
               />
             </div>
@@ -429,11 +429,11 @@ const ProfilePage = () => {
           <div className="space-y-2">
             <Label htmlFor="location" className="text-xs font-black uppercase tracking-widest text-slate-500">Location</Label>
             <div className="group relative">
-              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors" size={18} />
+              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
               <Input
                 id="location"
                 placeholder="Dhaka, Bangladesh"
-                className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                className="h-12 rounded-2xl border-primary/10 bg-canvas/50 pl-12 font-bold focus:bg-card transition-all"
                 {...register('location', { required: 'Location is required' })}
               />
             </div>
@@ -442,11 +442,11 @@ const ProfilePage = () => {
           <div className="space-y-2">
             <Label htmlFor="imageUrl" className="text-xs font-black uppercase tracking-widest text-slate-500">Profile Image URL</Label>
             <div className="group relative">
-              <ImageIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors" size={18} />
+              <ImageIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
               <Input
                 id="imageUrl"
                 placeholder="https://..."
-                className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                className="h-12 rounded-2xl border-primary/10 bg-canvas/50 pl-12 font-bold focus:bg-card transition-all"
                 {...register('imageUrl')}
               />
             </div>
@@ -462,7 +462,7 @@ const ProfilePage = () => {
           <Button
             type="submit"
             disabled={isSubmitting || (!isDirty && hasExistingProfile)}
-            className="h-14 min-w-[180px] rounded-2xl bg-sky-600 px-8 font-black text-white shadow-lg shadow-sky-100 hover:bg-sky-700 hover:-translate-y-1 transition-all active:scale-95"
+            className="h-14 min-w-[180px] rounded-2xl bg-primary px-8 font-black text-white shadow-lg shadow-primary hover:bg-primary hover:-translate-y-1 transition-all active:scale-95"
           >
             {isSubmitting ? <LoaderCircle className="animate-spin" /> : <span className="flex items-center gap-2 uppercase tracking-widest text-xs"><Save size={18}/> {hasExistingProfile ? 'Update Profile' : 'Create Profile'}</span>}
           </Button>
@@ -472,13 +472,13 @@ const ProfilePage = () => {
 
     {/* ─── SIDEBAR ─── */}
     <aside className="space-y-6">
-      <div className="overflow-hidden rounded-[32px] border border-slate-100 bg-white p-1 shadow-sm transition-all hover:shadow-xl hover:shadow-sky-500/5">
-        <div className="bg-slate-50/50 p-6 rounded-[28px]">
+      <div className="overflow-hidden rounded-[32px] border border-primary/10 bg-card p-1 shadow-sm transition-all hover:shadow-xl hover:shadow-primary/5">
+        <div className="bg-canvas/50 p-6 rounded-[28px]">
           <h3 className="text-lg font-black text-slate-900 tracking-tight">Live Preview</h3>
           <div className="mt-6 space-y-6">
             <div className="flex items-center gap-4">
-              <div className="h-16 w-16 overflow-hidden rounded-2xl border-2 border-white shadow-md bg-sky-100">
-                {profile?.imageUrl ? <img src={profile.imageUrl} className="h-full w-full object-cover" /> : <UserRound className="m-auto h-8 w-8 text-sky-600 mt-3" />}
+              <div className="h-16 w-16 overflow-hidden rounded-2xl border-2 border-white shadow-md bg-primary">
+                {profile?.imageUrl ? <img src={profile.imageUrl} className="h-full w-full object-cover" /> : <UserRound className="m-auto h-8 w-8 text-primary mt-3" />}
               </div>
               <div>
                 <p className="text-xs font-black uppercase tracking-widest text-slate-400 leading-none">Tutor Name</p>
@@ -486,11 +486,11 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="space-y-4 border-t border-slate-100 pt-6">
+            <div className="space-y-4 border-t border-primary/10 pt-6">
               <div className="flex justify-between items-center">
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Rating</span>
                 <div className="flex items-center gap-1 font-black text-slate-800">
-                  <Star size={14} className="fill-yellow-400 text-yellow-400" /> {profile ? profile.avgRating.toFixed(1) : '0.0'}
+                  <Star size={14} className="fill-secondary text-secondary" /> {profile ? profile.avgRating.toFixed(1) : '0.0'}
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -501,7 +501,7 @@ const ProfilePage = () => {
 
             <div className="mt-4 flex flex-wrap gap-1.5">
               {profile?.categories?.map(({ category }) => (
-                <span key={category.id} className="rounded-lg bg-sky-50 px-2 py-1 text-[10px] font-black text-sky-700 uppercase tracking-tighter border border-sky-100">
+                <span key={category.id} className="rounded-lg bg-primary px-2 py-1 text-[10px] font-black text-primary uppercase tracking-tighter border border-primary">
                   {category.name}
                 </span>
               ))}
@@ -510,9 +510,9 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <div className="rounded-[32px] border border-slate-100 bg-slate-900 p-8 text-white">
+      <div className="rounded-[32px] border border-primary/10 bg-slate-900 p-8 text-white">
         <h3 className="text-lg font-black tracking-tight flex items-center gap-2">
-          <Sparkles size={20} className="text-yellow-400" /> Pro Tips
+          <Sparkles size={20} className="text-secondary" /> Pro Tips
         </h3>
         <ul className="mt-6 space-y-4">
           {[
@@ -522,7 +522,7 @@ const ProfilePage = () => {
             'Be specific about your location.'
           ].map((tip, i) => (
             <li key={i} className="flex gap-3 text-sm font-medium text-slate-400">
-              <span className="text-sky-500 font-black">0{i+1}.</span> {tip}
+              <span className="text-primary font-black">0{i+1}.</span> {tip}
             </li>
           ))}
         </ul>

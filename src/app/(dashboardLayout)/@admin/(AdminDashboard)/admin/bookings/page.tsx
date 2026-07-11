@@ -19,9 +19,9 @@ type AdminBooking = {
 };
 
 const statusTone: Record<BookingStatus, string> = {
-  CONFIRMED: "border-sky-200 bg-sky-50 text-sky-700",
-  COMPLETED: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  CANCELLED: "border-rose-200 bg-rose-50 text-rose-700",
+  CONFIRMED: "border-primary bg-primary text-primary",
+  COMPLETED: "border-primary bg-primary text-primary",
+  CANCELLED: "border-secondary/30 bg-secondary/10 text-secondary",
 };
 
 const AdminBookingsPage = () => {
@@ -48,7 +48,7 @@ const AdminBookingsPage = () => {
         if (!res.ok) throw new Error(result.message || "Failed");
         setBookings(Array.isArray(result.data) ? result.data : []);
       } catch {
-        await Swal.fire({ icon: "error", title: "Failed to load bookings", confirmButtonColor: "#e11d48" });
+        await Swal.fire({ icon: "error", title: "Failed to load bookings", confirmButtonColor: "#B45309" });
       } finally {
         setIsLoading(false);
       }
@@ -68,7 +68,7 @@ const AdminBookingsPage = () => {
       icon: "info",
       title: `Booking #${booking.id}`,
       html: `<div style="text-align:left"><p><b>Student:</b> ${booking.student.name}</p><p><b>Tutor:</b> ${booking.tutorProfile.user.name}</p><p><b>Status:</b> ${booking.status}</p><p><b>Total:</b> $${booking.totalPrice.toFixed(2)}</p></div>`,
-      confirmButtonColor: "#e11d48",
+      confirmButtonColor: "#B45309",
     });
   };
 
@@ -84,7 +84,7 @@ const AdminBookingsPage = () => {
       if (!res.ok) throw new Error(result.message || "Failed to update booking");
       setBookings((prev) => prev.map((item) => item.id === booking.id ? { ...item, status } : item));
     } catch (error: any) {
-      await Swal.fire({ icon: "error", title: "Update failed", text: error.message, confirmButtonColor: "#e11d48" });
+      await Swal.fire({ icon: "error", title: "Update failed", text: error.message, confirmButtonColor: "#B45309" });
     } finally {
       setUpdatingId(null);
     }
@@ -95,7 +95,7 @@ const AdminBookingsPage = () => {
       icon: "warning",
       title: `Delete booking #${booking.id}?`,
       showCancelButton: true,
-      confirmButtonColor: "#e11d48",
+      confirmButtonColor: "#B45309",
       confirmButtonText: "Delete",
     });
     if (!confirm.isConfirmed) return;
@@ -111,7 +111,7 @@ const AdminBookingsPage = () => {
       }
       setBookings((prev) => prev.filter((item) => item.id !== booking.id));
     } catch (error: any) {
-      await Swal.fire({ icon: "error", title: "Delete failed", text: error.message, confirmButtonColor: "#e11d48" });
+      await Swal.fire({ icon: "error", title: "Delete failed", text: error.message, confirmButtonColor: "#B45309" });
     } finally {
       setUpdatingId(null);
     }
@@ -135,8 +135,8 @@ const AdminBookingsPage = () => {
 
   if (isLoading) return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
-        <LoaderCircle className="h-5 w-5 animate-spin text-rose-600" />
+      <div className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-card px-5 py-4 shadow-sm">
+        <LoaderCircle className="h-5 w-5 animate-spin text-secondary" />
         <span className="text-sm text-slate-600">Loading bookings...</span>
       </div>
     </div>
@@ -144,12 +144,12 @@ const AdminBookingsPage = () => {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-3xl bg-gradient-to-br from-rose-600 via-pink-600 to-orange-500 p-6 text-white shadow-lg">
+      <section className="rounded-3xl bg-gradient-to-br from-primary via-primary to-secondary p-6 text-white shadow-lg">
         <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] mb-3">
           <Sparkles className="h-3.5 w-3.5" /> Booking Management
         </div>
         <h1 className="text-3xl font-bold tracking-tight">All Bookings</h1>
-        <p className="mt-2 text-sm text-rose-50/90">Monitor all platform session bookings.</p>
+        <p className="mt-2 text-sm text-white/90">Monitor all platform session bookings.</p>
       </section>
 
       <div className="flex flex-col gap-3 sm:flex-row">
@@ -157,12 +157,12 @@ const AdminBookingsPage = () => {
           <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input type="text" value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             placeholder="Search student or tutor..."
-            className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100" />
+            className="w-full rounded-2xl border border-primary/15 bg-card py-3 pl-11 pr-4 text-sm outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20" />
         </div>
         <div className="flex gap-2 flex-wrap">
           {(["ALL", "CONFIRMED", "COMPLETED", "CANCELLED"] as const).map((s) => (
             <button key={s} onClick={() => { setStatusFilter(s); setPage(1); }}
-              className={`rounded-2xl border px-3 py-2 text-xs font-semibold transition-colors ${statusFilter === s ? "border-rose-300 bg-rose-50 text-rose-700" : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"}`}>
+              className={`rounded-2xl border px-3 py-2 text-xs font-semibold transition-colors ${statusFilter === s ? "border-secondary/40 bg-secondary/10 text-secondary" : "border-primary/15 bg-card text-slate-600 hover:bg-canvas"}`}>
               {s}
             </button>
           ))}
@@ -178,7 +178,7 @@ const AdminBookingsPage = () => {
           <button
             key={item.key}
             onClick={() => handleSort(item.key as typeof sortKey)}
-            className={`inline-flex items-center gap-2 rounded-2xl border px-3 py-2 text-xs font-semibold transition-colors ${sortKey === item.key ? "border-rose-300 bg-rose-50 text-rose-700" : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"}`}
+            className={`inline-flex items-center gap-2 rounded-2xl border px-3 py-2 text-xs font-semibold transition-colors ${sortKey === item.key ? "border-secondary/40 bg-secondary/10 text-secondary" : "border-primary/15 bg-card text-slate-600 hover:bg-canvas"}`}
           >
             {item.label} <ChevronsUpDown className="h-3 w-3" />
           </button>
@@ -187,22 +187,22 @@ const AdminBookingsPage = () => {
 
       <div className="space-y-3">
         {filtered.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center text-sm text-slate-400">No bookings match your filters.</div>
+          <div className="rounded-3xl border border-dashed border-slate-300 bg-canvas p-10 text-center text-sm text-slate-400">No bookings match your filters.</div>
         ) : paginated.map((b) => (
-          <div key={b.id} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div key={b.id} className="rounded-3xl border border-primary/15 bg-card p-5 shadow-sm">
             <div className="flex flex-wrap items-center gap-3 mb-3">
               <h3 className="font-semibold text-slate-900">Booking #{b.id}</h3>
               <span className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold ${statusTone[b.status]}`}>{b.status}</span>
             </div>
             <div className="grid gap-2 text-sm text-slate-600 sm:grid-cols-2 xl:grid-cols-4">
-              <div className="flex items-center gap-2"><BookOpen className="h-4 w-4 text-indigo-500" />Student: {b.student.name}</div>
-              <div className="flex items-center gap-2"><BookOpen className="h-4 w-4 text-sky-500" />Tutor: {b.tutorProfile.user.name}</div>
-              <div className="flex items-center gap-2"><CalendarDays className="h-4 w-4 text-rose-500" />{new Date(b.scheduledAt).toLocaleString()}</div>
-              <div className="flex items-center gap-2"><Clock3 className="h-4 w-4 text-rose-500" />{b.duration} min</div>
-              <div className="flex items-center gap-2"><Wallet className="h-4 w-4 text-emerald-500" />${b.totalPrice.toFixed(2)}</div>
+              <div className="flex items-center gap-2"><BookOpen className="h-4 w-4 text-primary" />Student: {b.student.name}</div>
+              <div className="flex items-center gap-2"><BookOpen className="h-4 w-4 text-primary" />Tutor: {b.tutorProfile.user.name}</div>
+              <div className="flex items-center gap-2"><CalendarDays className="h-4 w-4 text-secondary" />{new Date(b.scheduledAt).toLocaleString()}</div>
+              <div className="flex items-center gap-2"><Clock3 className="h-4 w-4 text-secondary" />{b.duration} min</div>
+              <div className="flex items-center gap-2"><Wallet className="h-4 w-4 text-primary" />${b.totalPrice.toFixed(2)}</div>
             </div>
-            {b.note && <p className="mt-3 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-2 text-sm text-slate-500">{b.note}</p>}
-            <div className="mt-4 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
+            {b.note && <p className="mt-3 rounded-2xl border border-primary/10 bg-canvas px-4 py-2 text-sm text-slate-500">{b.note}</p>}
+            <div className="mt-4 flex flex-wrap gap-2 border-t border-primary/10 pt-4">
               <Button onClick={() => handleView(b)} className="h-8 rounded-xl bg-slate-700 px-3 text-xs font-semibold text-white hover:bg-slate-800">
                 <Eye className="h-3 w-3" /> View
               </Button>
@@ -211,7 +211,7 @@ const AdminBookingsPage = () => {
                   key={status}
                   onClick={() => handleStatusUpdate(b, status)}
                   disabled={updatingId === b.id || b.status === status}
-                  className="h-8 rounded-xl bg-rose-600 px-3 text-xs font-semibold text-white hover:bg-rose-700 disabled:opacity-50"
+                  className="h-8 rounded-xl bg-secondary px-3 text-xs font-semibold text-white hover:bg-secondary/90 disabled:opacity-50"
                 >
                   {updatingId === b.id ? <LoaderCircle className="h-3 w-3 animate-spin" /> : status}
                 </Button>
@@ -223,13 +223,13 @@ const AdminBookingsPage = () => {
           </div>
         ))}
       </div>
-      <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
+      <div className="flex items-center justify-between rounded-2xl border border-primary/15 bg-card px-4 py-3 text-sm text-slate-600">
         <span>Page {currentPage} of {totalPages}</span>
         <div className="flex gap-2">
           <Button onClick={() => setPage((value) => Math.max(1, value - 1))} disabled={currentPage === 1} className="h-8 rounded-xl bg-slate-100 px-3 text-xs font-semibold text-slate-700 hover:bg-slate-200">
             Previous
           </Button>
-          <Button onClick={() => setPage((value) => Math.min(totalPages, value + 1))} disabled={currentPage === totalPages} className="h-8 rounded-xl bg-rose-600 px-3 text-xs font-semibold text-white hover:bg-rose-700">
+          <Button onClick={() => setPage((value) => Math.min(totalPages, value + 1))} disabled={currentPage === totalPages} className="h-8 rounded-xl bg-secondary px-3 text-xs font-semibold text-white hover:bg-secondary/90">
             Next
           </Button>
         </div>

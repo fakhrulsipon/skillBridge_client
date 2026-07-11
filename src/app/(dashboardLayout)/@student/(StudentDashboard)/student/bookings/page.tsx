@@ -34,9 +34,9 @@ type StudentBooking = {
 type ReviewDraft = { bookingId: number; rating: number; comment: string };
 
 const statusTone: Record<BookingStatus, string> = {
-  CONFIRMED: "border-sky-200 bg-sky-50 text-sky-700",
-  COMPLETED: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  CANCELLED: "border-rose-200 bg-rose-50 text-rose-700",
+  CONFIRMED: "border-primary bg-primary text-primary",
+  COMPLETED: "border-primary bg-primary text-primary",
+  CANCELLED: "border-secondary/30 bg-secondary/10 text-secondary",
 };
 
 const StudentBookingsPage = () => {
@@ -73,7 +73,7 @@ const StudentBookingsPage = () => {
         await Swal.fire({
           icon: "error",
           title: "Unable to load bookings",
-          confirmButtonColor: "#4f46e5",
+          confirmButtonColor: "#047857",
         });
       } finally {
         setIsLoadingBookings(false);
@@ -113,7 +113,7 @@ const StudentBookingsPage = () => {
         icon: "error",
         title: "Cancel failed",
         text: error.message,
-        confirmButtonColor: "#4f46e5",
+        confirmButtonColor: "#047857",
       });
     } finally {
       setUpdatingBookingId(null);
@@ -151,7 +151,7 @@ const StudentBookingsPage = () => {
         icon: "error",
         title: "Review failed",
         text: error.message,
-        confirmButtonColor: "#4f46e5",
+        confirmButtonColor: "#047857",
       });
     } finally {
       setSubmittingReview(false);
@@ -169,8 +169,8 @@ const StudentBookingsPage = () => {
   if (isAuthLoading || isLoadingBookings)
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
-          <LoaderCircle className="h-5 w-5 animate-spin text-indigo-600" />
+        <div className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-card px-5 py-4 shadow-sm">
+          <LoaderCircle className="h-5 w-5 animate-spin text-primary" />
           <span className="text-sm font-medium text-slate-600">
             Loading bookings...
           </span>
@@ -189,9 +189,9 @@ const StudentBookingsPage = () => {
     <div className="space-y-8 max-w-6xl mx-auto">
       {/* ─── HEADER SECTION ─── */}
       <section className="relative overflow-hidden rounded-[32px] bg-slate-950 p-8 text-white shadow-2xl">
-        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-indigo-600/20 blur-3xl" />
+        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
         <div className="relative z-10">
-          <div className="inline-flex items-center gap-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-4">
+          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary mb-4">
             <Sparkles size={14} /> My Bookings
           </div>
           <h1 className="text-4xl font-black tracking-tight">
@@ -211,25 +211,25 @@ const StudentBookingsPage = () => {
             label: "Total",
             key: "ALL",
             color: "bg-slate-100 text-slate-900",
-            border: "border-slate-200",
+            border: "border-primary/15",
           },
           {
             label: "Upcoming",
             key: "CONFIRMED",
-            color: "bg-blue-50 text-blue-700",
-            border: "border-blue-100",
+            color: "bg-primary text-primary",
+            border: "border-primary",
           },
           {
             label: "Completed",
             key: "COMPLETED",
-            color: "bg-emerald-50 text-emerald-600",
-            border: "border-emerald-100",
+            color: "bg-primary text-primary",
+            border: "border-primary",
           },
           {
             label: "Cancelled",
             key: "CANCELLED",
-            color: "bg-rose-50 text-rose-700",
-            border: "border-rose-100",
+            color: "bg-secondary/10 text-secondary",
+            border: "border-secondary/20",
           },
         ].map((s) => (
           <button
@@ -237,11 +237,11 @@ const StudentBookingsPage = () => {
             onClick={() => setStatusFilter(s.key as BookingStatus | "ALL")}
             className={`group relative overflow-hidden rounded-[24px] border p-5 text-left transition-all duration-300 ${
               statusFilter === s.key
-                ? `${s.border} ring-2 ring-indigo-500 ring-offset-2 bg-white shadow-lg`
-                : "border-slate-200 bg-white hover:border-indigo-300 hover:shadow-md"
+                ? `${s.border} ring-2 ring-primary ring-offset-2 bg-card shadow-lg`
+                : "border-primary/15 bg-card hover:border-primary hover:shadow-md"
             }`}
           >
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400 group-hover:text-indigo-500 transition-colors">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400 group-hover:text-primary transition-colors">
               {s.label}
             </p>
             <p
@@ -250,7 +250,7 @@ const StudentBookingsPage = () => {
               {counts[s.key as keyof typeof counts]}
             </p>
             <div
-              className={`absolute bottom-0 left-0 h-1 transition-all duration-300 ${statusFilter === s.key ? "w-full bg-indigo-500" : "w-0 bg-slate-200 group-hover:w-1/2"}`}
+              className={`absolute bottom-0 left-0 h-1 transition-all duration-300 ${statusFilter === s.key ? "w-full bg-primary" : "w-0 bg-slate-200 group-hover:w-1/2"}`}
             />
           </button>
         ))}
@@ -259,7 +259,7 @@ const StudentBookingsPage = () => {
       {/* ─── BOOKING LIST ─── */}
       <div className="space-y-6">
         {filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-[32px] border-2 border-dashed border-slate-200 bg-slate-50/50 py-20 text-center">
+          <div className="flex flex-col items-center justify-center rounded-[32px] border-2 border-dashed border-primary/15 bg-canvas/50 py-20 text-center">
             <div className="mb-4 rounded-full bg-slate-100 p-4 text-slate-400">
               <CalendarDays size={40} />
             </div>
@@ -276,17 +276,17 @@ const StudentBookingsPage = () => {
             return (
               <article
                 key={booking.id}
-                className="group overflow-hidden rounded-[32px] border border-slate-200 bg-white p-2 transition-all hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/5"
+                className="group overflow-hidden rounded-[32px] border border-primary/15 bg-card p-2 transition-all hover:border-primary hover:shadow-xl hover:shadow-primary/5"
               >
                 <div className="flex flex-col lg:flex-row lg:items-center gap-6 p-6">
                   {/* Tutor Info & Status */}
                   <div className="flex-1 space-y-4">
                     <div className="flex items-center justify-between lg:justify-start gap-4">
-                      <div className="h-12 w-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-xl shadow-inner">
+                      <div className="h-12 w-12 rounded-2xl bg-primary flex items-center justify-center text-primary font-bold text-xl shadow-inner">
                         {booking.tutorProfile.user.name.charAt(0)}
                       </div>
                       <div>
-                        <h3 className="text-xl font-black text-slate-900 tracking-tight leading-none group-hover:text-indigo-600 transition-colors">
+                        <h3 className="text-xl font-black text-slate-900 tracking-tight leading-none group-hover:text-primary transition-colors">
                           {booking.tutorProfile.user.name}
                         </h3>
                         <span
@@ -300,7 +300,7 @@ const StudentBookingsPage = () => {
                     {/* Details Grid */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
                       <div className="flex items-center gap-2.5">
-                        <div className="p-2 rounded-xl bg-slate-50 text-slate-400 group-hover:text-indigo-500 transition-colors">
+                        <div className="p-2 rounded-xl bg-canvas text-slate-400 group-hover:text-primary transition-colors">
                           <CalendarDays size={18} />
                         </div>
                         <span className="text-sm font-bold text-slate-600">
@@ -308,7 +308,7 @@ const StudentBookingsPage = () => {
                         </span>
                       </div>
                       <div className="flex items-center gap-2.5">
-                        <div className="p-2 rounded-xl bg-slate-50 text-slate-400 group-hover:text-indigo-500 transition-colors">
+                        <div className="p-2 rounded-xl bg-canvas text-slate-400 group-hover:text-primary transition-colors">
                           <Clock3 size={18} />
                         </div>
                         <span className="text-sm font-bold text-slate-600">
@@ -316,7 +316,7 @@ const StudentBookingsPage = () => {
                         </span>
                       </div>
                       <div className="flex items-center gap-2.5">
-                        <div className="p-2 rounded-xl bg-slate-50 text-slate-400 group-hover:text-indigo-500 transition-colors">
+                        <div className="p-2 rounded-xl bg-canvas text-slate-400 group-hover:text-primary transition-colors">
                           <Wallet size={18} />
                         </div>
                         <span className="text-sm font-bold text-slate-900">
@@ -326,19 +326,19 @@ const StudentBookingsPage = () => {
                     </div>
 
                     {booking.note && (
-                      <div className="relative rounded-2xl bg-slate-50 p-4 text-sm font-medium text-slate-500 italic border-l-4 border-indigo-200">
+                      <div className="relative rounded-2xl bg-canvas p-4 text-sm font-medium text-slate-500 italic border-l-4 border-primary">
                         "{booking.note}"
                       </div>
                     )}
                   </div>
 
                   {/* Actions Area */}
-                  <div className="lg:pl-6 lg:border-l border-slate-100 flex flex-col gap-3 min-w-[200px]">
+                  <div className="lg:pl-6 lg:border-l border-primary/10 flex flex-col gap-3 min-w-[200px]">
                     {booking.status === "CONFIRMED" && (
                       <Button
                         onClick={() => handleCancelBooking(booking.id)}
                         disabled={updatingBookingId === booking.id}
-                        className="w-full h-12 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-600 hover:text-white transition-all font-bold"
+                        className="w-full h-12 rounded-2xl bg-secondary/10 text-secondary border border-secondary/20 hover:bg-secondary hover:text-white transition-all font-bold"
                       >
                         {updatingBookingId === booking.id ? (
                           <LoaderCircle className="animate-spin" />
@@ -361,7 +361,7 @@ const StudentBookingsPage = () => {
                         className={`w-full h-12 rounded-2xl font-bold transition-all ${
                           alreadyReviewed
                             ? "bg-slate-100 text-slate-400"
-                            : "bg-indigo-600 text-white shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:-translate-y-0.5"
+                            : "bg-primary text-white shadow-lg shadow-primary hover:bg-primary hover:-translate-y-0.5"
                         }`}
                       >
                         {alreadyReviewed ? "Reviewed" : "Leave a Review"}
@@ -369,7 +369,7 @@ const StudentBookingsPage = () => {
                     )}
 
                     {booking.status === "CANCELLED" && (
-                      <div className="flex items-center justify-center h-12 rounded-2xl bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-400 border border-slate-100">
+                      <div className="flex items-center justify-center h-12 rounded-2xl bg-canvas text-[10px] font-black uppercase tracking-widest text-slate-400 border border-primary/10">
                         Inactive
                       </div>
                     )}

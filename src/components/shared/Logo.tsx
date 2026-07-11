@@ -15,7 +15,7 @@ const Logo = ({ variant = "default" }: LogoProps) => {
       <GraduationCap 
         className={cn(
           "w-6 h-6 transition-transform group-hover:scale-110",
-          variant === "light" ? "text-white" : "text-indigo-600"
+          variant === "light" ? "text-white" : "text-primary"
         )} 
       />
       <span 
@@ -23,7 +23,7 @@ const Logo = ({ variant = "default" }: LogoProps) => {
           "font-bold text-xl tracking-tight",
           variant === "light" 
             ? "text-white" 
-            : "bg-gradient-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent"
+            : "bg-gradient-to-r from-primary to-primary bg-clip-text text-transparent"
         )}
       >
         SkillBridge

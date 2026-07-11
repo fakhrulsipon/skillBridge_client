@@ -29,7 +29,7 @@ const AdminCategoriesPage = () => {
         if (!res.ok) throw new Error(result.message || "Failed");
         setCategories(Array.isArray(result.data) ? result.data : []);
       } catch {
-        await Swal.fire({ icon: "error", title: "Failed to load categories", confirmButtonColor: "#e11d48" });
+        await Swal.fire({ icon: "error", title: "Failed to load categories", confirmButtonColor: "#B45309" });
       } finally {
         setIsLoading(false);
       }
@@ -53,7 +53,7 @@ const AdminCategoriesPage = () => {
       setNewIcon("");
       await Swal.fire({ icon: "success", title: "Category created", timer: 1500, showConfirmButton: false });
     } catch (error: any) {
-      await Swal.fire({ icon: "error", title: "Failed", text: error.message, confirmButtonColor: "#e11d48" });
+      await Swal.fire({ icon: "error", title: "Failed", text: error.message, confirmButtonColor: "#B45309" });
     } finally {
       setIsCreating(false);
     }
@@ -65,7 +65,7 @@ const AdminCategoriesPage = () => {
       title: `Delete "${name}"?`,
       text: "This cannot be undone.",
       showCancelButton: true,
-      confirmButtonColor: "#e11d48",
+      confirmButtonColor: "#B45309",
       confirmButtonText: "Delete",
     });
     if (!confirm.isConfirmed) return;
@@ -79,7 +79,7 @@ const AdminCategoriesPage = () => {
       if (!res.ok) throw new Error(result.message || "Failed");
       setCategories((prev) => prev.filter((c) => c.id !== id));
     } catch (error: any) {
-      await Swal.fire({ icon: "error", title: "Failed", text: error.message, confirmButtonColor: "#e11d48" });
+      await Swal.fire({ icon: "error", title: "Failed", text: error.message, confirmButtonColor: "#B45309" });
     } finally {
       setDeletingId(null);
     }
@@ -87,8 +87,8 @@ const AdminCategoriesPage = () => {
 
   if (isLoading) return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
-        <LoaderCircle className="h-5 w-5 animate-spin text-rose-600" />
+      <div className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-card px-5 py-4 shadow-sm">
+        <LoaderCircle className="h-5 w-5 animate-spin text-secondary" />
         <span className="text-sm text-slate-600">Loading categories...</span>
       </div>
     </div>
@@ -96,16 +96,16 @@ const AdminCategoriesPage = () => {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-3xl bg-gradient-to-br from-rose-600 via-pink-600 to-orange-500 p-6 text-white shadow-lg">
+      <section className="rounded-3xl bg-gradient-to-br from-primary via-primary to-secondary p-6 text-white shadow-lg">
         <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] mb-3">
           <Sparkles className="h-3.5 w-3.5" /> Category Management
         </div>
         <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
-        <p className="mt-2 text-sm text-rose-50/90">Create and delete tutoring subject categories.</p>
+        <p className="mt-2 text-sm text-white/90">Create and delete tutoring subject categories.</p>
       </section>
 
       {/* Create form */}
-      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-3xl border border-primary/15 bg-card p-6 shadow-sm">
         <h2 className="mb-4 text-lg font-semibold text-slate-900">Add New Category</h2>
         <div className="flex flex-col gap-3 sm:flex-row">
           <input
@@ -113,19 +113,19 @@ const AdminCategoriesPage = () => {
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             placeholder="Category name (e.g. Mathematics)"
-            className="flex-1 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100"
+            className="flex-1 rounded-2xl border border-primary/15 bg-canvas px-4 py-2.5 text-sm outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
           />
           <input
             type="text"
             value={newIcon}
             onChange={(e) => setNewIcon(e.target.value)}
             placeholder="Icon (emoji or URL, optional)"
-            className="w-48 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100"
+            className="w-48 rounded-2xl border border-primary/15 bg-canvas px-4 py-2.5 text-sm outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
           />
           <Button
             onClick={handleCreate}
             disabled={isCreating || !newName.trim()}
-            className="rounded-2xl bg-rose-600 text-white hover:bg-rose-700"
+            className="rounded-2xl bg-secondary text-white hover:bg-secondary/90"
           >
             {isCreating ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
             Create
@@ -136,15 +136,15 @@ const AdminCategoriesPage = () => {
       {/* Categories grid */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {categories.length === 0 ? (
-          <div className="col-span-full rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center text-sm text-slate-400">
+          <div className="col-span-full rounded-3xl border border-dashed border-slate-300 bg-canvas p-10 text-center text-sm text-slate-400">
             No categories yet. Create one above.
           </div>
         ) : (
           categories.map((cat) => (
-            <div key={cat.id} className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:border-rose-200 transition-colors">
+            <div key={cat.id} className="flex items-center justify-between rounded-2xl border border-primary/15 bg-card p-4 shadow-sm hover:border-secondary/30 transition-colors">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-xl">
-                  {cat.icon || <FolderOpen className="h-5 w-5 text-rose-500" />}
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/10 text-xl">
+                  {cat.icon || <FolderOpen className="h-5 w-5 text-secondary" />}
                 </div>
                 <div>
                   <p className="font-medium text-slate-900">{cat.name}</p>

@@ -214,7 +214,7 @@ const TrustedBySection = () => (
           <motion.div
             variants={cardVariants}
             key={partner}
-            className="flex min-h-24 min-w-0 items-center justify-center rounded-3xl border border-slate-200 bg-card px-5 py-6 text-center text-sm font-bold uppercase tracking-widest text-slate-400 grayscale transition-all duration-300 hover:scale-[1.02] hover:border-secondary/40 hover:text-primary hover:shadow-xl hover:shadow-primary/10"
+            className="flex min-h-24 min-w-0 items-center justify-center rounded-3xl border border-primary/15 bg-card px-5 py-6 text-center text-sm font-bold uppercase tracking-widest text-slate-400 grayscale transition-all duration-300 hover:scale-[1.02] hover:border-secondary/40 hover:text-primary hover:shadow-xl hover:shadow-primary/10"
           >
             {partner}
           </motion.div>
@@ -323,7 +323,7 @@ const FAQNewsletterSection = () => (
           <input
             type="email"
             placeholder="Email address"
-            className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-card px-4 py-3 text-sm outline-none transition-all focus:border-secondary focus:ring-4 focus:ring-secondary/10"
+            className="min-w-0 flex-1 rounded-xl border border-primary/15 bg-card px-4 py-3 text-sm outline-none transition-all focus:border-secondary focus:ring-4 focus:ring-secondary/10"
           />
           <button className="rounded-xl bg-primary px-8 py-3 font-semibold text-white shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/25">
             Subscribe

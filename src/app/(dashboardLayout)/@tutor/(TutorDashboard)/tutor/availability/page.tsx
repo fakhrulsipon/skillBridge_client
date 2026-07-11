@@ -100,7 +100,7 @@ const AvailabilityPage = () => {
           icon: 'error',
           title: 'Unable to load availability',
           text: message,
-          confirmButtonColor: '#0284c7',
+          confirmButtonColor: '#047857',
         })
       } finally {
         setIsLoadingProfile(false)
@@ -164,7 +164,7 @@ const AvailabilityPage = () => {
         icon: 'warning',
         title: 'Login required',
         text: 'Please sign in again to manage availability.',
-        confirmButtonColor: '#0284c7',
+        confirmButtonColor: '#047857',
       })
       return
     }
@@ -174,7 +174,7 @@ const AvailabilityPage = () => {
         icon: 'info',
         title: 'Create your tutor profile first',
         text: 'You need a tutor profile before you can publish availability.',
-        confirmButtonColor: '#0284c7',
+        confirmButtonColor: '#047857',
       })
       return
     }
@@ -184,7 +184,7 @@ const AvailabilityPage = () => {
         icon: 'warning',
         title: 'Check your availability slots',
         text: validationError,
-        confirmButtonColor: '#0284c7',
+        confirmButtonColor: '#047857',
       })
       return
     }
@@ -220,7 +220,7 @@ const AvailabilityPage = () => {
         icon: 'success',
         title: 'Availability updated',
         text: result.message || 'Your availability slots have been saved successfully.',
-        confirmButtonColor: '#0284c7',
+        confirmButtonColor: '#047857',
       })
     } catch (error) {
       const message =
@@ -230,7 +230,7 @@ const AvailabilityPage = () => {
         icon: 'error',
         title: 'Save failed',
         text: message,
-        confirmButtonColor: '#0284c7',
+        confirmButtonColor: '#047857',
       })
     } finally {
       setIsSubmitting(false)
@@ -240,8 +240,8 @@ const AvailabilityPage = () => {
   if (isAuthLoading || isLoadingProfile) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 text-slate-600 shadow-sm">
-          <LoaderCircle className="h-5 w-5 animate-spin text-sky-600" />
+        <div className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-card px-5 py-4 text-slate-600 shadow-sm">
+          <LoaderCircle className="h-5 w-5 animate-spin text-primary" />
           <span className="text-sm font-medium">Loading your availability...</span>
         </div>
       </div>
@@ -250,18 +250,18 @@ const AvailabilityPage = () => {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-3xl bg-gradient-to-br from-sky-600 via-cyan-600 to-teal-500 p-6 text-white shadow-lg">
+      <section className="rounded-3xl bg-gradient-to-br from-primary via-primary to-primary p-6 text-white shadow-lg">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] border border-white/10">
-              <Sparkles className="h-3.5 w-3.5 text-yellow-200" />
+              <Sparkles className="h-3.5 w-3.5 text-secondary" />
               Tutor availability
             </div>
             <div>
               <h1 className="text-3xl font-black tracking-tight">
                 {user?.name ? `${user.name}&apos;s Availability` : 'Set your availability'}
               </h1>
-              <p className="mt-2 max-w-2xl text-sm font-medium text-sky-50/90">
+              <p className="mt-2 max-w-2xl text-sm font-medium text-primary/90">
                 Choose the days and times when students can book you. The backend accepts
                 `dayOfWeek`, `startTime`, and `endTime` for each slot.
               </p>
@@ -275,7 +275,7 @@ const AvailabilityPage = () => {
       </section>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
+        <section className="rounded-3xl border border-primary/10 bg-card p-6 shadow-sm">
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <h2 className="text-xl font-black text-slate-900 tracking-tight">Weekly time slots</h2>
@@ -287,7 +287,7 @@ const AvailabilityPage = () => {
             <Button
               type="button"
               onClick={addSlot}
-              className="rounded-2xl bg-sky-600 font-black text-white hover:bg-sky-700 shadow-lg shadow-sky-100 transition-all active:scale-95 px-6"
+              className="rounded-2xl bg-primary font-black text-white hover:bg-primary shadow-lg shadow-primary transition-all active:scale-95 px-6"
             >
               <Plus className="h-4 w-4 stroke-[3px]" />
               Add slot
@@ -295,7 +295,7 @@ const AvailabilityPage = () => {
           </div>
 
           {!hasProfile && (
-            <div className="mb-6 rounded-2xl border border-amber-100 bg-amber-50/50 px-4 py-3 text-sm font-bold text-amber-700 flex items-center gap-2">
+            <div className="mb-6 rounded-2xl border border-secondary bg-secondary/50 px-4 py-3 text-sm font-bold text-secondary flex items-center gap-2">
               <AlertCircle size={18} />
               Please create your tutor profile first.
             </div>
@@ -305,17 +305,17 @@ const AvailabilityPage = () => {
             {slots.map((slot, index) => (
               <div
                 key={`${slot.id ?? 'new'}-${index}`}
-                className="rounded-3xl border border-slate-100 bg-slate-50/50 p-5 transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50"
+                className="rounded-3xl border border-primary/10 bg-canvas/50 p-5 transition-all hover:bg-card hover:shadow-xl hover:shadow-slate-200/50"
               >
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                    <CalendarDays className="h-4 w-4 text-sky-500" />
+                    <CalendarDays className="h-4 w-4 text-primary" />
                     Slot {index + 1}
                   </div>
                   <button
                     type="button"
                     onClick={() => removeSlot(index)}
-                    className="inline-flex items-center gap-2 rounded-xl border border-red-100 bg-white px-3 py-2 text-xs font-black uppercase tracking-widest text-red-500 transition-all hover:bg-red-500 hover:text-white"
+                    className="inline-flex items-center gap-2 rounded-xl border border-red-100 bg-card px-3 py-2 text-xs font-black uppercase tracking-widest text-red-500 transition-all hover:bg-red-500 hover:text-white"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                     Remove
@@ -330,7 +330,7 @@ const AvailabilityPage = () => {
                       onChange={(event) =>
                         updateSlot(index, 'dayOfWeek', Number(event.target.value))
                       }
-                      className="h-11 w-full rounded-2xl border border-slate-100 bg-white px-4 text-sm font-bold text-slate-700 outline-none transition focus:ring-4 focus:ring-sky-500/5 focus:border-sky-500"
+                      className="h-11 w-full rounded-2xl border border-primary/10 bg-card px-4 text-sm font-bold text-slate-700 outline-none transition focus:ring-4 focus:ring-primary/5 focus:border-primary"
                     >
                       {dayOptions.map((day) => (
                         <option key={day.value} value={day.value}>
@@ -350,7 +350,7 @@ const AvailabilityPage = () => {
                         onChange={(event) =>
                           updateSlot(index, 'startTime', event.target.value)
                         }
-                        className="h-11 w-full rounded-2xl border border-slate-100 bg-white pl-10 pr-4 text-sm font-bold text-slate-700 outline-none transition focus:ring-4 focus:ring-sky-500/5 focus:border-sky-500"
+                        className="h-11 w-full rounded-2xl border border-primary/10 bg-card pl-10 pr-4 text-sm font-bold text-slate-700 outline-none transition focus:ring-4 focus:ring-primary/5 focus:border-primary"
                       />
                     </div>
                   </div>
@@ -365,7 +365,7 @@ const AvailabilityPage = () => {
                         onChange={(event) =>
                           updateSlot(index, 'endTime', event.target.value)
                         }
-                        className="h-11 w-full rounded-2xl border border-slate-100 bg-white pl-10 pr-4 text-sm font-bold text-slate-700 outline-none transition focus:ring-4 focus:ring-sky-500/5 focus:border-sky-500"
+                        className="h-11 w-full rounded-2xl border border-primary/10 bg-card pl-10 pr-4 text-sm font-bold text-slate-700 outline-none transition focus:ring-4 focus:ring-primary/5 focus:border-primary"
                       />
                     </div>
                   </div>
@@ -383,7 +383,7 @@ const AvailabilityPage = () => {
               type="button"
               onClick={handleSubmit}
               disabled={isSubmitting || !hasProfile}
-              className="h-12 rounded-2xl bg-sky-600 px-8 font-black text-white hover:bg-sky-700 shadow-lg shadow-sky-100 transition-all active:scale-95"
+              className="h-12 rounded-2xl bg-primary px-8 font-black text-white hover:bg-primary shadow-lg shadow-primary transition-all active:scale-95"
             >
               {isSubmitting ? (
                 <>
@@ -401,16 +401,16 @@ const AvailabilityPage = () => {
         </section>
 
         <aside className="space-y-4">
-          <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-primary/10 bg-card p-6 shadow-sm">
             <h3 className="text-lg font-black text-slate-900 tracking-tight mb-4">Preview</h3>
             <div className="space-y-3">
               {slots.length ? (
                 slots.map((slot, index) => (
                   <div
                     key={`preview-${slot.id ?? 'new'}-${index}`}
-                    className="rounded-2xl border border-slate-50 bg-slate-50/50 px-4 py-3"
+                    className="rounded-2xl border border-slate-50 bg-canvas/50 px-4 py-3"
                   >
-                    <p className="text-[10px] font-black uppercase tracking-widest text-sky-600">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-primary">
                       {dayOptions.find((day) => day.value === Number(slot.dayOfWeek))?.label}
                     </p>
                     <p className="mt-1 text-sm font-black text-slate-700">

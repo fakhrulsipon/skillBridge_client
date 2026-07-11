@@ -29,17 +29,17 @@ interface SignUpFormData {
 
 const features = [
   {
-    icon: <Users size={18} className="text-indigo-400" />,
+    icon: <Users size={18} className="text-primary" />,
     title: "Expert Tutors",
     sub: "Learn from the best in the industry.",
   },
   {
-    icon: <BookOpen size={18} className="text-emerald-400" />,
+    icon: <BookOpen size={18} className="text-primary" />,
     title: "Curated Courses",
     sub: "High-quality content for all levels.",
   },
   {
-    icon: <Zap size={18} className="text-amber-400" />,
+    icon: <Zap size={18} className="text-secondary" />,
     title: "Instant Access",
     sub: "Start your journey in seconds.",
   },
@@ -93,7 +93,7 @@ const SignUp = () => {
           icon: "success",
           title: "Welcome Aboard! 🎉",
           text: "Your account has been created successfully. Redirecting you to your dashboard...",
-          confirmButtonColor: "#4f46e5",
+          confirmButtonColor: "#047857",
           confirmButtonText: "Continue",
           timer: 3000,
           timerProgressBar: true,
@@ -119,7 +119,7 @@ const SignUp = () => {
           text:
             result.message ||
             "Unable to create your account. Please try again.",
-          confirmButtonColor: "#4f46e5",
+          confirmButtonColor: "#047857",
           confirmButtonText: "Try Again",
           customClass: {
             popup: "rounded-2xl",
@@ -136,7 +136,7 @@ const SignUp = () => {
         icon: "error",
         title: "Connection Error",
         text: "Unable to reach the server. Please check your internet connection and try again.",
-        confirmButtonColor: "#4f46e5",
+        confirmButtonColor: "#047857",
         confirmButtonText: "Retry",
         customClass: {
           popup: "rounded-2xl",
@@ -149,16 +149,16 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 p-4 lg:p-8">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-canvas via-card to-primary/30 p-4 lg:p-8">
       {/* Main Card Container */}
-      <div className="flex w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl shadow-indigo-500/10 border border-slate-100 transition-all duration-300 hover:shadow-indigo-500/20">
+      <div className="flex w-full max-w-5xl overflow-hidden rounded-3xl bg-card shadow-2xl shadow-primary/10 border border-primary/10 transition-all duration-300 hover:shadow-primary/20">
         {/* --- LEFT PANEL: Branding & Features --- */}
-        <div className="relative hidden w-[45%] flex-col justify-between bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 p-10 text-white lg:flex">
+        <div className="relative hidden w-[45%] flex-col justify-between bg-gradient-to-br from-slate-900 via-slate-800 to-primary p-10 text-white lg:flex">
           <div className="relative z-10">
             <div className="flex items-center gap-2">
               <div className="relative">
-                <div className="absolute inset-0 rounded-xl bg-indigo-500 blur-md opacity-50" />
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 shadow-lg">
+                <div className="absolute inset-0 rounded-xl bg-primary blur-md opacity-50" />
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary shadow-lg">
                   <Sparkles
                     size={20}
                     className="text-white"
@@ -166,7 +166,7 @@ const SignUp = () => {
                   />
                 </div>
               </div>
-              <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">
+              <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-card to-primary bg-clip-text text-transparent">
                 SkillBridge
               </span>
             </div>
@@ -188,7 +188,7 @@ const SignUp = () => {
                 key={idx}
                 className="group flex items-start gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:shadow-lg"
               >
-                <div className="rounded-xl bg-white/10 p-2 transition-all duration-300 group-hover:scale-110 group-hover:bg-indigo-500/20">
+                <div className="rounded-xl bg-white/10 p-2 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
                   {item.icon}
                 </div>
                 <div>
@@ -209,7 +209,7 @@ const SignUp = () => {
         </div>
 
         {/* --- RIGHT PANEL: Form --- */}
-        <div className="flex flex-1 flex-col justify-center bg-white px-6 py-12 md:px-12 lg:px-16">
+        <div className="flex flex-1 flex-col justify-center bg-card px-6 py-12 md:px-12 lg:px-16">
           <div className="mb-8 text-center lg:text-left">
             <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
               Create Account
@@ -230,8 +230,8 @@ const SignUp = () => {
                   disabled={isLoading}
                   className={`relative flex flex-col items-center gap-2 rounded-xl border-2 py-3 transition-all duration-200 ${
                     selectedRole === role
-                      ? "border-indigo-500 bg-indigo-50 text-indigo-600 shadow-md"
-                      : "border-slate-200 bg-white text-slate-400 hover:border-slate-300 hover:bg-slate-50"
+                      ? "border-primary bg-primary text-primary shadow-md"
+                      : "border-primary/15 bg-card text-slate-400 hover:border-slate-300 hover:bg-canvas"
                   }`}
                 >
                   {role === "STUDENT" ? (
@@ -245,7 +245,7 @@ const SignUp = () => {
                   {selectedRole === role && (
                     <CheckCircle2
                       size={16}
-                      className="absolute right-2 top-2 text-indigo-500"
+                      className="absolute right-2 top-2 text-primary"
                     />
                   )}
                 </button>
@@ -261,7 +261,7 @@ const SignUp = () => {
                 </label>
                 <div className="relative">
                   <UserCircle
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors peer-focus:text-indigo-500"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors peer-focus:text-primary"
                     size={18}
                   />
                   <input
@@ -275,7 +275,7 @@ const SignUp = () => {
                         return true;
                       },
                     })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full rounded-xl border border-primary/15 bg-canvas/50 py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -291,7 +291,7 @@ const SignUp = () => {
                 </label>
                 <div className="relative">
                   <Mail
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors peer-focus:text-indigo-500"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors peer-focus:text-primary"
                     size={18}
                   />
                   <input
@@ -305,7 +305,7 @@ const SignUp = () => {
                         message: "Please enter a valid email address",
                       },
                     })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full rounded-xl border border-primary/15 bg-canvas/50 py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -321,7 +321,7 @@ const SignUp = () => {
                 </label>
                 <div className="relative">
                   <Lock
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors peer-focus:text-indigo-500"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors peer-focus:text-primary"
                     size={18}
                   />
                   <input
@@ -338,13 +338,13 @@ const SignUp = () => {
                           "Password must include at least one letter and one number",
                       },
                     })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-10 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full rounded-xl border border-primary/15 bg-canvas/50 py-3 pl-10 pr-10 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20"
                     placeholder="Create a strong password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-indigo-500"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-primary"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -361,7 +361,7 @@ const SignUp = () => {
               <p
                 className={`text-xs ${
                   formMessage.type === "success"
-                    ? "text-emerald-600"
+                    ? "text-primary"
                     : "text-red-500"
                 }`}
               >
@@ -373,7 +373,7 @@ const SignUp = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all duration-200 hover:shadow-indigo-500/40 hover:from-indigo-700 hover:to-indigo-800 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
+              className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-primary to-primary py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-primary/40 hover:from-primary hover:to-primary active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isLoading ? (
                 <>
@@ -398,7 +398,7 @@ const SignUp = () => {
               Already have an account?{" "}
               <a
                 href="/login"
-                className="font-semibold text-indigo-600 transition-colors hover:text-indigo-700 hover:underline underline-offset-4"
+                className="font-semibold text-primary transition-colors hover:text-primary hover:underline underline-offset-4"
               >
                 Sign in
               </a>

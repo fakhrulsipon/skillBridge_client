@@ -66,7 +66,7 @@ export default function ContactPage() {
         icon: "success",
         title: "Message sent",
         text: result.message || "Your message has been sent successfully.",
-        confirmButtonColor: "#4f46e5",
+        confirmButtonColor: "#047857",
         confirmButtonText: "Continue",
         customClass: {
           popup: "rounded-2xl",
@@ -84,11 +84,11 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50">
-      <section className="bg-white border-b border-slate-200 py-12 md:py-20">
+    <div className="min-h-screen bg-canvas/50">
+      <section className="bg-card border-b border-primary/15 py-12 md:py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="max-w-3xl">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-indigo-50 px-4 py-1.5 text-xs font-semibold text-indigo-600">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary">
               <Mail size={14} /> Contact SkillBridge
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tight">
@@ -106,7 +106,7 @@ export default function ContactPage() {
         <div className="mx-auto max-w-3xl px-6">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm"
+            className="rounded-3xl border border-primary/10 bg-card p-8 shadow-sm"
           >
             <div className="grid gap-5 md:grid-cols-2">
               <div className="space-y-1.5">
@@ -129,7 +129,7 @@ export default function ContactPage() {
                         return true;
                       },
                     })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full rounded-xl border border-primary/15 bg-canvas/50 py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -156,7 +156,7 @@ export default function ContactPage() {
                         message: "Please enter a valid email address",
                       },
                     })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20"
+                    className="w-full rounded-xl border border-primary/15 bg-canvas/50 py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -181,7 +181,7 @@ export default function ContactPage() {
                     return true;
                   },
                 })}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-xl border border-primary/15 bg-canvas/50 px-4 py-3 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20"
                 placeholder="How can we help?"
               />
               {errors.subject && (
@@ -211,7 +211,7 @@ export default function ContactPage() {
                       return true;
                     },
                   })}
-                  className="h-36 w-full resize-none rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20"
+                  className="h-36 w-full resize-none rounded-xl border border-primary/15 bg-canvas/50 py-3 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20"
                   placeholder="Write your message..."
                 />
               </div>
@@ -226,7 +226,7 @@ export default function ContactPage() {
               <p
                 className={`mt-5 text-xs ${
                   formMessage.type === "success"
-                    ? "text-emerald-600"
+                    ? "text-primary"
                     : "text-red-500"
                 }`}
               >
@@ -237,7 +237,7 @@ export default function ContactPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-8 py-3 font-semibold text-white transition hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-200 disabled:cursor-not-allowed disabled:opacity-70"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-8 py-3 font-semibold text-white transition hover:bg-primary hover:shadow-lg hover:shadow-primary disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isLoading ? (
                 <>

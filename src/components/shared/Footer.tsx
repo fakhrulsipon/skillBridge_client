@@ -33,26 +33,26 @@ const Footer = () => {
     {
       icon: Facebook,
       href: "#",
-      color: "text-[#1877f2]",
-      bg: "bg-[#1877f2]/10",
+      hoverColor: "group-hover:text-primary",
+      bg: "bg-[#047857]/10",
     },
     {
       icon: Twitter,
       href: "#",
-      color: "text-[#1da1f2]",
-      bg: "bg-[#1da1f2]/10",
+      hoverColor: "group-hover:text-primary",
+      bg: "bg-[#047857]/10",
     },
     {
       icon: Instagram,
       href: "#",
-      color: "text-[#e4405f]",
-      bg: "bg-[#e4405f]/10",
+      hoverColor: "group-hover:text-secondary",
+      bg: "bg-[#B45309]/10",
     },
     {
       icon: Linkedin,
       href: "#",
-      color: "text-[#0a66c2]",
-      bg: "bg-[#0a66c2]/10",
+      hoverColor: "group-hover:text-primary",
+      bg: "bg-[#047857]/10",
     },
   ];
 
@@ -64,10 +64,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-white border-t border-slate-100 overflow-hidden">
-      {/* Decorative top gradient line */}
-      <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
-
+    <footer className="relative bg-card overflow-hidden">
       <div className="relative mx-auto max-w-7xl px-6 py-20">
         <div className="flex justify-between items-center mb-20">
           {/* Brand Section */}
@@ -86,9 +83,11 @@ const Footer = () => {
                   <a
                     key={idx}
                     href={social.href}
-                    className={`h-12 w-12 rounded-2xl ${social.bg} flex items-center justify-center transition-all hover:scale-110`}
+                    className={`group h-12 w-12 rounded-2xl ${social.bg} flex items-center justify-center text-slate-500 transition-all hover:scale-110`}
                   >
-                    <social.icon className={`h-5 w-5 ${social.color}`} />
+                    <social.icon
+                      className={`h-5 w-5 transition-colors ${social.hoverColor}`}
+                    />
                   </a>
                 ))}
               </div>
@@ -105,7 +104,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-slate-500 font-bold hover:text-indigo-600 transition-colors flex items-center gap-2 group"
+                    className="text-slate-500 font-bold hover:text-primary transition-colors flex items-center gap-2 group"
                   >
                     <ChevronRight
                       size={14}
@@ -120,10 +119,10 @@ const Footer = () => {
         </div>
 
         {/* Trust Badges */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-10 border-y border-slate-100">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-10 border-y border-primary/10">
           {trustBadges.map((badge, idx) => (
             <div key={idx} className="flex items-center gap-4 group">
-              <div className="h-12 w-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-all">
+              <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
                 <badge.icon size={20} />
               </div>
               <div>

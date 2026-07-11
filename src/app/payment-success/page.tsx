@@ -14,7 +14,7 @@ export default function PaymentSuccessPage() {
       icon: "success",
       title: "Payment Successful!",
       text: "Your session has been booked successfully.",
-      confirmButtonColor: "#6366f1",
+      confirmButtonColor: "#047857",
     }).then(() => {
       // ২. পপআপ বন্ধ হলে কোনো ঝামেলা ছাড়াই ক্লিন ড্যাশবোর্ড পাথে রিডাইরেক্ট করা
       router.push("/student/dashboard");
@@ -22,8 +22,8 @@ export default function PaymentSuccessPage() {
   }, [router]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50">
-      <LoaderCircle className="h-10 w-10 animate-spin text-indigo-600" />
+    <div className="flex min-h-screen flex-col items-center justify-center bg-canvas">
+      <LoaderCircle className="h-10 w-10 animate-spin text-primary" />
       <p className="mt-4 text-sm font-medium text-slate-500">
         Verifying payment and redirecting to dashboard...
       </p>
