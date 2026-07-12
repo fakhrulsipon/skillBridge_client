@@ -67,8 +67,8 @@ const Login = () => {
   const fillDemoCredentials = (role: "USER" | "ADMIN") => {
     const credentials =
       role === "ADMIN"
-        ? { email: "admin@skillbridge.com", password: "admin123" }
-        : { email: "student@skillbridge.com", password: "student123" };
+        ? { email: "sipon@gmail.com", password: "sipon12345" }
+        : { email: "rahul@gmail.com", password: "rahul12345" };
 
     setValue("email", credentials.email, { shouldValidate: true });
     setValue("password", credentials.password, { shouldValidate: true });
@@ -207,7 +207,7 @@ const Login = () => {
                   SkillBridge
                 </span>
               </h1>
-              <p className="text-primary text-sm leading-relaxed">
+              <p className="text-white/80 text-sm leading-relaxed">
                 Continue your learning journey and unlock new possibilities with
                 our expert-led courses.
               </p>
@@ -217,15 +217,15 @@ const Login = () => {
             <div className="mt-8 flex gap-6">
               <div>
                 <div className="text-2xl font-bold">10k+</div>
-                <div className="text-xs text-primary">Active Students</div>
+                <div className="text-xs text-white/70">Active Students</div>
               </div>
               <div>
                 <div className="text-2xl font-bold">500+</div>
-                <div className="text-xs text-primary">Expert Tutors</div>
+                <div className="text-xs text-white/70">Expert Tutors</div>
               </div>
               <div>
                 <div className="text-2xl font-bold">98%</div>
-                <div className="text-xs text-primary">Satisfaction Rate</div>
+                <div className="text-xs text-white/70">Satisfaction Rate</div>
               </div>
             </div>
           </div>
@@ -243,7 +243,7 @@ const Login = () => {
                   <h3 className="text-sm font-semibold text-white">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-primary leading-relaxed">
+                  <p className="text-xs text-white/70 leading-relaxed">
                     {item.sub}
                   </p>
                 </div>
@@ -251,9 +251,9 @@ const Login = () => {
             ))}
           </div>
 
-          <div className="relative z-10 flex items-center gap-4 text-xs text-primary">
+          <div className="relative z-10 flex items-center gap-4 text-xs text-white/70">
             <span>© 2026 SkillBridge Inc.</span>
-            <span className="h-3 w-px bg-primary/30" />
+              <span className="h-3 w-px bg-white/30" />
             <span>Secure Platform</span>
           </div>
         </div>
@@ -262,8 +262,8 @@ const Login = () => {
         <div className="flex flex-1 flex-col justify-center bg-card px-6 py-12 md:px-12 lg:px-16">
           <div className="mb-8 text-center lg:text-left">
             <div className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-3 py-1 mb-4 lg:hidden">
-              <Sparkles size={14} className="text-primary" />
-              <span className="text-xs font-semibold text-primary">
+              <Sparkles size={14} className="text-white" />
+              <span className="text-xs font-semibold text-white">
                 SkillBridge
               </span>
             </div>
@@ -366,7 +366,7 @@ const Login = () => {
                 type="button"
                 onClick={() => fillDemoCredentials("USER")}
                 disabled={isLoading}
-                className="rounded-xl border border-primary/15 bg-canvas/50 py-3 text-sm font-semibold text-slate-600 transition-all hover:border-primary hover:bg-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-70"
+                className="rounded-xl border border-primary/15 bg-canvas/50 py-3 text-sm font-semibold text-slate-600 transition-all hover:border-primary hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
               >
                 Demo User
               </button>
@@ -374,7 +374,7 @@ const Login = () => {
                 type="button"
                 onClick={() => fillDemoCredentials("ADMIN")}
                 disabled={isLoading}
-                className="rounded-xl border border-primary/15 bg-canvas/50 py-3 text-sm font-semibold text-slate-600 transition-all hover:border-primary hover:bg-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-70"
+                className="rounded-xl border border-primary/15 bg-canvas/50 py-3 text-sm font-semibold text-slate-600 transition-all hover:border-primary hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
               >
                 Demo Admin
               </button>

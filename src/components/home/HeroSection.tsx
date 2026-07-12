@@ -13,7 +13,7 @@ const stats = [
 
 const HeroSection = () => {
   return (
-    <section className="relative flex min-h-[680px] items-center overflow-x-hidden overflow-y-hidden bg-gradient-to-br from-primary via-primary to-secondary pb-20 pt-24 text-white sm:min-h-[720px] sm:pt-28 md:pt-32 lg:h-[68vh] lg:min-h-[640px] lg:max-h-[760px]">
+    <section className="relative flex min-h-[680px] items-center overflow-x-hidden overflow-y-hidden bg-gradient-to-br from-primary via-primary to-secondary pb-20 pt-36 text-white sm:min-h-[720px] sm:pt-40 md:pt-44 lg:h-[68vh] lg:min-h-[640px] lg:max-h-[760px]">
       <div className="absolute inset-0 opacity-20">
         <div className="absolute left-0 top-20 h-72 w-72 rounded-full bg-card blur-3xl animate-pulse sm:left-10" />
         <div className="absolute bottom-20 right-0 h-80 w-80 rounded-full bg-secondary blur-3xl animate-pulse delay-1000 sm:right-10 sm:h-96 sm:w-96" />

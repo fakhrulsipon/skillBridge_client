@@ -232,7 +232,7 @@ const res = await fetch(`${baseUrl}/create-payment-intent`, {
               <TutorAvatar tutor={tutor} />
             </div>
             <div className="flex-1 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary text-primary text-[10px] font-bold uppercase tracking-widest border border-primary">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary text-white text-[10px] font-bold uppercase tracking-widest border border-primary">
                 <ShieldCheck size={12} /> Verified Expert
               </div>
               <h1 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">{tutor.user.name}</h1>
@@ -243,7 +243,7 @@ const res = await fetch(`${baseUrl}/create-payment-intent`, {
               </div>
               <div className="flex flex-wrap gap-2 pt-2">
                 {tutor.categories.map(c => (
-                  <span key={c.categoryId} className="px-3 py-1 rounded-lg bg-primary text-primary text-xs font-bold border border-primary">
+                  <span key={c.categoryId} className="px-3 py-1 rounded-lg bg-primary text-white text-xs font-bold border border-primary">
                     {c.category.name}
                   </span>
                 ))}

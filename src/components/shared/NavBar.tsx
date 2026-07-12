@@ -197,7 +197,7 @@ const NavBar = () => {
                           key={item.href}
                           href={item.href}
                           onClick={() => setIsUserMenuOpen(false)}
-                          className="flex items-center gap-3 rounded-2xl px-5 py-3 text-sm font-bold text-slate-600 hover:bg-primary hover:text-primary transition-all"
+                          className="flex items-center gap-3 rounded-2xl px-5 py-3 text-sm font-bold text-slate-600 hover:bg-primary hover:text-white transition-all"
                         >
                           <item.icon size={18} />
                           {item.label}
@@ -265,7 +265,7 @@ const NavBar = () => {
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block rounded-2xl px-6 py-4 text-base font-bold text-slate-600 bg-canvas hover:bg-primary hover:text-primary transition-all"
+                className="block rounded-2xl px-6 py-4 text-base font-bold text-slate-600 bg-canvas hover:bg-primary hover:text-white transition-all"
               >
                 {link.label}
               </Link>
@@ -297,7 +297,7 @@ const NavBar = () => {
                       key={item.href}
                       href={item.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 hover:bg-primary hover:text-primary transition-all"
+                      className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 hover:bg-primary hover:text-white transition-all"
                     >
                       <item.icon size={18} />
                       {item.label}

@@ -9,28 +9,28 @@ const TutorSection = () => {
       title: 'Manage Your Availability',
       description: 'Set your teaching hours, block time slots, and let students book instantly — complete control.',
       bg: 'bg-primary',
-      iconColor: 'text-primary'
+      iconColor: 'text-white'
     },
     {
       icon: BarChart3,
       title: 'Track Sessions & Progress',
       description: 'View upcoming sessions, track earnings, and monitor student feedback in one dashboard.',
       bg: 'bg-primary',
-      iconColor: 'text-primary'
+      iconColor: 'text-white'
     },
     {
       icon: Wallet,
       title: 'Seamless Payments',
       description: 'Get paid automatically after each session. Flexible payout options and transparent fees.',
       bg: 'bg-primary',
-      iconColor: 'text-primary'
+      iconColor: 'text-white'
     },
     {
       icon: Users,
       title: 'Grow Your Student Base',
       description: 'Reach thousands of motivated learners actively looking for your expertise.',
       bg: 'bg-secondary',
-      iconColor: 'text-secondary'
+      iconColor: 'text-white'
     }
   ];
 
@@ -85,7 +85,7 @@ const TutorSection = () => {
             <div className="space-y-6">
               {steps.map((item) => (
                 <div key={item.step} className="flex gap-4 items-start group">
-                  <div className="w-10 h-10 rounded-full bg-primary text-primary flex items-center justify-center font-bold text-lg group-hover:bg-primary group-hover:text-white transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg group-hover:bg-primary group-hover:text-white transition-colors">
                     {item.step}
                   </div>
                   <div>
@@ -123,7 +123,7 @@ const TutorSection = () => {
             <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center font-bold">JD</div>
             <div>
               <div className="font-semibold">Jessica Diaz</div>
-              <div className="text-primary text-sm">Mathematics Tutor • 500+ sessions</div>
+              <div className="text-white/70 text-sm">Mathematics Tutor • 500+ sessions</div>
             </div>
           </div>
         </div>

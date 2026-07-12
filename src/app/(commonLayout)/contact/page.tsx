@@ -88,7 +88,7 @@ export default function ContactPage() {
       <section className="bg-card border-b border-primary/15 py-12 md:py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="max-w-3xl">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-white">
               <Mail size={14} /> Contact SkillBridge
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tight">

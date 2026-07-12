@@ -259,9 +259,9 @@ const AvailabilityPage = () => {
             </div>
             <div>
               <h1 className="text-3xl font-black tracking-tight">
-                {user?.name ? `${user.name}&apos;s Availability` : 'Set your availability'}
+                {user?.name ? `${user.name}'s Availability` : 'Set your availability'}
               </h1>
-              <p className="mt-2 max-w-2xl text-sm font-medium text-primary/90">
+              <p className="mt-2 max-w-2xl text-sm font-medium text-white/80">
                 Choose the days and times when students can book you. The backend accepts
                 `dayOfWeek`, `startTime`, and `endTime` for each slot.
               </p>
@@ -295,7 +295,7 @@ const AvailabilityPage = () => {
           </div>
 
           {!hasProfile && (
-            <div className="mb-6 rounded-2xl border border-secondary bg-secondary/50 px-4 py-3 text-sm font-bold text-secondary flex items-center gap-2">
+            <div className="mb-6 rounded-2xl border border-secondary bg-secondary/10 px-4 py-3 text-sm font-bold text-secondary flex items-center gap-2">
               <AlertCircle size={18} />
               Please create your tutor profile first.
             </div>

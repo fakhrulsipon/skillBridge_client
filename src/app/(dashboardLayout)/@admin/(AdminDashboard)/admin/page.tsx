@@ -165,10 +165,10 @@ const AdminDashboardPage = () => {
   }
 
   const cards = [
-    { label: "Total Users", value: stats?.totalUsers ?? 0, icon: Users, color: "text-primary", bg: "bg-primary" },
-    { label: "Students", value: stats?.totalStudents ?? 0, icon: Users, color: "text-primary", bg: "bg-primary" },
-    { label: "Tutors", value: stats?.totalTutors ?? 0, icon: TrendingUp, color: "text-primary", bg: "bg-primary" },
-    { label: "Bookings", value: stats?.totalBookings ?? 0, icon: BookOpen, color: "text-secondary", bg: "bg-secondary" },
+    { label: "Total Users", value: stats?.totalUsers ?? 0, icon: Users, color: "text-white", bg: "bg-primary" },
+    { label: "Students", value: stats?.totalStudents ?? 0, icon: Users, color: "text-white", bg: "bg-primary" },
+    { label: "Tutors", value: stats?.totalTutors ?? 0, icon: TrendingUp, color: "text-white", bg: "bg-primary" },
+    { label: "Bookings", value: stats?.totalBookings ?? 0, icon: BookOpen, color: "text-white", bg: "bg-secondary" },
     { label: "Categories", value: stats?.totalCategories ?? 0, icon: FolderOpen, color: "text-secondary", bg: "bg-secondary/10" },
   ];
 

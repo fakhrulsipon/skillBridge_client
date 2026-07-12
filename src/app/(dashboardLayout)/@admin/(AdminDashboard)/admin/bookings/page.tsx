@@ -19,8 +19,8 @@ type AdminBooking = {
 };
 
 const statusTone: Record<BookingStatus, string> = {
-  CONFIRMED: "border-primary bg-primary text-primary",
-  COMPLETED: "border-primary bg-primary text-primary",
+  CONFIRMED: "border-primary bg-primary text-white",
+  COMPLETED: "border-primary bg-primary text-white",
   CANCELLED: "border-secondary/30 bg-secondary/10 text-secondary",
 };
 

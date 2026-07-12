@@ -230,7 +230,7 @@ const SignUp = () => {
                   disabled={isLoading}
                   className={`relative flex flex-col items-center gap-2 rounded-xl border-2 py-3 transition-all duration-200 ${
                     selectedRole === role
-                      ? "border-primary bg-primary text-primary shadow-md"
+                      ? "border-primary bg-primary text-white shadow-md"
                       : "border-primary/15 bg-card text-slate-400 hover:border-slate-300 hover:bg-canvas"
                   }`}
                 >
@@ -245,7 +245,7 @@ const SignUp = () => {
                   {selectedRole === role && (
                     <CheckCircle2
                       size={16}
-                      className="absolute right-2 top-2 text-primary"
+                      className="absolute right-2 top-2 text-white"
                     />
                   )}
                 </button>

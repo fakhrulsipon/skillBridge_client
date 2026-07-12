@@ -33,10 +33,35 @@ type AdminUser = {
 };
 
 const roleBadge: Record<string, string> = {
-  STUDENT: "bg-primary text-primary border-primary",
-  TUTOR: "bg-primary text-primary border-primary",
+  STUDENT: "bg-primary text-white border-primary",
+  TUTOR: "bg-primary text-white border-primary",
   ADMIN: "bg-secondary/10 text-secondary border-secondary/30",
 };
+
+type EditableUserFields = {
+  name: string;
+  role?: string;
+};
+
+const readApiMessage = (value: unknown, fallback: string) => {
+  if (value && typeof value === "object" && "message" in value) {
+    const message = (value as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+
+  return fallback;
+};
+
+const errorMessage = (error: unknown, fallback: string) =>
+  error instanceof Error ? error.message : fallback;
+
+const deleteUserPaths = (userId: number) => [
+  `/admin/users/${userId}`,
+  `/admin/user/${userId}`,
+  `/users/${userId}`,
+  `/user/${userId}`,
+  `/admin/users/${userId}/delete`,
+];
 
 const AdminUsersPage = () => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
@@ -64,7 +89,7 @@ const AdminUsersPage = () => {
         const result = await res.json();
         if (!res.ok) throw new Error(result.message || "Failed to load users");
         setUsers(Array.isArray(result.data) ? result.data : []);
-      } catch (error) {
+      } catch {
         await Swal.fire({ icon: "error", title: "Failed to load users", confirmButtonColor: "#B45309" });
       } finally {
         setIsLoading(false);
@@ -95,8 +120,8 @@ const AdminUsersPage = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-    } catch (error: any) {
-      await Swal.fire({ icon: "error", title: "Update failed", text: error.message, confirmButtonColor: "#B45309" });
+    } catch (error: unknown) {
+      await Swal.fire({ icon: "error", title: "Update failed", text: errorMessage(error, "Failed to update user"), confirmButtonColor: "#B45309" });
     } finally {
       setUpdatingId(null);
     }
@@ -135,7 +160,7 @@ const AdminUsersPage = () => {
           Swal.showValidationMessage("Name is required");
           return false;
         }
-        return { name, role };
+        return { name, role } satisfies EditableUserFields;
       },
       showCancelButton: true,
       confirmButtonColor: "#B45309",
@@ -158,8 +183,8 @@ const AdminUsersPage = () => {
       setUsers((prev) =>
         prev.map((u) => (u.id === user.id ? { ...u, ...result.value } : u)),
       );
-    } catch (error: any) {
-      await Swal.fire({ icon: "error", title: "Update failed", text: error.message, confirmButtonColor: "#B45309" });
+    } catch (error: unknown) {
+      await Swal.fire({ icon: "error", title: "Update failed", text: errorMessage(error, "Failed to update user"), confirmButtonColor: "#B45309" });
     } finally {
       setUpdatingId(null);
     }
@@ -177,17 +202,30 @@ const AdminUsersPage = () => {
     if (!confirm.isConfirmed) return;
     setUpdatingId(user.id);
     try {
-      const res = await fetch(`${baseUrl}/admin/users/${user.id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) {
+      let lastMessage = "Failed to delete user";
+      let deleted = false;
+
+      for (const path of deleteUserPaths(user.id)) {
+        const res = await fetch(`${baseUrl}${path}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.ok) {
+          deleted = true;
+          break;
+        }
+
         const apiResult = await res.json().catch(() => ({}));
-        throw new Error(apiResult.message || "Failed to delete user");
+        lastMessage = readApiMessage(apiResult, lastMessage);
+
+        if (res.status !== 404) break;
       }
+
+      if (!deleted) throw new Error(lastMessage);
       setUsers((prev) => prev.filter((u) => u.id !== user.id));
-    } catch (error: any) {
-      await Swal.fire({ icon: "error", title: "Delete failed", text: error.message, confirmButtonColor: "#B45309" });
+    } catch (error: unknown) {
+      await Swal.fire({ icon: "error", title: "Delete failed", text: errorMessage(error, "Failed to delete user"), confirmButtonColor: "#B45309" });
     } finally {
       setUpdatingId(null);
     }
@@ -322,7 +360,7 @@ const AdminUsersPage = () => {
                           <Ban className="h-3 w-3" /> Banned
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-primary border border-primary px-2.5 py-1 text-xs font-semibold text-primary">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-primary border border-primary px-2.5 py-1 text-xs font-semibold text-white">
                           <CheckCircle2 className="h-3 w-3" /> Active
                         </span>
                       )}

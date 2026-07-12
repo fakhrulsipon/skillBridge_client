@@ -16,32 +16,24 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
+import {
+  fetchStudentBookings,
+  type BookingStatus,
+  type StudentBooking,
+} from "@/lib/student-bookings";
 
-type BookingStatus = "CONFIRMED" | "COMPLETED" | "CANCELLED";
-type StudentBooking = {
-  id: number;
-  scheduledAt: string;
-  duration: number;
-  totalPrice: number;
-  note: string | null;
-  status: BookingStatus;
-  tutorProfile: {
-    id: number;
-    bio?: string;
-    user: { id: number; name: string; email: string };
-  };
-};
 type ReviewDraft = { bookingId: number; rating: number; comment: string };
 
 const statusTone: Record<BookingStatus, string> = {
-  CONFIRMED: "border-primary bg-primary text-primary",
-  COMPLETED: "border-primary bg-primary text-primary",
+  PENDING: "border-secondary/30 bg-secondary/10 text-secondary",
+  CONFIRMED: "border-primary bg-primary text-white",
+  COMPLETED: "border-primary bg-primary text-white",
   CANCELLED: "border-secondary/30 bg-secondary/10 text-secondary",
 };
 
 const StudentBookingsPage = () => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
-  const { token, isLoading: isAuthLoading } = useAuth();
+  const { token, user, isLoading: isAuthLoading } = useAuth();
   const [bookings, setBookings] = useState<StudentBooking[]>([]);
   const [isLoadingBookings, setIsLoadingBookings] = useState(true);
   const [updatingBookingId, setUpdatingBookingId] = useState<number | null>(
@@ -61,18 +53,15 @@ const StudentBookingsPage = () => {
         return;
       }
       try {
-        const res = await fetch(`${baseUrl}/booking`, {
-          headers: { Authorization: `Bearer ${token}` },
-          cache: "no-store",
-        });
-        const result = await res.json();
-        if (!res.ok)
-          throw new Error(result.message || "Failed to load bookings");
-        setBookings(Array.isArray(result.data) ? result.data : []);
+        setBookings(await fetchStudentBookings(baseUrl, token, user?.id));
       } catch (error) {
         await Swal.fire({
           icon: "error",
           title: "Unable to load bookings",
+          text:
+            error instanceof Error
+              ? error.message
+              : "Failed to load bookings",
           confirmButtonColor: "#047857",
         });
       } finally {
@@ -80,7 +69,7 @@ const StudentBookingsPage = () => {
       }
     };
     fetchBookings();
-  }, [baseUrl, token]);
+  }, [baseUrl, token, user?.id]);
 
   const handleCancelBooking = async (bookingId: number) => {
     if (!token) return;
@@ -180,6 +169,7 @@ const StudentBookingsPage = () => {
 
   const counts = {
     ALL: bookings.length,
+    PENDING: bookings.filter((b) => b.status === "PENDING").length,
     CONFIRMED: bookings.filter((b) => b.status === "CONFIRMED").length,
     COMPLETED: bookings.filter((b) => b.status === "COMPLETED").length,
     CANCELLED: bookings.filter((b) => b.status === "CANCELLED").length,
@@ -214,15 +204,21 @@ const StudentBookingsPage = () => {
             border: "border-primary/15",
           },
           {
+            label: "Pending",
+            key: "PENDING",
+            color: "bg-secondary/10 text-secondary",
+            border: "border-secondary/20",
+          },
+          {
             label: "Upcoming",
             key: "CONFIRMED",
-            color: "bg-primary text-primary",
+            color: "bg-primary text-white",
             border: "border-primary",
           },
           {
             label: "Completed",
             key: "COMPLETED",
-            color: "bg-primary text-primary",
+            color: "bg-primary text-white",
             border: "border-primary",
           },
           {
@@ -282,7 +278,7 @@ const StudentBookingsPage = () => {
                   {/* Tutor Info & Status */}
                   <div className="flex-1 space-y-4">
                     <div className="flex items-center justify-between lg:justify-start gap-4">
-                      <div className="h-12 w-12 rounded-2xl bg-primary flex items-center justify-center text-primary font-bold text-xl shadow-inner">
+                      <div className="h-12 w-12 rounded-2xl bg-primary flex items-center justify-center text-white font-bold text-xl shadow-inner">
                         {booking.tutorProfile.user.name.charAt(0)}
                       </div>
                       <div>

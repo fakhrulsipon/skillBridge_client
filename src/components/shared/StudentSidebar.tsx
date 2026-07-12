@@ -57,7 +57,7 @@ const StudentSidebar = () => {
                 className={cn(
                   "flex min-w-fit items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition-colors",
                   isActive
-                    ? "border-primary bg-primary text-primary"
+                    ? "border-primary bg-primary text-white"
                     : "border-primary/15 text-slate-600 hover:border-primary hover:bg-canvas hover:text-slate-900",
                 )}
               >

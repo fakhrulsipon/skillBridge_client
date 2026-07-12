@@ -94,11 +94,11 @@ const StudentProfilePage = () => {
       <h1 className="text-5xl font-black tracking-tight leading-tight">
         {user?.name ? (
           <>
-            <span className="text-primary">{user.name.split(" ")[0]}</span>s Space
+            <span className="text-white">{user.name.split(" ")[0]}</span>&apos;s Space
           </>
         ) : "Student Profile"}
       </h1>
-      <p className="mt-4 max-w-2xl text-lg font-medium text-primary/80 leading-relaxed">
+      <p className="mt-4 max-w-2xl text-lg font-medium text-white/80 leading-relaxed">
         Manage your personal identity and track your growth within the <span className="text-white font-bold">SkillBridge</span> ecosystem.
       </p>
     </div>
@@ -116,9 +116,9 @@ const StudentProfilePage = () => {
       
       <div className="grid gap-6">
         {[
-          { label: "Full Name", value: user?.name, icon: UserCircle, color: "text-primary", bg: "bg-primary" },
-          { label: "Email Address", value: user?.email, icon: Mail, color: "text-primary", bg: "bg-primary" },
-          { label: "Account Role", value: user?.role, icon: ShieldCheck, color: "text-primary", bg: "bg-primary" },
+          { label: "Full Name", value: user?.name, icon: UserCircle, color: "text-white", bg: "bg-primary" },
+          { label: "Email Address", value: user?.email, icon: Mail, color: "text-white", bg: "bg-primary" },
+          { label: "Account Role", value: user?.role, icon: ShieldCheck, color: "text-white", bg: "bg-primary" },
         ].map((item, idx) => (
           <div key={idx} className="group flex items-center gap-6 rounded-3xl border border-transparent bg-canvas/50 p-6 transition-all hover:bg-card hover:border-primary/10 hover:shadow-md">
             <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${item.bg} ${item.color} shadow-sm group-hover:scale-110 transition-transform`}>
@@ -203,7 +203,7 @@ const StudentProfilePage = () => {
         </div>
         
         <h2 className="relative z-10 mb-8 text-xl font-black tracking-tight flex items-center gap-2">
-          Your <span className="text-primary underline decoration-primary/30 underline-offset-4 decoration-4">Journey</span>
+          Your <span className="text-white underline decoration-white/40 underline-offset-4 decoration-4">Journey</span>
         </h2>
         
         <ul className="relative z-10 space-y-6">
@@ -214,8 +214,8 @@ const StudentProfilePage = () => {
             "Contribute to the community with reviews."
           ].map((text, i) => (
             <li key={i} className="flex items-start gap-4 group/item">
-              <div className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-primary group-hover/item:scale-150 transition-transform" />
-              <p className="text-sm font-bold text-primary/90 leading-relaxed group-hover/item:text-white transition-colors">
+              <div className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-white group-hover/item:scale-150 transition-transform" />
+              <p className="text-sm font-bold text-white/80 leading-relaxed group-hover/item:text-white transition-colors">
                 {text}
               </p>
             </li>
@@ -223,14 +223,14 @@ const StudentProfilePage = () => {
         </ul>
 
         <div className="relative z-10 mt-10 rounded-3xl bg-white/10 backdrop-blur-md p-6 border border-white/10">
-          <p className="text-[10px] font-black uppercase tracking-widest text-primary">
+          <p className="text-[10px] font-black uppercase tracking-widest text-white/70">
             Current Status
           </p>
           <div className="mt-3 flex items-center justify-between">
              <p className="text-sm font-bold">Ready to explore?</p>
              <Link
               href="/tutors"
-              className="px-4 py-2 bg-primary rounded-xl text-xs font-black hover:bg-card hover:text-primary transition-all active:scale-95"
+              className="px-4 py-2 bg-white rounded-xl text-xs font-black text-primary hover:bg-card transition-all active:scale-95"
             >
               Browse Now
             </Link>
@@ -241,7 +241,7 @@ const StudentProfilePage = () => {
       {/* Quick Support Card */}
       <div className="rounded-[32px] border border-primary/10 bg-card p-6 flex items-center justify-between group cursor-pointer hover:border-primary transition-all">
          <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-xl bg-canvas flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-primary transition-colors">
+            <div className="h-12 w-12 rounded-xl bg-canvas flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-white transition-colors">
                <HelpCircle size={24} />
             </div>
             <div>

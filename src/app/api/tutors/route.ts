@@ -39,6 +39,8 @@ const extractTutorArray = (payload: unknown): TutorProfile[] => {
 };
 
 const toNumber = (value: string | null, fallback: number) => {
+  if (value === null || value.trim() === "") return fallback;
+
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
 };

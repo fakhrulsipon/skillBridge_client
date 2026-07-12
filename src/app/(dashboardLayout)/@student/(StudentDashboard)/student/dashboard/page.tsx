@@ -20,23 +20,10 @@ import {
 
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-
-type BookingStatus = "CONFIRMED" | "COMPLETED" | "CANCELLED";
-
-type StudentBooking = {
-  id: number;
-  scheduledAt: string;
-  duration: number;
-  totalPrice: number;
-  status: BookingStatus;
-  tutorProfile: {
-    id: number;
-    user: {
-      name: string;
-      email: string;
-    };
-  };
-};
+import {
+  fetchStudentBookings,
+  type StudentBooking,
+} from "@/lib/student-bookings";
 
 const StudentDashboardPage = () => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
@@ -48,18 +35,14 @@ const StudentDashboardPage = () => {
     const fetchBookings = async () => {
       if (!token) { setIsLoading(false); return; }
       try {
-        const response = await fetch(`${baseUrl}/booking`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const result = await response.json();
-        if (response.ok) setBookings(Array.isArray(result.data) ? result.data : []);
+        setBookings(await fetchStudentBookings(baseUrl, token, user?.id));
       } catch {
       } finally {
         setIsLoading(false);
       }
     };
     fetchBookings();
-  }, [baseUrl, token]);
+  }, [baseUrl, token, user?.id]);
 
   const stats = useMemo(() => {
     const confirmed = bookings.filter((b) => b.status === "CONFIRMED");
@@ -116,9 +99,9 @@ const StudentDashboardPage = () => {
       {/* ─── QUICK STATS ─── */}
       <div className="grid gap-6 md:grid-cols-3">
         {[
-          { label: "Total Investment", value: `$${stats.totalSpent.toFixed(0)}`, icon: Wallet, color: "text-primary", bg: "bg-primary", desc: "Knowledge assets" },
-          { label: "Completed Lessons", value: stats.completed.length, icon: GraduationCap, color: "text-primary", bg: "bg-primary", desc: "Skills mastered" },
-          { label: "Avg. Learning Score", value: "4.9", icon: Star, color: "text-secondary", bg: "bg-secondary", desc: "Top 5% student" },
+          { label: "Total Investment", value: `$${stats.totalSpent.toFixed(0)}`, icon: Wallet, color: "text-white", bg: "bg-primary", desc: "Knowledge assets" },
+          { label: "Completed Lessons", value: stats.completed.length, icon: GraduationCap, color: "text-white", bg: "bg-primary", desc: "Skills mastered" },
+          { label: "Avg. Learning Score", value: "4.9", icon: Star, color: "text-white", bg: "bg-secondary", desc: "Top 5% student" },
         ].map((s) => (
           <div key={s.label} className="group relative rounded-[32px] border border-primary/10 bg-card p-8 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/5">
             <div className={`mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl ${s.bg} ${s.color} group-hover:rotate-12 transition-transform shadow-sm`}>
@@ -157,7 +140,7 @@ const StudentDashboardPage = () => {
                   </div>
                 </div>
                 <div className="flex-1 space-y-3">
-                  <div className="inline-flex items-center gap-2 rounded-full bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-widest text-white">
                     Confirmed Session
                   </div>
                   <h3 className="text-3xl font-black text-slate-900 tracking-tight italic">{stats.nextSession.tutorProfile.user.name}</h3>
@@ -189,8 +172,8 @@ const StudentDashboardPage = () => {
           <h2 className="text-2xl font-black text-slate-900 tracking-tight px-2">Quick Actions</h2>
           <div className="grid gap-4">
             {[
-              { href: "/student/profile", icon: Wallet, title: "Manage Profile", desc: "Account security & settings", color: "text-primary", bg: "bg-primary" },
-              { href: "/tutors", icon: BookOpen, title: "Explore Subjects", desc: "Discover new expert mentors", color: "text-primary", bg: "bg-primary" },
+              { href: "/student/profile", icon: Wallet, title: "Manage Profile", desc: "Account security & settings", color: "text-white", bg: "bg-primary" },
+              { href: "/tutors", icon: BookOpen, title: "Explore Subjects", desc: "Discover new expert mentors", color: "text-white", bg: "bg-primary" },
             ].map((action) => (
               <Link key={action.title} href={action.href} className="group flex items-center justify-between rounded-[32px] border border-primary/10 bg-card p-2 transition-all hover:border-primary hover:shadow-xl">
                 <div className="flex items-center gap-5 p-5">

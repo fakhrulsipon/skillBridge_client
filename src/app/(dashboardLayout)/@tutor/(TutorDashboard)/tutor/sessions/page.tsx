@@ -40,8 +40,8 @@ type ApiResponse<T> = {
 };
 
 const statusTone: Record<BookingStatus, string> = {
-  CONFIRMED: "border-primary bg-primary text-primary",
-  COMPLETED: "border-primary bg-primary text-primary",
+  CONFIRMED: "border-primary bg-primary text-white",
+  COMPLETED: "border-primary bg-primary text-white",
   CANCELLED: "border-secondary/30 bg-secondary/10 text-secondary",
 };
 
@@ -184,7 +184,7 @@ const TutorSessionsPage = () => {
           <h1 className="text-3xl font-black tracking-tight">
             {user?.name ? `${user.name}'s Sessions` : "Session Manager"}
           </h1>
-          <p className="mt-2 max-w-2xl text-sm font-medium text-primary/90 leading-relaxed">
+          <p className="mt-2 max-w-2xl text-sm font-medium text-white/80 leading-relaxed">
             Review confirmed sessions, track your completed lessons, and manage your teaching pipeline efficiently.
           </p>
         </div>

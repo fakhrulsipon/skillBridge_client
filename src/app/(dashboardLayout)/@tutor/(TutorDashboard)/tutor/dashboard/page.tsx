@@ -126,7 +126,7 @@ const TutorDashboard = () => {
             <h1 className="text-3xl font-black tracking-tight">
               {user?.name ? `Welcome back, ${user.name}` : "Tutor dashboard"}
             </h1>
-            <p className="mt-2 max-w-2xl text-sm font-medium text-primary/80">
+            <p className="mt-2 max-w-2xl text-sm font-medium text-white/80">
               Manage your sessions, track your performance, and see what students are saying about your teaching.
             </p>
           </div>
@@ -136,10 +136,10 @@ const TutorDashboard = () => {
       {/* ─── STATS GRID: CLEANER CARDS ─── */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { label: "Slots", val: profile?.availability?.length ?? 0, icon: CalendarDays, color: "text-primary", bg: "bg-primary" },
-          { label: "Upcoming", val: confirmedCount, icon: Video, color: "text-primary", bg: "bg-primary" },
-          { label: "Completed", val: completedCount, icon: ShieldCheck, color: "text-primary", bg: "bg-primary" },
-          { label: "Rating", val: profile?.avgRating ? profile.avgRating.toFixed(1) : "0.0", icon: Star, color: "text-secondary", bg: "bg-secondary", fill: true },
+          { label: "Slots", val: profile?.availability?.length ?? 0, icon: CalendarDays, color: "text-white", bg: "bg-primary" },
+          { label: "Upcoming", val: confirmedCount, icon: Video, color: "text-white", bg: "bg-primary" },
+          { label: "Completed", val: completedCount, icon: ShieldCheck, color: "text-white", bg: "bg-primary" },
+          { label: "Rating", val: profile?.avgRating ? profile.avgRating.toFixed(1) : "0.0", icon: Star, color: "text-white", bg: "bg-secondary", fill: true },
         ].map((stat, i) => (
           <div key={i} className="rounded-[28px] border border-primary/10 bg-card p-6 shadow-sm transition-all hover:shadow-md">
             <div className="flex items-center gap-3">
@@ -252,8 +252,8 @@ const TutorDashboard = () => {
               <div className="pt-5 border-t border-primary/15">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-bold text-slate-500">Profile Status</span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-2.5 py-1 text-[10px] font-black text-primary uppercase">
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-2.5 py-1 text-[10px] font-black text-white uppercase">
+                    <span className="h-1.5 w-1.5 rounded-full bg-white" />
                     Verified
                   </span>
                 </div>

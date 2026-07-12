@@ -281,18 +281,18 @@ const ProfilePage = () => {
     if (!profile) {
       return {
         label: 'Profile not created yet',
-        tone: 'bg-secondary text-secondary border-secondary',
+        tone: 'bg-secondary text-white border-secondary',
       }
     }
 
     return profile.isApproved
       ? {
           label: 'Approved tutor profile',
-          tone: 'bg-primary text-primary border-primary',
+          tone: 'bg-primary text-white border-primary',
         }
       : {
           label: 'Pending approval',
-          tone: 'bg-secondary text-secondary border-secondary',
+          tone: 'bg-secondary text-white border-secondary',
         }
   }, [profile])
 
@@ -321,10 +321,10 @@ const ProfilePage = () => {
         <div>
           <h1 className="text-3xl font-black tracking-tight leading-tight">
             {profile?.user?.name || user?.name
-              ? `${profile?.user?.name || user?.name}&apos;s Profile`
+              ? `${profile?.user?.name || user?.name}'s Profile`
               : 'Build your tutor profile'}
           </h1>
-          <p className="mt-2 max-w-2xl text-sm font-medium text-primary/90">
+          <p className="mt-2 max-w-2xl text-sm font-medium text-white/80">
             Add the details students need to trust you, understand your experience,
             and book lessons with confidence.
           </p>
@@ -478,7 +478,7 @@ const ProfilePage = () => {
           <div className="mt-6 space-y-6">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 overflow-hidden rounded-2xl border-2 border-white shadow-md bg-primary">
-                {profile?.imageUrl ? <img src={profile.imageUrl} className="h-full w-full object-cover" /> : <UserRound className="m-auto h-8 w-8 text-primary mt-3" />}
+                {profile?.imageUrl ? <img src={profile.imageUrl} className="h-full w-full object-cover" /> : <UserRound className="m-auto h-8 w-8 text-white mt-3" />}
               </div>
               <div>
                 <p className="text-xs font-black uppercase tracking-widest text-slate-400 leading-none">Tutor Name</p>
@@ -501,7 +501,7 @@ const ProfilePage = () => {
 
             <div className="mt-4 flex flex-wrap gap-1.5">
               {profile?.categories?.map(({ category }) => (
-                <span key={category.id} className="rounded-lg bg-primary px-2 py-1 text-[10px] font-black text-primary uppercase tracking-tighter border border-primary">
+                <span key={category.id} className="rounded-lg bg-primary px-2 py-1 text-[10px] font-black text-white uppercase tracking-tighter border border-primary">
                   {category.name}
                 </span>
               ))}
