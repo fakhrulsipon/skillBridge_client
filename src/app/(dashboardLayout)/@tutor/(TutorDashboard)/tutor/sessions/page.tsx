@@ -16,30 +16,14 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import {
+  fetchTutorBookings,
+  type TutorBooking,
+  type TutorBookingStatus,
+} from "@/lib/tutor-bookings";
 
-type BookingStatus = "CONFIRMED" | "COMPLETED" | "CANCELLED";
-
-type TutorBooking = {
-  id: number;
-  scheduledAt: string;
-  duration: number;
-  totalPrice: number;
-  note: string | null;
-  status: BookingStatus;
-  student: {
-    id: number;
-    name: string;
-    email: string;
-  };
-};
-
-type ApiResponse<T> = {
-  success: boolean;
-  message: string;
-  data: T;
-};
-
-const statusTone: Record<BookingStatus, string> = {
+const statusTone: Record<TutorBookingStatus, string> = {
+  PENDING: "border-secondary/30 bg-secondary/10 text-secondary",
   CONFIRMED: "border-primary bg-primary text-white",
   COMPLETED: "border-primary bg-primary text-white",
   CANCELLED: "border-secondary/30 bg-secondary/10 text-secondary",
@@ -61,20 +45,7 @@ const TutorSessionsPage = () => {
       }
 
       try {
-        const response = await fetch(`${baseUrl}/booking`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          cache: "no-store",
-        });
-
-        const result: ApiResponse<TutorBooking[]> = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.message || "Failed to load sessions");
-        }
-
-        setBookings(Array.isArray(result.data) ? result.data : []);
+        setBookings(await fetchTutorBookings(baseUrl, token, user?.id));
       } catch (error) {
         const message =
           error instanceof Error ? error.message : "Failed to load sessions";
@@ -91,7 +62,12 @@ const TutorSessionsPage = () => {
     };
 
     fetchBookings();
-  }, [baseUrl, token]);
+  }, [baseUrl, token, user?.id]);
+
+  const pendingBookings = useMemo(
+    () => bookings.filter((booking) => booking.status === "PENDING"),
+    [bookings],
+  );
 
   const confirmedBookings = useMemo(
     () => bookings.filter((booking) => booking.status === "CONFIRMED"),
@@ -192,8 +168,8 @@ const TutorSessionsPage = () => {
 
       <div className="inline-flex items-center gap-4 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-3 text-sm font-bold shadow-lg">
         <div className="text-center">
-          <span className="block text-[10px] uppercase tracking-widest opacity-70">Confirmed</span>
-          <span>{confirmedBookings.length}</span>
+          <span className="block text-[10px] uppercase tracking-widest opacity-70">Pending</span>
+          <span>{pendingBookings.length}</span>
         </div>
         <div className="h-8 w-px bg-white/20" />
         <div className="text-center">
@@ -205,10 +181,11 @@ const TutorSessionsPage = () => {
   </section>
 
   {/* ─── STATS GRID ─── */}
-  <div className="grid gap-6 md:grid-cols-3">
+  <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
     {[
       { label: "Total sessions", value: bookings.length, color: "text-slate-900", icon: Video },
-      { label: "Ready to teach", value: confirmedBookings.length, color: "text-primary", icon: CheckCircle2 },
+      { label: "New requests", value: pendingBookings.length, color: "text-secondary", icon: CheckCircle2 },
+      { label: "Ready to teach", value: confirmedBookings.length, color: "text-primary", icon: Video },
       { label: "Completed lessons", value: completedBookings.length, color: "text-primary", icon: GraduationCap },
     ].map((stat, i) => (
       <div key={i} className="group rounded-[28px] border border-primary/10 bg-card p-6 shadow-sm transition-all hover:shadow-md">
@@ -289,6 +266,10 @@ const TutorSessionsPage = () => {
                       </span>
                     )}
                   </Button>
+                ) : booking.status === "PENDING" ? (
+                  <div className="flex flex-col items-center justify-center h-12 rounded-xl bg-card border border-secondary/20 px-4 text-[10px] font-black uppercase tracking-widest text-secondary">
+                    Awaiting confirmation
+                  </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center h-12 rounded-xl bg-card border border-primary/10 px-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
                     {booking.status === "COMPLETED" ? "Service Delivered" : "Student Cancelled"}

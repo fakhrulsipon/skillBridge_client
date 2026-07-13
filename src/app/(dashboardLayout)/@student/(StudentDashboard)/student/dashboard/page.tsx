@@ -10,7 +10,6 @@ import {
   Star,
   Wallet,
   ArrowRight,
-  TrendingUp,
   BookOpen,
   GraduationCap,
   ChevronRight,
@@ -19,7 +18,6 @@ import {
 } from "lucide-react";
 
 import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
 import {
   fetchStudentBookings,
   type StudentBooking,
@@ -45,12 +43,17 @@ const StudentDashboardPage = () => {
   }, [baseUrl, token, user?.id]);
 
   const stats = useMemo(() => {
-    const confirmed = bookings.filter((b) => b.status === "CONFIRMED");
+    const active = bookings.filter((b) =>
+      ["PENDING", "CONFIRMED"].includes(b.status),
+    );
     const completed = bookings.filter((b) => b.status === "COMPLETED");
     const totalSpent = completed.reduce((acc, b) => acc + b.totalPrice, 0);
-    const nextSession = confirmed.sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime())[0];
+    const nextSession = [...active].sort(
+      (a, b) =>
+        new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime(),
+    )[0];
 
-    return { confirmed, completed, totalSpent, nextSession };
+    return { active, completed, totalSpent, nextSession };
   }, [bookings]);
 
   if (isAuthLoading || isLoading) {
@@ -82,7 +85,7 @@ const StudentDashboardPage = () => {
                 </span>
               </h1>
               <p className="mt-4 max-w-lg text-lg font-medium text-slate-500 leading-relaxed">
-                You have <span className="text-primary font-black border-b-2 border-primary">{stats.confirmed.length} sessions</span> scheduled. 
+                You have <span className="text-primary font-black border-b-2 border-primary">{stats.active.length} sessions</span> booked. 
                 Your learning journey is looking great this week.
               </p>
             </div>
@@ -141,7 +144,7 @@ const StudentDashboardPage = () => {
                 </div>
                 <div className="flex-1 space-y-3">
                   <div className="inline-flex items-center gap-2 rounded-full bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-widest text-white">
-                    Confirmed Session
+                    {stats.nextSession.status === "PENDING" ? "Pending Session" : "Confirmed Session"}
                   </div>
                   <h3 className="text-3xl font-black text-slate-900 tracking-tight italic">{stats.nextSession.tutorProfile.user.name}</h3>
                   <div className="flex flex-wrap gap-4 text-base font-bold text-slate-500">

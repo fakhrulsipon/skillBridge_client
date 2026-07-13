@@ -36,6 +36,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 // Stripe লোড করা (আপনার .env.local ফাইলে NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY থাকতে হবে)
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+const PENDING_BOOKING_STORAGE_KEY = "skillbridge:pendingBooking";
 
 type Category = { id: number; name: string; icon?: string | null };
 
@@ -70,6 +71,12 @@ type TutorReview = {
   comment: string | null;
   createdAt: string;
   student: { id: number; name: string };
+};
+
+type BookingFormState = {
+  scheduledAt: string;
+  duration: string;
+  note: string;
 };
 
 const dayLabels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -196,8 +203,13 @@ const res = await fetch(`${baseUrl}/create-payment-intent`, {
       if (!res.ok) throw new Error(result.error || "Failed to initiate payment");
       
       setClientSecret(result.clientSecret);
-    } catch (e: any) {
-      await Swal.fire({ icon: "error", title: "Failed", text: e.message, confirmButtonColor: "#047857" });
+    } catch (error) {
+      await Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: error instanceof Error ? error.message : "Failed to initiate payment",
+        confirmButtonColor: "#047857",
+      });
     } finally {
       setIsBooking(false);
     }
@@ -340,7 +352,9 @@ const res = await fetch(`${baseUrl}/create-payment-intent`, {
                       </div>
                       <Stars rating={r.rating} size={14} />
                     </div>
-                    <p className="text-sm text-slate-600 italic">"{r.comment}"</p>
+                    <p className="text-sm text-slate-600 italic">
+                      &ldquo;{r.comment}&rdquo;
+                    </p>
                   </div>
                 ))}
                 {!reviews.length && <p className="text-slate-400 text-center py-10 italic">No reviews yet.</p>}
@@ -402,14 +416,9 @@ const res = await fetch(`${baseUrl}/create-payment-intent`, {
                   {clientSecret ? (
                     <Elements stripe={stripePromise} options={{ clientSecret }}>
                       <StripeCheckoutSubForm 
-                        baseUrl={baseUrl}
-                        token={token!}
                         tutorId={tutorId}
                         bookingForm={bookingForm}
-                        clearForm={() => {
-                          setBookingForm({ scheduledAt: "", duration: "60", note: "" });
-                          setClientSecret("");
-                        }}
+                        totalPrice={estimatedPrice}
                       />
                     </Elements>
                   ) : (
@@ -477,21 +486,16 @@ const res = await fetch(`${baseUrl}/create-payment-intent`, {
 
 // 🚨 কাস্টম সাব-কম্পোনেন্ট যা Stripe UI রেন্ডার করবে এবং পেমেন্ট সম্পাদন করবে
 function StripeCheckoutSubForm({ 
-  baseUrl, 
-  token, 
   tutorId, 
   bookingForm, 
-  clearForm 
+  totalPrice,
 }: { 
-  baseUrl: string; 
-  token: string; 
   tutorId: number; 
-  bookingForm: any; 
-  clearForm: () => void;
+  bookingForm: BookingFormState; 
+  totalPrice: number;
 }) {
   const stripe = useStripe();
   const elements = useElements();
-  const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
   const returnUrl =
     typeof window !== "undefined"
@@ -505,23 +509,39 @@ function StripeCheckoutSubForm({
     setIsProcessing(true);
 
     try {
-      // ১. প্রথমে আপনার নিজের বুকিং ব্যাকএন্ড এপিআই কল করে ডেটা সেভ করে নিন (নিরাপদ উপায়)
-      // অথবা আপনি যদি চান পেমেন্ট আগে হবে, তবে স্ট্রাইপকে অফিশিয়াল return_url দিন।
-      
+      sessionStorage.setItem(
+        PENDING_BOOKING_STORAGE_KEY,
+        JSON.stringify({
+          tutorProfileId: tutorId,
+          scheduledAt: bookingForm.scheduledAt,
+          duration: Number(bookingForm.duration),
+          totalPrice,
+          note: bookingForm.note.trim(),
+        }),
+      );
+
       const { error } = await stripe.confirmPayment({
-  elements,
-  confirmParams: {
-    // 🚨 আমরা ইউজারকে একটি ডেডিকেটেড সাকসেস পেজে পাঠাবো
-    return_url: returnUrl,
-  },
-});
-      // যদি কোনো কারণে সাথে সাথে এরর আসে (যেমন ব্যালেন্স কম)
+        elements,
+        confirmParams: {
+          return_url: returnUrl,
+        },
+      });
+
       if (error) {
+        sessionStorage.removeItem(PENDING_BOOKING_STORAGE_KEY);
         throw new Error(error.message || "Payment verification failed");
       }
 
-    } catch (err: any) {
-      await Swal.fire({ icon: "error", title: "Booking Failed", text: err.message, confirmButtonColor: "#047857" });
+    } catch (error) {
+      await Swal.fire({
+        icon: "error",
+        title: "Booking Failed",
+        text:
+          error instanceof Error
+            ? error.message
+            : "Payment verification failed",
+        confirmButtonColor: "#047857",
+      });
     } finally {
       setIsProcessing(false);
     }

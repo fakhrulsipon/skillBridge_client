@@ -24,6 +24,69 @@ const statusTone: Record<BookingStatus, string> = {
   CANCELLED: "border-secondary/30 bg-secondary/10 text-secondary",
 };
 
+const readApiMessage = (value: unknown, fallback: string) => {
+  if (value && typeof value === "object" && "message" in value) {
+    const message = (value as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+
+  if (value && typeof value === "object" && "error" in value) {
+    const message = (value as { error?: unknown }).error;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+
+  return fallback;
+};
+
+const errorMessage = (error: unknown, fallback: string) =>
+  error instanceof Error ? error.message : fallback;
+
+const updateBookingStatusPaths = (bookingId: number) => [
+  `/admin/bookings/${bookingId}`,
+  `/booking/${bookingId}/status`,
+  `/bookings/${bookingId}/status`,
+];
+
+const shouldTryNextDeletePath = (response: Response, message: string) => {
+  const normalizedMessage = message.toLowerCase();
+
+  return (
+    response.status === 404 ||
+    response.status === 403 ||
+    normalizedMessage.includes("api route not found") ||
+    normalizedMessage.includes("forbidden") ||
+    normalizedMessage.includes("required role") ||
+    normalizedMessage.includes("route not found") ||
+    normalizedMessage.includes("not found") ||
+    normalizedMessage.includes("invalid booking id")
+  );
+};
+
+const updateBookingStatus = async (
+  baseUrl: string,
+  token: string,
+  bookingId: number,
+  status: BookingStatus,
+) => {
+  let lastMessage = "Failed to update booking";
+
+  for (const path of updateBookingStatusPaths(bookingId)) {
+    const res = await fetch(`${baseUrl}${path}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ status }),
+    });
+    const result = await res.json().catch(() => ({}));
+
+    if (res.ok) return;
+
+    lastMessage = readApiMessage(result, lastMessage);
+    if (!shouldTryNextDeletePath(res, lastMessage)) break;
+  }
+
+  throw new Error(lastMessage);
+};
+
 const AdminBookingsPage = () => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
   const { token } = useAuth();
@@ -75,16 +138,10 @@ const AdminBookingsPage = () => {
   const handleStatusUpdate = async (booking: AdminBooking, status: BookingStatus) => {
     setUpdatingId(booking.id);
     try {
-      const res = await fetch(`${baseUrl}/admin/bookings/${booking.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ status }),
-      });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.message || "Failed to update booking");
+      await updateBookingStatus(baseUrl, token, booking.id, status);
       setBookings((prev) => prev.map((item) => item.id === booking.id ? { ...item, status } : item));
-    } catch (error: any) {
-      await Swal.fire({ icon: "error", title: "Update failed", text: error.message, confirmButtonColor: "#B45309" });
+    } catch (error: unknown) {
+      await Swal.fire({ icon: "error", title: "Update failed", text: errorMessage(error, "Failed to update booking"), confirmButtonColor: "#B45309" });
     } finally {
       setUpdatingId(null);
     }
@@ -105,13 +162,21 @@ const AdminBookingsPage = () => {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
+
       if (!res.ok) {
         const result = await res.json().catch(() => ({}));
-        throw new Error(result.message || "Failed to delete booking");
+        throw new Error(readApiMessage(result, "Failed to delete booking"));
       }
+
       setBookings((prev) => prev.filter((item) => item.id !== booking.id));
-    } catch (error: any) {
-      await Swal.fire({ icon: "error", title: "Delete failed", text: error.message, confirmButtonColor: "#B45309" });
+      await Swal.fire({
+        icon: "success",
+        title: "Booking removed",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } catch (error: unknown) {
+      await Swal.fire({ icon: "error", title: "Delete failed", text: errorMessage(error, "Failed to delete booking"), confirmButtonColor: "#B45309" });
     } finally {
       setUpdatingId(null);
     }

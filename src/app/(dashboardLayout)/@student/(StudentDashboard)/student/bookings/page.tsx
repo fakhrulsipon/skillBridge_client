@@ -97,11 +97,11 @@ const StudentBookingsPage = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-    } catch (error: any) {
+    } catch (error) {
       await Swal.fire({
         icon: "error",
         title: "Cancel failed",
-        text: error.message,
+        text: error instanceof Error ? error.message : "Failed to cancel booking",
         confirmButtonColor: "#047857",
       });
     } finally {
@@ -135,11 +135,11 @@ const StudentBookingsPage = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-    } catch (error: any) {
+    } catch (error) {
       await Swal.fire({
         icon: "error",
         title: "Review failed",
-        text: error.message,
+        text: error instanceof Error ? error.message : "Failed to submit review",
         confirmButtonColor: "#047857",
       });
     } finally {
@@ -323,7 +323,7 @@ const StudentBookingsPage = () => {
 
                     {booking.note && (
                       <div className="relative rounded-2xl bg-canvas p-4 text-sm font-medium text-slate-500 italic border-l-4 border-primary">
-                        "{booking.note}"
+                        &ldquo;{booking.note}&rdquo;
                       </div>
                     )}
                   </div>

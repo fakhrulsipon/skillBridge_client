@@ -49,19 +49,16 @@ const readApiMessage = (value: unknown, fallback: string) => {
     if (typeof message === "string" && message.trim()) return message;
   }
 
+  if (value && typeof value === "object" && "error" in value) {
+    const message = (value as { error?: unknown }).error;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+
   return fallback;
 };
 
 const errorMessage = (error: unknown, fallback: string) =>
   error instanceof Error ? error.message : fallback;
-
-const deleteUserPaths = (userId: number) => [
-  `/admin/users/${userId}`,
-  `/admin/user/${userId}`,
-  `/users/${userId}`,
-  `/user/${userId}`,
-  `/admin/users/${userId}/delete`,
-];
 
 const AdminUsersPage = () => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
@@ -202,28 +199,23 @@ const AdminUsersPage = () => {
     if (!confirm.isConfirmed) return;
     setUpdatingId(user.id);
     try {
-      let lastMessage = "Failed to delete user";
-      let deleted = false;
+      const res = await fetch(`${baseUrl}/admin/users/${user.id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      for (const path of deleteUserPaths(user.id)) {
-        const res = await fetch(`${baseUrl}${path}`, {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (res.ok) {
-          deleted = true;
-          break;
-        }
-
-        const apiResult = await res.json().catch(() => ({}));
-        lastMessage = readApiMessage(apiResult, lastMessage);
-
-        if (res.status !== 404) break;
+      if (!res.ok) {
+        const result = await res.json().catch(() => ({}));
+        throw new Error(readApiMessage(result, "Failed to delete user"));
       }
 
-      if (!deleted) throw new Error(lastMessage);
       setUsers((prev) => prev.filter((u) => u.id !== user.id));
+      await Swal.fire({
+        icon: "success",
+        title: "User removed",
+        timer: 1500,
+        showConfirmButton: false,
+      });
     } catch (error: unknown) {
       await Swal.fire({ icon: "error", title: "Delete failed", text: errorMessage(error, "Failed to delete user"), confirmButtonColor: "#B45309" });
     } finally {

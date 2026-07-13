@@ -9,23 +9,15 @@ import {
   MessageSquareQuote,
   ShieldCheck,
   Star,
-  UserCircle,
   Video,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-
-type BookingStatus = "CONFIRMED" | "COMPLETED" | "CANCELLED";
-
-type TutorBooking = {
-  id: number;
-  scheduledAt: string;
-  status: BookingStatus;
-  student: {
-    name: string;
-  };
-};
+import {
+  fetchTutorBookings,
+  type TutorBooking,
+} from "@/lib/tutor-bookings";
 
 type Review = {
   id: number;
@@ -47,7 +39,7 @@ type TutorProfileSummary = {
 
 const TutorDashboard = () => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
-  const { user, token, isLoading, isAuthenticated } = useAuth();
+  const { user, token, isLoading } = useAuth();
   const [bookings, setBookings] = useState<TutorBooking[]>([]);
   const [profile, setProfile] = useState<TutorProfileSummary | null>(null);
   const [isLoadingData, setIsLoadingData] = useState(true);
@@ -60,37 +52,34 @@ const TutorDashboard = () => {
       }
 
       try {
-        const [profileResponse, bookingsResponse] = await Promise.all([
+        const [profileResponse, tutorBookings] = await Promise.all([
           fetch(`${baseUrl}/tutors/me`, {
             headers: { Authorization: `Bearer ${token}` },
             cache: "no-store",
           }),
-          fetch(`${baseUrl}/booking`, {
-            headers: { Authorization: `Bearer ${token}` },
-            cache: "no-store",
-          }),
+          fetchTutorBookings(baseUrl, token, user?.id).catch(() => []),
         ]);
 
         const profileResult = await profileResponse.json();
-        const bookingsResult = await bookingsResponse.json();
 
         if (profileResponse.ok && profileResult.data) {
           setProfile(profileResult.data as TutorProfileSummary);
         }
 
-        if (bookingsResponse.ok && Array.isArray(bookingsResult.data)) {
-          setBookings(bookingsResult.data as TutorBooking[]);
-        }
+        setBookings(tutorBookings);
       } finally {
         setIsLoadingData(false);
       }
     };
 
     fetchDashboardData();
-  }, [baseUrl, token]);
+  }, [baseUrl, token, user?.id]);
 
-  const confirmedCount = useMemo(
-    () => bookings.filter((booking) => booking.status === "CONFIRMED").length,
+  const activeCount = useMemo(
+    () =>
+      bookings.filter((booking) =>
+        ["PENDING", "CONFIRMED"].includes(booking.status),
+      ).length,
     [bookings],
   );
 
@@ -101,7 +90,13 @@ const TutorDashboard = () => {
 
   const nextSession = useMemo(
     () =>
-      bookings.find((booking) => booking.status === "CONFIRMED") ?? null,
+      [...bookings]
+        .filter((booking) => ["PENDING", "CONFIRMED"].includes(booking.status))
+        .sort(
+          (a, b) =>
+            new Date(a.scheduledAt).getTime() -
+            new Date(b.scheduledAt).getTime(),
+        )[0] ?? null,
     [bookings],
   );
 
@@ -137,7 +132,7 @@ const TutorDashboard = () => {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
           { label: "Slots", val: profile?.availability?.length ?? 0, icon: CalendarDays, color: "text-white", bg: "bg-primary" },
-          { label: "Upcoming", val: confirmedCount, icon: Video, color: "text-white", bg: "bg-primary" },
+          { label: "Requests", val: activeCount, icon: Video, color: "text-white", bg: "bg-primary" },
           { label: "Completed", val: completedCount, icon: ShieldCheck, color: "text-white", bg: "bg-primary" },
           { label: "Rating", val: profile?.avgRating ? profile.avgRating.toFixed(1) : "0.0", icon: Star, color: "text-white", bg: "bg-secondary", fill: true },
         ].map((stat, i) => (
@@ -171,7 +166,9 @@ const TutorDashboard = () => {
             
             {nextSession ? (
               <div className="rounded-2xl bg-canvas/50 p-6 border border-primary/10 transition-colors hover:bg-canvas">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Student</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                  {nextSession.status === "PENDING" ? "Pending request" : "Student"}
+                </p>
                 <p className="text-xl font-black text-slate-900 mt-1">{nextSession.student.name}</p>
                 <div className="flex items-center gap-2 mt-4 text-sm font-bold text-slate-600 bg-card w-fit px-3 py-1.5 rounded-lg border border-primary/10 shadow-sm">
                   <CalendarDays className="h-4 w-4 text-primary" />

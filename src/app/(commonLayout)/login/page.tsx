@@ -172,7 +172,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-canvas via-card to-primary/30 p-4 lg:p-8">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-canvas via-card to-primary/30 p-4 sm:p-6 md:p-8 lg:p-12">
       {/* Animated Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary/30 blur-3xl animate-pulse" />
@@ -181,8 +181,9 @@ const Login = () => {
 
       {/* Main Card Container */}
       <div className="flex w-full max-w-5xl overflow-hidden rounded-3xl bg-card shadow-2xl shadow-primary/10 border border-primary/10 transition-all duration-300 hover:shadow-primary/20">
+        
         {/* --- LEFT PANEL: Welcome Section --- */}
-        <div className="relative hidden w-[45%] flex-col justify-between bg-gradient-to-br from-primary via-primary to-primary p-10 text-white lg:flex">
+        <div className="relative hidden w-1/2 flex-col justify-between bg-gradient-to-br from-primary via-primary to-primary p-8 lg:p-12 text-white md:flex">
           <div className="relative z-10">
             <div className="flex items-center gap-2">
               <div className="relative">
@@ -201,7 +202,7 @@ const Login = () => {
             </div>
 
             <div className="mt-12 space-y-3">
-              <h1 className="text-4xl font-bold leading-tight tracking-tight">
+              <h1 className="text-3xl lg:text-4xl font-bold leading-tight tracking-tight">
                 Welcome back to
                 <span className="block mt-2 bg-gradient-to-r from-card to-primary bg-clip-text text-transparent">
                   SkillBridge
@@ -214,29 +215,29 @@ const Login = () => {
             </div>
 
             {/* Stats Section */}
-            <div className="mt-8 flex gap-6">
+            <div className="mt-8 flex flex-wrap gap-4 lg:gap-6">
               <div>
-                <div className="text-2xl font-bold">10k+</div>
+                <div className="text-xl lg:text-2xl font-bold">10k+</div>
                 <div className="text-xs text-white/70">Active Students</div>
               </div>
               <div>
-                <div className="text-2xl font-bold">500+</div>
+                <div className="text-xl lg:text-2xl font-bold">500+</div>
                 <div className="text-xs text-white/70">Expert Tutors</div>
               </div>
               <div>
-                <div className="text-2xl font-bold">98%</div>
+                <div className="text-xl lg:text-2xl font-bold">98%</div>
                 <div className="text-xs text-white/70">Satisfaction Rate</div>
               </div>
             </div>
           </div>
 
-          <div className="relative z-10 space-y-3">
+          <div className="relative z-10 my-8 space-y-3">
             {features.map((item, idx) => (
               <div
                 key={idx}
                 className="group flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-3 transition-all duration-300 hover:bg-white/10 hover:border-white/20"
               >
-                <div className="rounded-lg bg-white/10 p-1.5 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/30">
+                <div className="rounded-lg bg-white/10 p-1.5 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/30 shrink-0">
                   {item.icon}
                 </div>
                 <div>
@@ -253,29 +254,29 @@ const Login = () => {
 
           <div className="relative z-10 flex items-center gap-4 text-xs text-white/70">
             <span>© 2026 SkillBridge Inc.</span>
-              <span className="h-3 w-px bg-white/30" />
+            <span className="h-3 w-px bg-white/30" />
             <span>Secure Platform</span>
           </div>
         </div>
 
         {/* --- RIGHT PANEL: Login Form --- */}
-        <div className="flex flex-1 flex-col justify-center bg-card px-6 py-12 md:px-12 lg:px-16">
-          <div className="mb-8 text-center lg:text-left">
-            <div className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-3 py-1 mb-4 lg:hidden">
+        <div className="flex w-full md:w-1/2 flex-col justify-center bg-card px-6 py-10 sm:px-10 md:px-12 lg:px-16">
+          <div className="mb-8 text-center md:text-left">
+            <div className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-3 py-1 mb-4 md:hidden">
               <Sparkles size={14} className="text-white" />
               <span className="text-xs font-semibold text-white">
                 SkillBridge
               </span>
             </div>
-            <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
               Sign In
             </h2>
-            <p className="mt-2 text-slate-500">
+            <p className="mt-2 text-sm text-slate-500">
               Welcome back! Please enter your details.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
             {/* Email Field */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -286,7 +287,7 @@ const Login = () => {
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 transition-all group-focus-within:text-primary"
                   size={18}
                 />
-              <input
+                <input
                   type="email"
                   {...register("email", {
                     required: "Email address is required",
@@ -366,7 +367,7 @@ const Login = () => {
                 type="button"
                 onClick={() => fillDemoCredentials("USER")}
                 disabled={isLoading}
-                className="rounded-xl border border-primary/15 bg-canvas/50 py-3 text-sm font-semibold text-slate-600 transition-all hover:border-primary hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
+                className="rounded-xl border border-primary/15 bg-canvas/50 py-2.5 sm:py-3 text-sm font-semibold text-slate-600 transition-all hover:border-primary hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
               >
                 Demo User
               </button>
@@ -374,7 +375,7 @@ const Login = () => {
                 type="button"
                 onClick={() => fillDemoCredentials("ADMIN")}
                 disabled={isLoading}
-                className="rounded-xl border border-primary/15 bg-canvas/50 py-3 text-sm font-semibold text-slate-600 transition-all hover:border-primary hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
+                className="rounded-xl border border-primary/15 bg-canvas/50 py-2.5 sm:py-3 text-sm font-semibold text-slate-600 transition-all hover:border-primary hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
               >
                 Demo Admin
               </button>
@@ -384,13 +385,13 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative mt-6 flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-primary to-primary py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-primary/40 hover:from-primary hover:to-primary active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
+              className="group relative mt-4 flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-primary to-primary py-3 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-primary/40 hover:from-primary hover:to-primary active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isLoading ? (
                 <>
                   <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
                   <span>Signing In...</span>
-                </>
+                </                >
               ) : (
                 <>
                   <LogIn size={16} />

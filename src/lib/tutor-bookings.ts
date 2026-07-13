@@ -1,16 +1,20 @@
-export type BookingStatus = "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+export type TutorBookingStatus =
+  | "PENDING"
+  | "CONFIRMED"
+  | "COMPLETED"
+  | "CANCELLED";
 
-export type StudentBooking = {
+export type TutorBooking = {
   id: number;
   scheduledAt: string;
   duration: number;
   totalPrice: number;
   note: string | null;
-  status: BookingStatus;
-  tutorProfile: {
-    id: number;
-    bio?: string;
-    user: { id?: number; name: string; email?: string };
+  status: TutorBookingStatus;
+  student: {
+    id?: number;
+    name: string;
+    email?: string;
   };
 };
 
@@ -48,21 +52,20 @@ const readOptionalNumber = (value: unknown) => {
 const readString = (value: unknown, fallback = "") =>
   typeof value === "string" ? value : fallback;
 
-const normalizeBooking = (value: unknown): StudentBooking | null => {
+const normalizeTutorBooking = (value: unknown): TutorBooking | null => {
   if (!isObject(value)) return null;
 
-  const tutorProfile = isObject(value.tutorProfile) ? value.tutorProfile : {};
-  const tutorUser = isObject(tutorProfile.user)
-    ? tutorProfile.user
-    : isObject(value.tutor)
-      ? value.tutor
-      : isObject(value.tutorUser)
-        ? value.tutorUser
+  const student = isObject(value.student)
+    ? value.student
+    : isObject(value.studentUser)
+      ? value.studentUser
+      : isObject(value.user)
+        ? value.user
         : {};
 
   const id = readNumber(value.id, NaN);
   const scheduledAt = readString(value.scheduledAt, readString(value.date));
-  const status = readString(value.status, "CONFIRMED") as BookingStatus;
+  const status = readString(value.status, "PENDING") as TutorBookingStatus;
 
   if (!Number.isFinite(id) || !scheduledAt) return null;
 
@@ -73,25 +76,21 @@ const normalizeBooking = (value: unknown): StudentBooking | null => {
     totalPrice: readNumber(value.totalPrice ?? value.price ?? value.amount, 0),
     note: typeof value.note === "string" ? value.note : null,
     status,
-    tutorProfile: {
-      id: readNumber(tutorProfile.id ?? value.tutorProfileId),
-      bio: readString(tutorProfile.bio),
-      user: {
-        id: readOptionalNumber(tutorUser.id),
-        name: readString(tutorUser.name, "Tutor"),
-        email: readString(tutorUser.email),
-      },
+    student: {
+      id: readOptionalNumber(student.id),
+      name: readString(student.name, "Student"),
+      email: readString(student.email),
     },
   };
 };
 
-const buildStudentBookingPaths = (userId?: number) => [
+const buildTutorBookingPaths = (userId?: number) => [
   "/booking",
   "/booking/me",
-  "/booking/student/me",
-  "/booking/my-bookings",
-  "/booking/student",
-  ...(userId ? [`/booking/student/${userId}`] : []),
+  "/booking/tutor/me",
+  "/booking/my-sessions",
+  "/booking/tutor",
+  ...(userId ? [`/booking/tutor/${userId}`] : []),
 ];
 
 const readApiMessage = (payload: unknown, fallback: string) => {
@@ -106,20 +105,20 @@ const shouldTryNextPath = (response: Response, message: string) =>
   response.status === 404 ||
   (response.status === 400 && message.toLowerCase().includes("invalid booking id"));
 
-export const extractStudentBookings = (payload: unknown) =>
+export const extractTutorBookings = (payload: unknown) =>
   firstArray(payload)
-    .map(normalizeBooking)
-    .filter((booking): booking is StudentBooking => Boolean(booking));
+    .map(normalizeTutorBooking)
+    .filter((booking): booking is TutorBooking => Boolean(booking));
 
-export const fetchStudentBookings = async (
+export const fetchTutorBookings = async (
   baseUrl: string,
   token: string,
   userId?: number,
 ) => {
-  let lastMessage = "Failed to load bookings";
+  let lastMessage = "Failed to load sessions";
   let foundEmptyResponse = false;
 
-  for (const path of buildStudentBookingPaths(userId)) {
+  for (const path of buildTutorBookingPaths(userId)) {
     const response = await fetch(`${baseUrl}${path}`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
@@ -128,7 +127,7 @@ export const fetchStudentBookings = async (
     const result = await response.json().catch(() => ({}));
 
     if (response.ok) {
-      const bookings = extractStudentBookings(result);
+      const bookings = extractTutorBookings(result);
       if (bookings.length > 0) return bookings;
       foundEmptyResponse = true;
       continue;

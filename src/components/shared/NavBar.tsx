@@ -233,8 +233,8 @@ const NavBar = () => {
                   className={cn(
                     "hidden sm:flex items-center gap-2 rounded-full px-7 py-3 text-sm font-bold shadow-2xl transition-all hover:scale-105 active:scale-95",
                     isHome && !isScrolled
-                      ? "bg-card text-primary hover:bg-primary shadow-white/10"
-                      : "bg-primary text-white hover:bg-primary shadow-primary",
+                      ? "bg-card text-primary "
+                      : "bg-primary text-white",
                   )}
                 >
                   Get Started <Sparkles size={14} />
